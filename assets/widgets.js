@@ -32,6 +32,28 @@
   // 小數 → 分數
   W.Fdec = x => { const s = String(x), k = s.includes(".") ? s.split(".")[1].length : 0; return W.F(Math.round(x * 10 ** k), 10 ** k); };
 
+  /* ---------- 圓形圖 ----------
+     W.pie(cx, cy, r, [{ v: 百分率, c: 顏色, t: 名字 }], { labels: true }) → SVG 字串 */
+  W.slice = (cx, cy, r, a0, a1) => {
+    if (a1 - a0 >= 359.999) return `M${cx} ${cy - r} A${r} ${r} 0 1 1 ${cx - 0.01} ${cy - r} Z`;
+    const [x0, y0] = L.pol(cx, cy, r, a0), [x1, y1] = L.pol(cx, cy, r, a1);
+    return `M${cx} ${cy} L${x0.toFixed(2)} ${y0.toFixed(2)} A${r} ${r} 0 ${a1 - a0 > 180 ? 1 : 0} 1 ${x1.toFixed(2)} ${y1.toFixed(2)} Z`;
+  };
+  W.pie = (cx, cy, r, parts, opt = {}) => {
+    let a = 0, s = "";
+    parts.forEach(p => {
+      const a1 = a + p.v * 3.6;
+      if (p.v > 0) s += `<path d="${W.slice(cx, cy, r, a, a1)}" fill="${p.c}" stroke="var(--ink)" stroke-width="1.5"/>`;
+      if (opt.labels !== false && p.v >= 6) {
+        const [tx, ty] = L.pol(cx, cy, r * 0.62, (a + a1) / 2);
+        s += `<text x="${tx}" y="${ty + 4}" text-anchor="middle" font-size="${opt.fs || 12}" style="fill:#2b2a33">${opt.text ? opt.text(p) : p.v + "%"}</text>`;
+      }
+      a = a1;
+    });
+    return s;
+  };
+  W.COLORS = ["#7cb8f0", "#f6cd6a", "#8fd4ab", "#f5a3a3", "#c3b1ee", "#f7b98a"];
+
   /* ---------- 隨機出題 ----------
      W.practice(el, { gens: [fn...] } 或 { groups: [{ label, gens, on }] })
      每個 fn() 回傳 { q, ans, unit, hint, pic, pre, choices } */

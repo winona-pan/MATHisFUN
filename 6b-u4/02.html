@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>圓心角 = 百分率 × 360°</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6b-u4" data-page="6b-u4/02">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-formula">公式怎麼來</span>
+  <h1>圓心角 = 百分率 × 360°</h1>
+  <p class="lead">要畫圓形百分圖，就要知道每一塊要切幾度。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>百分率 ↔ 角度</h2>
+    <div class="stage"><svg id="g" viewBox="0 0 400 230"></svg></div>
+    <div class="controls"><label>百分率 <input type="range" id="p" min="0" max="100" value="25"> <b id="pv"></b>%</label></div>
+    <div class="work" id="w"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>公式怎麼來</h2>
+    <div class="steps">
+      <div class="step"><p>① 整個圓 = <b>100%</b> = 一圈 = <b>360°</b>（周角）。</p></div>
+      <div class="step"><p>② 所以 1% 就是 360° ÷ 100 = <b>3.6°</b>。</p></div>
+      <div class="step"><p>③ 25% → 25 × 3.6° = 90°。也可以想成 25% = ¼，360° 的 ¼ = 90°。</p></div>
+      <div class="step"><p>④ <b>圓心角 = 百分率 × 360°</b>（百分率先換成小數，例如 25% = 0.25）。</p></div>
+      <div class="step"><p>⑤ 反過來：圓心角 72° 是百分之幾？72 ÷ 360 = 0.2 = <b>20%</b>。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <section class="box">
+    <h2><span class="n">3</span>公式三角形</h2>
+    <div id="tri"></div>
+  </section>
+
+  <div class="formula">
+    <div class="label">公式</div>
+    <div class="big">圓心角 = 百分率 × 360°</div>
+    <div class="big" style="font-size:1.3rem">百分率 = 圓心角 ÷ 360°</div>
+    <div class="sub">好記：1% = 3.6°、10% = 36°、25% = 90°、50% = 180°</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>這是「比例」的應用：<code>百分率 : 100% = 圓心角 : 360°</code>。國中的比例式會一直用到。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">4</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  const pIn = document.getElementById("p");
+  function draw() {
+    const p = +pIn.value, deg = p * 3.6;
+    let s = `<circle cx="110" cy="115" r="95" fill="var(--card)" stroke="var(--ink)" stroke-width="2"/>`;
+    for (let i = 0; i < 10; i++) { const [x, y] = L.pol(110, 115, 95, i * 36); s += `<line x1="110" y1="115" x2="${x}" y2="${y}" stroke="var(--line)" stroke-width="1.5"/>`; }
+    if (p > 0) s += `<path d="${W.slice(110, 115, 95, 0, deg)}" fill="var(--red)" fill-opacity=".55" stroke="var(--ink)" stroke-width="2"/>`;
+    s += `<text x="230" y="70" font-size="16">${p}% 的圓</text><text x="230" y="102" font-size="16">= ${p} × 3.6°</text><text x="230" y="136" font-size="22" style="fill:var(--red)">= ${W.num(deg)}°</text><text x="230" y="176" font-size="12" style="fill:var(--muted)">灰色線：每格 10% = 36°</text>`;
+    document.getElementById("g").innerHTML = s;
+    document.getElementById("pv").textContent = p;
+    document.getElementById("w").innerHTML = `圓心角 = ${p}% × 360° = ${p / 100} × 360° = <b>${W.num(deg)}°</b>`;
+  }
+  pIn.addEventListener("input", draw); draw();
+  W.tri(document.getElementById("tri"), { top: "圓心角", l: "百分率", r: "360°", colors: { l: "var(--red)", r: "var(--blue)" }, start: "top" });
+
+  const pic = (p, label) => `<path d="${W.slice(75, 75, 62, 0, p * 3.6)}" fill="var(--red)" fill-opacity=".55" stroke="var(--ink)" stroke-width="2"/><circle cx="75" cy="75" r="62" fill="none" stroke="var(--ink)" stroke-width="2"/><text x="150" y="80" font-size="15">${label}</text>`;
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { const p = W.rand(1, 19) * 5; return { q: `佔 <b>${p}%</b> 的扇形，圓心角是幾度？`, ans: p * 3.6, unit: "度", hint: `${p} × 3.6`, pic: pic(p, `${p}%`) }; },
+    () => { const p = W.rand(1, 19) * 5; return { q: `圓心角 <b>${W.num(p * 3.6)}°</b> 的扇形，佔百分之幾？`, ans: p, unit: "%", hint: `${W.num(p * 3.6)} ÷ 360 = ${p / 100}`, pic: pic(p, `${W.num(p * 3.6)}°`) }; },
+    () => { const tot = W.pick([20, 40, 50, 25]), k = W.rand(1, tot - 1), p = k / tot * 100; if (p % 1) return { q: `佔 <b>50%</b> 的扇形，圓心角是幾度？`, ans: 180, unit: "度", hint: "一半的圓", pic: pic(50, "50%") };
+      return { q: `全班 <b>${tot}</b> 人，有 <b>${k}</b> 人喜歡游泳。畫成圓形圖，這一塊的圓心角是幾度？`, ans: p * 3.6, unit: "度", hint: `先算百分率：${k} ÷ ${tot} = ${p / 100}，再 × 360`, pic: pic(p, `${k}/${tot} 人`) }; },
+  ] });
+</script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>長條圖、折線圖</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6b-u4" data-page="review/bar-line-chart">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-pre">先備知識・3–4 年級學過</span>
+  <h1>長條圖、折線圖</h1>
+  <p class="lead">比「誰多誰少」用長條圖；看「怎麼變化」用折線圖。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>同樣的資料，換一種圖</h2>
+    <div class="controls" style="margin-top:0">
+      <button class="btn" data-d="0" aria-pressed="true">各班借書本數</button>
+      <button class="btn" data-d="1">一年中每月氣溫</button>
+    </div>
+    <div class="controls">
+      <button class="btn" data-c="bar" aria-pressed="true">📊 長條圖</button>
+      <button class="btn" data-c="line">📈 折線圖</button>
+    </div>
+    <div class="stage" style="margin-top:12px"><svg id="g" viewBox="0 0 400 240"></svg></div>
+    <div class="work" id="w"></div>
+  </section>
+
+  <div class="formula pre">
+    <div class="label">記起來</div>
+    <div class="big" style="font-size:1.35rem">長條圖：比較多少（各班、各種類）</div>
+    <div class="big" style="font-size:1.35rem">折線圖：看變化（隨著時間）</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中會畫「<b>座標平面</b>」上的點和線，折線圖就是最早的練習。也會學「平均數、中位數」來說明資料。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">2</span>練習一下</h2>
+    <div class="quiz">
+      <div class="q" data-hint="身高隨著年齡在變化">
+        <p class="qt">要表示「小明 6 歲到 12 歲的身高變化」，用哪一種圖比較好？</p>
+        <div class="choices"><button class="choice">長條圖</button><button class="choice" data-right>折線圖</button></div>
+      </div>
+      <div class="q" data-hint="比較不同水果誰多誰少">
+        <p class="qt">要比較「全班最喜歡的水果各有幾人」，用哪一種圖比較好？</p>
+        <div class="choices"><button class="choice" data-right>長條圖</button><button class="choice">折線圖</button></div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script>
+  const DATA = [
+    { labels: ["甲班", "乙班", "丙班", "丁班", "戊班"], vals: [32, 45, 28, 50, 38], unit: "本", good: "bar", why: "各班是不同的「種類」，要比誰多誰少 → <b>長條圖</b>比較清楚。" },
+    { labels: ["1月", "3月", "5月", "7月", "9月", "11月"], vals: [16, 20, 26, 30, 28, 21], unit: "°C", good: "line", why: "月份是「時間」，要看氣溫怎麼升高、降低 → <b>折線圖</b>看得出變化。" },
+  ];
+  let di = 0, ct = "bar";
+  function draw() {
+    const D = DATA[di], n = D.vals.length, max = Math.max(...D.vals) * 1.15, x0 = 40, y0 = 210, Wd = 340, Hh = 180, step = Wd / n;
+    let s = `<line x1="${x0}" y1="${y0}" x2="${x0 + Wd}" y2="${y0}" class="stroke"/><line x1="${x0}" y1="${y0}" x2="${x0}" y2="${y0 - Hh}" class="stroke"/>`;
+    for (let k = 0; k <= 4; k++) { const v = Math.round(max * k / 4), y = y0 - Hh * k / 4; s += `<line x1="${x0}" y1="${y}" x2="${x0 + Wd}" y2="${y}" class="gridline"/><text x="4" y="${y + 4}" font-size="10">${v}</text>`; }
+    const pts = D.vals.map((v, i) => [x0 + step * (i + 0.5), y0 - v / max * Hh]);
+    if (ct === "bar") pts.forEach(([x, y], i) => s += `<rect x="${x - step * 0.3}" y="${y}" width="${step * 0.6}" height="${y0 - y}" fill="var(--blue)" fill-opacity=".75" stroke="var(--ink)"/>`);
+    else s += `<polyline points="${pts.map(p => p.join(",")).join(" ")}" fill="none" stroke="var(--red)" stroke-width="3"/>` + pts.map(([x, y]) => `<circle cx="${x}" cy="${y}" r="5" fill="var(--red)"/>`).join("");
+    pts.forEach(([x, y], i) => s += `<text x="${x - 12}" y="${y0 + 18}" font-size="11">${D.labels[i]}</text><text x="${x - 8}" y="${y - 8}" font-size="11">${D.vals[i]}</text>`);
+    document.getElementById("g").innerHTML = s;
+    document.getElementById("w").innerHTML = (ct === D.good ? "👍 適合！" : "🤔 也可以畫，但不是最適合。") + " " + D.why;
+    document.querySelectorAll("[data-d]").forEach(b => b.setAttribute("aria-pressed", +b.dataset.d === di));
+    document.querySelectorAll("[data-c]").forEach(b => b.setAttribute("aria-pressed", b.dataset.c === ct));
+  }
+  document.querySelectorAll("[data-d]").forEach(b => b.addEventListener("click", () => { di = +b.dataset.d; draw(); }));
+  document.querySelectorAll("[data-c]").forEach(b => b.addEventListener("click", () => { ct = b.dataset.c; draw(); }));
+  draw();
+</script>
+</body>
+</html>

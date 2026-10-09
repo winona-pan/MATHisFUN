@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>選哪一種圖</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6b-u4" data-page="6b-u4/04">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-learn">學會方法</span>
+  <h1>選哪一種圖？</h1>
+  <p class="lead">長條圖、折線圖、圓形圖，各有各的專長。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>三種圖的專長</h2>
+    <div class="stage"><svg viewBox="0 0 400 190">
+      <g transform="translate(10 20)"><rect x="10" y="60" width="18" height="60" fill="var(--blue)" stroke="var(--ink)"/><rect x="36" y="30" width="18" height="90" fill="var(--blue)" stroke="var(--ink)"/><rect x="62" y="80" width="18" height="40" fill="var(--blue)" stroke="var(--ink)"/><rect x="88" y="50" width="18" height="70" fill="var(--blue)" stroke="var(--ink)"/>
+        <text x="4" y="146" font-size="14">長條圖</text><text x="4" y="166" font-size="12" style="fill:var(--red)">比多少</text></g>
+      <g transform="translate(140 20)"><polyline points="5,110 30,90 55,95 80,50 105,30" fill="none" stroke="var(--red)" stroke-width="3"/><circle cx="5" cy="110" r="4" fill="var(--red)"/><circle cx="30" cy="90" r="4" fill="var(--red)"/><circle cx="55" cy="95" r="4" fill="var(--red)"/><circle cx="80" cy="50" r="4" fill="var(--red)"/><circle cx="105" cy="30" r="4" fill="var(--red)"/>
+        <text x="4" y="146" font-size="14">折線圖</text><text x="4" y="166" font-size="12" style="fill:var(--red)">看變化（時間）</text></g>
+      <g id="pieicon" transform="translate(270 20)"></g>
+    </svg></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>怎麼選？</h2>
+    <div class="steps">
+      <div class="step"><p>① 要比「<b>哪一個最多、最少</b>」，而且看<b>實際的數量</b> → <b>長條圖</b>。</p></div>
+      <div class="step"><p>② 資料是<b>隨著時間</b>（每天、每月、每年）在變 → <b>折線圖</b>。</p></div>
+      <div class="step"><p>③ 要看「<b>每一部分佔全部的多少</b>」（百分率）→ <b>圓形圖</b>。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula word">
+    <div class="label">口訣</div>
+    <div class="big" style="font-size:1.3rem;line-height:1.9">比多少 → 長條　看變化 → 折線　佔多少 → 圓形</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中還會學「<b>直方圖</b>」和「<b>盒狀圖</b>」，也是依照想看的重點來選圖。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：選選看</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  document.getElementById("pieicon").innerHTML = W.pie(55, 70, 50, [{ v: 50, c: W.COLORS[0] }, { v: 30, c: W.COLORS[1] }, { v: 20, c: W.COLORS[2] }]) + `<text x="4" y="146" font-size="14">圓形圖</text><text x="4" y="166" font-size="12" style="fill:var(--red)">佔全部多少</text>`;
+  const Q = [
+    ["一年來每個月的雨量變化", 1], ["小華這學期每週的跳繩次數", 1], ["台北市過去 10 年的人口變化", 1], ["一天中每小時的氣溫", 1],
+    ["各班回收的寶特瓶數量", 0], ["全班最喜歡的動物，各有幾人", 0], ["五種飲料的銷售數量比較", 0], ["各縣市的小學數量", 0],
+    ["零用錢花在哪些地方，各佔多少", 2], ["全校學生上學方式的比例", 2], ["一天 24 小時怎麼分配（睡覺、上學…）", 2], ["班上男生、女生各佔全班的幾成", 2],
+  ];
+  const names = ["長條圖", "折線圖", "圓形圖"];
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { const [t, a] = W.pick(Q); return { q: `要表示「<b>${t}</b>」，用哪一種圖最好？`, choices: names, ans: a, hint: "比多少 → 長條；看變化 → 折線；佔多少 → 圓形", pic: `<text x="10" y="60" font-size="14">比多少 → 長條</text><text x="10" y="90" font-size="14">看變化 → 折線</text><text x="10" y="120" font-size="14">佔多少 → 圓形</text>` }; },
+  ] });
+</script>
+</body>
+</html>

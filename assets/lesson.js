@@ -82,6 +82,18 @@
         { path: "6b-u3/06", t: "名詞公式總整理" },
       ],
     },
+    "6b-u4": {
+      name: "六下 第 4 單元・統計圖表",
+      pages: [
+        { path: "review/bar-line-chart", t: "長條圖、折線圖", pre: true },
+        { path: "review/percent", t: "百分率", pre: true },
+        { path: "review/angles", t: "角度與量角器", pre: true },
+        { path: "6b-u4/01", t: "圓形百分圖" },
+        { path: "6b-u4/02", t: "圓心角 = 百分率 × 360°" },
+        { path: "6b-u4/03", t: "讀懂圓形圖" },
+        { path: "6b-u4/04", t: "選哪一種圖" },
+      ],
+    },
   };
 
   const body = document.body;

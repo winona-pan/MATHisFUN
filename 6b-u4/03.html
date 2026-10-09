@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>讀懂圓形圖</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6b-u4" data-page="6b-u4/03">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-learn">學會方法</span>
+  <h1>讀懂圓形圖</h1>
+  <p class="lead">從圓形圖算出「有幾人」，或反過來算出「全部有幾人」。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>全校 400 人上學的方式</h2>
+    <div class="stage"><svg id="g" viewBox="0 0 400 230"></svg></div>
+    <p class="hint">👉 點一塊扇形，算算看有幾人。</p>
+    <div class="work" id="w"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>兩個方向</h2>
+    <div class="steps">
+      <div class="step"><p>① <b>知道全部，求部分</b>：走路佔 45%，全校 400 人 → 400 × 45% = 400 × 0.45 = <b>180 人</b>。</p></div>
+      <div class="step"><p>② <b>知道部分，求全部（翻過來）</b>：如果只知道「騎車 60 人，佔 15%」→ 全部 = 60 ÷ 15% = 60 ÷ 0.15 = <b>400 人</b>。</p></div>
+      <div class="step"><p>③ <b>差幾人</b>：走路比搭車多 45% − 25% = 20% → 400 × 20% = <b>80 人</b>（也可以先算出各自人數再相減）。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <section class="box">
+    <h2><span class="n">3</span>公式三角形</h2>
+    <div id="tri"></div>
+  </section>
+
+  <div class="formula">
+    <div class="label">公式</div>
+    <div class="big">部分 = 全部 × 百分率</div>
+    <div class="big" style="font-size:1.3rem">全部 = 部分 ÷ 百分率　百分率 = 部分 ÷ 全部</div>
+  </div>
+
+  <div class="warn"><span class="ic">⚠️</span><p>百分率要先換成小數（15% = 0.15）再乘或除！</p></div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中會學「<b>相對次數</b>」，就是百分率的另一個名字：次數 ÷ 總數。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">4</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  const P = [{ v: 45, c: W.COLORS[0], t: "走路" }, { v: 25, c: W.COLORS[1], t: "搭車" }, { v: 15, c: W.COLORS[2], t: "騎車" }, { v: 15, c: W.COLORS[3], t: "家長送" }];
+  let sel = 0;
+  function draw() {
+    let s = "", a = 0;
+    P.forEach((p, i) => {
+      const a1 = a + p.v * 3.6;
+      s += `<path d="${W.slice(110, 115, 95, a, a1)}" fill="${p.c}" stroke="var(--ink)" stroke-width="${i === sel ? 4 : 1.5}" data-i="${i}" style="cursor:pointer" ${i === sel ? 'transform="translate(0 0)"' : ""}/>`;
+      const [tx, ty] = L.pol(110, 115, 60, (a + a1) / 2);
+      s += `<text x="${tx}" y="${ty + 5}" text-anchor="middle" font-size="12" style="fill:#2b2a33;pointer-events:none">${p.t}<tspan x="${tx}" dy="14">${p.v}%</tspan></text>`;
+      a = a1;
+    });
+    s += `<text x="230" y="60" font-size="15">全校 400 人</text><text x="230" y="96" font-size="15">${P[sel].t}：${P[sel].v}%</text><text x="230" y="130" font-size="15" style="fill:var(--red)">400 × ${P[sel].v / 100}</text><text x="230" y="160" font-size="20" style="fill:var(--red)">= ${400 * P[sel].v / 100} 人</text>`;
+    document.getElementById("g").innerHTML = s;
+    document.querySelectorAll("#g [data-i]").forEach(el => el.addEventListener("click", () => { sel = +el.dataset.i; draw(); }));
+    document.getElementById("w").innerHTML = `${P[sel].t}有幾人？全部 × 百分率 = 400 × ${P[sel].v}% = <b>${400 * P[sel].v / 100} 人</b>`;
+  }
+  draw();
+  W.tri(document.getElementById("tri"), { top: "部分", l: "全部", r: "百分率", colors: { l: "var(--blue)", r: "var(--red)" }, start: "top" });
+
+  const pie = (vals, mark) => W.pie(75, 75, 62, vals.map((x, i) => ({ v: x, c: W.COLORS[i] })), { text: p => p.v + "%" });
+  const split = () => { let a; do { a = [W.rand(2, 9) * 5, W.rand(2, 9) * 5, W.rand(1, 6) * 5]; a.push(100 - a[0] - a[1] - a[2]); } while (a[3] <= 0); return a; };
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { const a = split(), tot = W.pick([200, 400, 500, 1000, 40, 80]), i = W.rand(0, 3), n = tot * a[i] / 100; if (n % 1) return { q: `全部 200 人，佔 ${a[i]}% 的有幾人？`, ans: 2 * a[i], unit: "人", hint: `200 × ${a[i] / 100}`, pic: pie(a) };
+      return { q: `全部 <b>${tot}</b> 人，佔 <b>${a[i]}%</b> 的那一種有幾人？`, ans: n, unit: "人", hint: `${tot} × ${a[i] / 100}`, pic: pie(a) }; },
+    () => { const p = W.pick([10, 20, 25, 40, 50, 5, 15]), tot = W.pick([200, 400, 600, 1000]), n = tot * p / 100;
+      return { q: `喜歡籃球的有 <b>${n}</b> 人，佔全部的 <b>${p}%</b>。全部有幾人？`, ans: tot, unit: "人", hint: `翻過來：全部 = 部分 ÷ 百分率 = ${n} ÷ ${p / 100}`, pic: pie([p, 100 - p]) }; },
+    () => { const a = split(), tot = W.pick([200, 400, 500, 1000]); const [x, y] = [0, 1]; const d = Math.abs(a[x] - a[y]) * tot / 100;
+      return { q: `全部 ${tot} 人，A 佔 ${a[x]}%、B 佔 ${a[y]}%，A 和 B 差幾人？`, ans: d, unit: "人", hint: `差 ${Math.abs(a[x] - a[y])}%，${tot} × ${Math.abs(a[x] - a[y]) / 100}`, pic: pie(a) }; },
+  ] });
+</script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>圓形百分圖</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+<style>
+  .cats { display: grid; gap: 8px; margin-top: 12px; }
+  .cat { display: flex; align-items: center; gap: 10px; font-weight: 700; }
+  .cat i { width: 18px; height: 18px; border-radius: 4px; display: inline-block; border: 1.5px solid var(--ink); }
+  .cat .v { min-width: 52px; text-align: right; }
+</style>
+</head>
+<body data-seq="6b-u4" data-page="6b-u4/01">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-word">名詞</span>
+  <h1>圓形百分圖</h1>
+  <p class="lead">整個圓是全部（100%），每一塊披薩是一種，一眼就看出誰佔多少。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>全班最喜歡的運動</h2>
+    <div class="stage"><svg id="g" viewBox="0 0 400 260"></svg></div>
+    <div class="cats" id="cats"></div>
+    <p class="hint">👉 調整前三種，最後一種會自動補到 100%。</p>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>認識圓形百分圖</h2>
+    <div class="steps">
+      <div class="step"><p>① <b>整個圓 = 全部 = 100%</b>。</p></div>
+      <div class="step"><p>② 每一塊扇形代表一種，<b>越大塊，佔的百分率越多</b>。</p></div>
+      <div class="step"><p>③ 所有的百分率<b>加起來一定是 100%</b>。</p></div>
+      <div class="step"><p>④ 下面那條叫<b>長條百分圖</b>（帶狀圖）：把整條看成 100%，意思一樣，只是畫成長條。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula word">
+    <div class="label">名詞</div>
+    <div class="big" style="font-size:1.3rem">圓形百分圖：整個圓 = 100%，看每一部分佔全部的多少</div>
+    <div class="sub">全部加起來 = 100%</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中叫做「<b>圓餅圖</b>」，會學怎麼從資料自己畫出來，也會比較不同統計圖的優缺點。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  const NAMES = ["躲避球", "跳繩", "籃球", "游泳"];
+  let v = [35, 25, 20];
+  function parts() { const last = 100 - v.reduce((a, b) => a + b, 0); return [...v, last].map((x, i) => ({ v: x, c: W.COLORS[i], t: NAMES[i] })); }
+  function draw() {
+    const P = parts();
+    let s = W.pie(110, 110, 95, P);
+    P.forEach((p, i) => s += `<rect x="230" y="${30 + i * 32}" width="18" height="18" fill="${p.c}" stroke="var(--ink)"/><text x="256" y="${44 + i * 32}" font-size="14">${p.t} ${p.v}%</text>`);
+    // 長條百分圖
+    let x = 20;
+    P.forEach(p => { const w = 360 * p.v / 100; if (w > 0) s += `<rect x="${x}" y="225" width="${w}" height="24" fill="${p.c}" stroke="var(--ink)" stroke-width="1.2"/>`; if (p.v >= 8) s += `<text x="${x + w / 2}" y="242" text-anchor="middle" font-size="11" style="fill:#2b2a33">${p.v}%</text>`; x += w; });
+    s += `<text x="230" y="170" font-size="13" style="fill:var(--muted)">加起來 = ${P.reduce((a, p) => a + p.v, 0)}%</text>`;
+    document.getElementById("g").innerHTML = s;
+    document.getElementById("cats").innerHTML = P.map((p, i) => `<div class="cat"><i style="background:${p.c}"></i>${p.t}${i < 3 ? `<input type="range" min="0" max="80" step="5" value="${p.v}" data-i="${i}">` : `<span style="color:var(--muted);font-size:.9rem">（自動補）</span>`}<span class="v">${p.v}%</span></div>`).join("");
+    document.querySelectorAll("[data-i]").forEach(r => r.addEventListener("input", () => {
+      const i = +r.dataset.i, others = v.reduce((a, b, j) => a + (j === i ? 0 : b), 0);
+      v[i] = Math.min(+r.value, 100 - others); draw();
+    }));
+  }
+  draw();
+
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { const a = W.rand(2, 8) * 5, b = W.rand(2, 8) * 5, c = W.rand(1, 6) * 5, d = 100 - a - b - c; if (d <= 0) return { q: "整個圓形百分圖代表百分之幾？", ans: 100, unit: "%", hint: "全部 = 100%", pic: W.pie(70, 75, 60, [{ v: 50, c: W.COLORS[0] }, { v: 50, c: W.COLORS[1] }]) };
+      return { q: `圓形圖中，三種分別佔 ${a}%、${b}%、${c}%，剩下一種佔百分之幾？`, ans: d, unit: "%", hint: `100 − ${a} − ${b} − ${c}`, pic: W.pie(75, 75, 62, [a, b, c, d].map((x, i) => ({ v: x, c: W.COLORS[i] })), { text: p => (p.v === d ? "?" : p.v + "%") }) }; },
+    () => { let all; do { all = [W.rand(1, 8) * 5, W.rand(1, 8) * 5, W.rand(1, 8) * 5]; all.push(100 - all[0] - all[1] - all[2]); } while (all[3] <= 0 || new Set(all).size < 4);
+      const names = ["蘋果", "香蕉", "芭樂", "西瓜"], m = all.indexOf(Math.max(...all));
+      return { q: "哪一種水果最多人喜歡？", choices: names, ans: m, hint: "找最大塊的扇形", pic: W.pie(75, 75, 62, all.map((x, i) => ({ v: x, c: W.COLORS[i] })), { labels: false }) + names.map((n, i) => `<rect x="150" y="${30 + i * 26}" width="14" height="14" fill="${W.COLORS[i]}" stroke="var(--ink)"/><text x="168" y="${42 + i * 26}" font-size="12">${n}</text>`).join("") }; },
+  ] });
+</script>
+</body>
+</html>
