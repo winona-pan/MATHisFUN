@@ -193,6 +193,18 @@
         { path: "6a-u5/05", t: "答案變大還是變小" },
       ],
     },
+    "6a-u6": {
+      name: "六上 第 6 單元・兩量關係與比",
+      pages: [
+        { path: "review/ratio", t: "比與比值", pre: true },
+        { path: "review/tables", t: "用表格整理數量", pre: true },
+        { path: "6a-u6/01", t: "用相等的比求 □" },
+        { path: "6a-u6/02", t: "按比例分配" },
+        { path: "6a-u6/03", t: "兩個量一起變" },
+        { path: "6a-u6/04", t: "正比" },
+        { path: "6a-u6/05", t: "正比的關係式" },
+      ],
+    },
   };
 
   const body = document.body;

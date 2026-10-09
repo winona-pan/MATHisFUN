@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>按比例分配</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u6" data-page="6a-u6/02">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-learn">學會方法</span>
+  <h1>按比例分配</h1>
+  <p class="lead">哥哥和弟弟照 3 : 2 分 40 顆糖，各分到幾顆？先切成「份」！</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>切成份</h2>
+    <div class="stage"><svg id="g" viewBox="0 0 400 180"></svg></div>
+    <div class="controls">
+      <label>總共 <input type="range" id="t" min="10" max="60" step="5" value="40"> <b id="tv"></b> 顆</label>
+      <label>哥哥 <input type="range" id="a" min="1" max="5" value="3"> : 弟弟 <input type="range" id="b" min="1" max="5" value="2"></label>
+    </div>
+    <div class="calc" id="calc" style="font-size:1.15rem"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>步驟</h2>
+    <div class="steps">
+      <div class="step"><p>① 3 : 2 → 一共分成 3 + 2 = <b>5 份</b>。</p></div>
+      <div class="step"><p>② 一份 = 40 ÷ 5 = <b>8 顆</b>。</p></div>
+      <div class="step"><p>③ 哥哥 3 份 = 3 × 8 = <b>24 顆</b>，弟弟 2 份 = 2 × 8 = <b>16 顆</b>。</p></div>
+      <div class="step"><p>④ 驗算：24 + 16 = 40 ✓，24 : 16 = 3 : 2 ✓</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula">
+    <div class="label">方法</div>
+    <div class="big" style="font-size:1.3rem">一份 = 總數 ÷ (a + b)</div>
+    <div class="sub">甲 = 一份 × a；乙 = 一份 × b</div>
+  </div>
+
+  <div class="warn"><span class="ic">💡</span><p>反過來：知道哥哥分到 24 顆（3 份），一份 = 24 ÷ 3 = 8，總數 = 8 × 5 = 40。</p></div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中設一份為 x：哥哥 3x、弟弟 2x，<code>3x + 2x = 40</code> → <code>x = 8</code>。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script src="../assets/gens.js"></script>
+<script>
+  const T = document.getElementById("t"), A = document.getElementById("a"), B = document.getElementById("b");
+  function draw() {
+    let t = +T.value; const a = +A.value, b = +B.value, n = a + b;
+    if (t % n) { t = Math.max(n, Math.round(t / n) * n); T.value = t; }
+    const one = t / n, W0 = 360, u = W0 / n;
+    let s = "";
+    for (let i = 0; i < n; i++) s += `<rect x="${20 + i * u}" y="40" width="${u}" height="44" fill="${i < a ? "var(--blue)" : "var(--orange)"}" fill-opacity=".7" stroke="var(--ink)" stroke-width="1.5"/><text x="${20 + i * u + u / 2 - 8}" y="68" font-size="14">${one}</text>`;
+    s += `<text x="20" y="30" font-size="14">${t} 顆分成 ${n} 份，每份 ${one} 顆</text>`;
+    s += `<path d="M22 92 q0 10 8 10 L${20 + a * u - 10} 102 q8 0 8 -10" fill="none" stroke="var(--blue)" stroke-width="2.5"/><text x="${20 + a * u / 2 - 24}" y="126" font-size="14" style="fill:var(--blue)">哥哥 ${a * one}</text>`;
+    s += `<path d="M${22 + a * u} 92 q0 10 8 10 L${20 + n * u - 10} 102 q8 0 8 -10" fill="none" stroke="var(--orange)" stroke-width="2.5"/><text x="${20 + a * u + b * u / 2 - 24}" y="126" font-size="14" style="fill:var(--orange)">弟弟 ${b * one}</text>`;
+    document.getElementById("g").innerHTML = s;
+    document.getElementById("tv").textContent = t;
+    document.getElementById("calc").innerHTML = `<span class="row">一份 = ${t} ÷ (${a} + ${b}) = ${one}</span><span class="row">哥哥 = ${one} × ${a} = <b>${a * one}</b>，弟弟 = ${one} × ${b} = <b>${b * one}</b></span>`;
+  }
+  [T, A, B].forEach(x => x.addEventListener("input", draw)); draw();
+
+  W.practice(document.getElementById("prac"), { gens: [G.ratio.share, () => { const a = W.rand(1, 5), b = W.rand(1, 5), k = W.rand(2, 12); return { q: `甲 : 乙 = ${a} : ${b}，甲分到 ${a * k} 元，兩人一共有多少元？`, ans: (a + b) * k, unit: "元", hint: `一份 = ${a * k} ÷ ${a} = ${k}，共 ${a + b} 份`, pic: "" }; }] });
+</script>
+</body>
+</html>

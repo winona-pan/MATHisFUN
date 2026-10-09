@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>兩個量一起變</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+<style>
+  table.t { border-collapse: collapse; width: 100%; font-weight: 900; text-align: center; margin-top: 10px; }
+  table.t td, table.t th { border: 2px solid var(--line); padding: 5px 3px; }
+  table.t th { background: var(--bg); color: var(--muted); font-size: .85rem; }
+</style>
+</head>
+<body data-seq="6a-u6" data-page="6a-u6/03">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-learn">學會方法</span>
+  <h1>兩個量一起變</h1>
+  <p class="lead">一個量變了，另一個怎麼變？有時候「和」不變，有時候「差」不變，有時候「比值」不變。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>四種關係</h2>
+    <div class="controls" style="margin-top:0" id="tabs"></div>
+    <p id="story" style="margin:10px 0 0"></p>
+    <table class="t" id="tb"></table>
+    <div class="stage" style="margin-top:12px"><svg id="g" viewBox="0 0 400 220"></svg></div>
+    <div class="work" id="w"></div>
+  </section>
+
+  <div class="formula word">
+    <div class="label">記起來</div>
+    <div class="big" style="font-size:1.2rem;line-height:1.9">和不變：x + y 一樣　差不變：y − x 一樣<br>積不變：x × y 一樣　商（比值）不變：y ÷ x 一樣 → 正比</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中會學：比值不變是<b>正比</b>（圖是一條穿過原點的直線），積不變是<b>反比</b>（圖是彎彎的曲線）。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">2</span>一直練：是哪一種？</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  const K = [
+    { n: "和不變", story: "姊妹共有 12 顆糖，姊姊拿 x 顆，妹妹拿 y 顆。", xs: [1, 2, 3, 4, 5, 6, 8, 10], f: x => 12 - x, rule: "x + y = 12（永遠一樣）", xl: "姊姊", yl: "妹妹" },
+    { n: "差不變", story: "哥哥比我大 3 歲：我 x 歲，哥哥 y 歲。", xs: [1, 2, 3, 4, 5, 6, 8, 10], f: x => x + 3, rule: "y − x = 3（永遠一樣）", xl: "我", yl: "哥哥" },
+    { n: "積不變", story: "長方形面積是 12：長 x、寬 y。", xs: [1, 2, 3, 4, 6, 12], f: x => 12 / x, rule: "x × y = 12（永遠一樣）", xl: "長", yl: "寬" },
+    { n: "比值不變", story: "一枝筆 3 元：買 x 枝，付 y 元。", xs: [1, 2, 3, 4, 5, 6], f: x => 3 * x, rule: "y ÷ x = 3（永遠一樣）→ 正比", xl: "枝數", yl: "元" },
+  ];
+  let ki = 0;
+  function draw() {
+    const k = K[ki], ys = k.xs.map(k.f);
+    document.getElementById("story").textContent = k.story;
+    document.getElementById("tb").innerHTML = `<tr><th>${k.xl}（x）</th>${k.xs.map(x => `<td>${x}</td>`).join("")}</tr><tr><th>${k.yl}（y）</th>${ys.map(y => `<td>${W.num(y)}</td>`).join("")}</tr>`;
+    const X0 = 40, Y0 = 200, maxX = Math.max(...k.xs) + 1, maxY = Math.max(...ys) + 2, sx = 340 / maxX, sy = 180 / maxY;
+    let s = `<line x1="${X0}" y1="${Y0}" x2="${X0 + 340}" y2="${Y0}" class="stroke"/><line x1="${X0}" y1="${Y0}" x2="${X0}" y2="10" class="stroke"/><text x="${X0 + 330}" y="${Y0 + 16}" font-size="12">x</text><text x="${X0 - 16}" y="18" font-size="12">y</text>`;
+    const pts = k.xs.map((x, i) => [X0 + x * sx, Y0 - ys[i] * sy]);
+    s += `<polyline points="${pts.map(p => p.join(",")).join(" ")}" fill="none" stroke="var(--red)" stroke-width="2.5" stroke-dasharray="${ki === 3 ? "" : "5 4"}"/>`;
+    if (ki === 3) s += `<line x1="${X0}" y1="${Y0}" x2="${pts[0][0]}" y2="${pts[0][1]}" stroke="var(--red)" stroke-width="2.5"/>`;
+    pts.forEach(([x, y]) => s += `<circle cx="${x}" cy="${y}" r="5" fill="var(--blue)"/>`);
+    document.getElementById("g").innerHTML = s;
+    document.getElementById("w").innerHTML = `規律：<b>${k.rule}</b>`;
+    document.querySelectorAll("[data-k]").forEach(b => b.setAttribute("aria-pressed", +b.dataset.k === ki));
+  }
+  document.getElementById("tabs").innerHTML = K.map((k, i) => `<button class="btn" data-k="${i}">${k.n}</button>`).join("");
+  document.querySelectorAll("[data-k]").forEach(b => b.addEventListener("click", () => { ki = +b.dataset.k; draw(); }));
+  draw();
+
+  const Q = [
+    ["媽媽給的零用錢 100 元，花掉 x 元，剩下 y 元", 0], ["兩人一共有 30 張卡片，甲有 x 張、乙有 y 張", 0],
+    ["我和爸爸的年齡：我 x 歲、爸爸 y 歲", 1], ["比賽時小明一直領先小華 5 分", 1],
+    ["24 顆糖平分給 x 人，每人 y 顆", 2], ["面積 36 的長方形，長 x、寬 y", 2],
+    ["每公斤 40 元的米，買 x 公斤付 y 元", 3], ["汽車時速 60 公里，開 x 小時走 y 公里", 3],
+  ];
+  W.practice(document.getElementById("prac"), { gens: [() => { const [t, a] = W.pick(Q); return { q: `「${t}」是哪一種關係？`, choices: K.map(k => k.n), ans: a, hint: "看 x 和 y：加起來？相減？相乘？相除？哪一個永遠一樣", pic: "" }; }] });
+</script>
+</body>
+</html>

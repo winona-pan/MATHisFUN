@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>用相等的比求 □</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u6" data-page="6a-u6/01">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-learn">學會方法</span>
+  <h1>用相等的比求 □</h1>
+  <p class="lead">做蛋糕：2 杯麵粉配 3 顆蛋。用了 12 顆蛋，要幾杯麵粉？</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>兩種方法</h2>
+    <div class="stage"><svg id="g" viewBox="0 0 400 200"></svg></div>
+    <div class="controls">
+      <button class="btn" data-m="k" aria-pressed="true">方法一：看倍數</button>
+      <button class="btn" data-m="v">方法二：看比值</button>
+    </div>
+    <div class="calc" id="calc" style="font-size:1.15rem"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>步驟</h2>
+    <div class="steps">
+      <div class="step"><p>① 照題目順序寫比：麵粉 : 蛋 = 2 : 3 = □ : 12。</p></div>
+      <div class="step"><p>② <b>看倍數</b>：3 → 12 是 × 4，所以 2 也 × 4 → □ = <b>8</b>。</p></div>
+      <div class="step"><p>③ <b>看比值</b>：2 ÷ 3 = □ ÷ 12 → □ = 12 × ⅔ = <b>8</b>。（倍數不是整數時好用）</p></div>
+      <div class="step"><p>④ 驗算：8 : 12 = 2 : 3 ✓（同除以 4）</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula">
+    <div class="label">方法</div>
+    <div class="big" style="font-size:1.3rem">a : b = □ : d → □ = a × (d ÷ b)</div>
+    <div class="sub">找出後項變了幾倍，前項也變一樣的倍數</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中叫「<b>比例式</b>」，用交叉相乘：<code>2 : 3 = x : 12</code> → <code>3x = 2 × 12</code> → <code>x = 8</code>。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script src="../assets/gens.js"></script>
+<script>
+  let m = "k";
+  function draw() {
+    let s = "";
+    const row = (y, a, b, lab) => { let o = `<text x="10" y="${y + 22}" font-size="13">${lab}</text>`; for (let i = 0; i < a; i++) o += `<rect x="${70 + i * 18}" y="${y}" width="14" height="30" rx="3" fill="#f1e4c8" stroke="var(--ink)"/>`; for (let i = 0; i < b; i++) o += `<circle cx="${70 + (a + 1) * 18 + i * 12 + 6}" cy="${y + 15}" r="5.5" fill="#fff4d6" stroke="var(--ink)"/>`; return o; };
+    s += row(20, 2, 3, "1 份");
+    s += row(80, 8, 12, "4 份");
+    s += `<text x="70" y="150" font-size="13">杯子 = 麵粉　圓圈 = 蛋</text><text x="70" y="180" font-size="15" style="fill:var(--red)">蛋 3 → 12 是 ×4，麵粉也 ×4</text>`;
+    document.getElementById("g").innerHTML = s;
+    document.getElementById("calc").innerHTML = m === "k"
+      ? `<span class="row">2 : 3 = □ : 12</span><span class="row">3 × <b>4</b> = 12 → 2 × <b>4</b> = <b>8</b></span>`
+      : `<span class="row">比值相等：2 ÷ 3 = □ ÷ 12</span><span class="row">□ = 12 × ⅔ = <b>8</b></span>`;
+    document.querySelectorAll("[data-m]").forEach(b => b.setAttribute("aria-pressed", b.dataset.m === m));
+  }
+  document.querySelectorAll("[data-m]").forEach(b => b.addEventListener("click", () => { m = b.dataset.m; draw(); }));
+  draw();
+
+  W.practice(document.getElementById("prac"), { gens: [G.ratio.equal, () => { const a = W.rand(1, 5), b = W.rand(2, 6), k = W.rand(2, 8); return { q: `果汁 : 水 = ${a} : ${b}。用了 ${b * k} 杯水，要幾杯果汁？`, ans: a * k, unit: "杯", hint: `${b} → ${b * k} 是 × ${k}`, pic: "" }; },
+    () => { const a = W.rand(2, 6), b = W.rand(2, 6), k = W.rand(2, 8); return { q: `地圖上 ${a} 公分代表 ${b} 公里。地圖上 ${a * k} 公分代表幾公里？`, ans: b * k, unit: "公里", hint: `${a} → ${a * k} 是 × ${k}`, pic: "" }; }] });
+</script>
+</body>
+</html>

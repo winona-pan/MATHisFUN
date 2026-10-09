@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>正比</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+<style>
+  table.t { border-collapse: collapse; width: 100%; font-weight: 900; text-align: center; margin-top: 10px; }
+  table.t td, table.t th { border: 2px solid var(--line); padding: 5px 3px; }
+  table.t th { background: var(--bg); color: var(--muted); font-size: .85rem; }
+  table.t td.hl { background: var(--yellow); color: #2b2a33; }
+</style>
+</head>
+<body data-seq="6a-u6" data-page="6a-u6/04">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-word">名詞</span>
+  <h1>正比</h1>
+  <p class="lead">x 變成 2 倍，y 也變成 2 倍；x 變成 3 倍，y 也變成 3 倍。這樣叫 <b>y 和 x 成正比</b>。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>一起變大幾倍</h2>
+    <p style="margin:0">一盒蛋 6 顆：買 x 盒，共 y 顆。</p>
+    <div class="stage" style="margin-top:8px"><svg id="eggs" viewBox="0 0 400 120"></svg></div>
+    <div class="controls"><label>買 <input type="range" id="x" min="1" max="6" value="1"> <b id="xv"></b> 盒</label></div>
+    <table class="t" id="tb"></table>
+    <div class="work" id="w"></div>
+  </section>
+
+  <section class="box">
+    <h2><span class="n">2</span>正比的圖：一條穿過 0 的直線</h2>
+    <div class="stage"><svg id="g" viewBox="0 0 400 230"></svg></div>
+    <div class="controls">
+      <button class="btn" data-k="0" aria-pressed="true">正比 y = 6 × x</button>
+      <button class="btn" data-k="1">不是正比 y = x + 6</button>
+    </div>
+    <div class="work" id="w2"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">3</span>怎麼判斷是不是正比？</h2>
+    <div class="steps">
+      <div class="step"><p>① 把 x 和 y 排成表格。</p></div>
+      <div class="step"><p>② 每一欄算 <b>y ÷ x</b>：6 ÷ 1 = 6、12 ÷ 2 = 6、18 ÷ 3 = 6……</p></div>
+      <div class="step"><p>③ 每一欄都一樣（都是 6）→ <b>成正比</b>。有一欄不一樣 → 不是正比。</p></div>
+      <div class="step"><p>④ 小心：「一起變大」不一定是正比！年齡 x 歲、哥哥 x + 3 歲，1 → 2 是 2 倍，但 4 → 5 不是 2 倍。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula word">
+    <div class="label">定義</div>
+    <div class="big" style="font-size:1.3rem">y ÷ x 永遠一樣（不是 0）→ y 和 x 成正比</div>
+    <div class="sub">x 變成幾倍，y 也變成幾倍；圖是一條穿過 0 的直線</div>
+  </div>
+
+  <div class="warn"><span class="ic">⚠️</span><p>「和不變」「差不變」「積不變」都<b>不是</b>正比。只有「商（比值）不變」才是。</p></div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中寫成 <code>y = kx</code>（k ≠ 0），k 叫<b>比例常數</b>。圖形是座標平面上通過<b>原點 (0, 0)</b> 的直線。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">4</span>一直練：是不是正比？</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  const X = document.getElementById("x");
+  function draw1() {
+    const x = +X.value;
+    let s = "";
+    for (let b = 0; b < x; b++) {
+      const bx = 10 + b * 64;
+      s += `<rect x="${bx}" y="30" width="58" height="44" rx="6" fill="#f1e4c8" stroke="var(--ink)" stroke-width="1.5"/>`;
+      for (let i = 0; i < 6; i++) s += `<ellipse cx="${bx + 11 + (i % 3) * 18}" cy="${43 + Math.floor(i / 3) * 18}" rx="7" ry="8" fill="#fff4d6" stroke="var(--ink)"/>`;
+    }
+    s += `<text x="10" y="105" font-size="15">${x} 盒 × 6 = <tspan style="fill:var(--red)">${6 * x}</tspan> 顆</text>`;
+    document.getElementById("eggs").innerHTML = s;
+    document.getElementById("xv").textContent = x;
+    const xs = [1, 2, 3, 4, 5, 6];
+    document.getElementById("tb").innerHTML = `<tr><th>盒數 x</th>${xs.map(i => `<td class="${i === x ? "hl" : ""}">${i}</td>`).join("")}</tr><tr><th>顆數 y</th>${xs.map(i => `<td class="${i === x ? "hl" : ""}">${6 * i}</td>`).join("")}</tr><tr><th>y ÷ x</th>${xs.map(() => `<td>6</td>`).join("")}</tr>`;
+    document.getElementById("w").innerHTML = x === 1 ? "拉拉看：盒數變 2 倍、3 倍……" : `盒數 1 → ${x} 是 × ${x}，顆數 6 → ${6 * x} 也是 × ${x} ✓`;
+  }
+  X.addEventListener("input", draw1); draw1();
+
+  let k = 0;
+  function draw2() {
+    const f = k ? (x => x + 6) : (x => 6 * x);
+    const X0 = 40, Y0 = 205, sx = 52, sy = 5;
+    let s = `<line x1="${X0}" y1="${Y0}" x2="${X0 + 350}" y2="${Y0}" class="stroke"/><line x1="${X0}" y1="${Y0}" x2="${X0}" y2="10" class="stroke"/><text x="${X0 - 14}" y="${Y0 + 16}" font-size="12">0</text><text x="${X0 + 340}" y="${Y0 + 16}" font-size="12">x</text><text x="${X0 - 16}" y="18" font-size="12">y</text>`;
+    for (let i = 1; i <= 6; i++) s += `<text x="${X0 + i * sx - 4}" y="${Y0 + 16}" font-size="11">${i}</text>`;
+    s += `<line x1="${X0}" y1="${Y0 - f(0) * sy}" x2="${X0 + 6 * sx}" y2="${Y0 - f(6) * sy}" stroke="var(--red)" stroke-width="2.5"/>`;
+    for (let i = 0; i <= 6; i++) s += `<circle cx="${X0 + i * sx}" cy="${Y0 - f(i) * sy}" r="${i ? 5 : 7}" fill="${i ? "var(--blue)" : "var(--orange)"}"/>`;
+    document.getElementById("g").innerHTML = s;
+    document.getElementById("w2").innerHTML = k
+      ? "也是直線，但<b>沒有穿過 0</b>（x = 0 時 y = 6）。1 → 2 盒：7 → 8，不是 2 倍 → <b>不是正比</b>"
+      : "直線<b>穿過 0</b>（橘點）：買 0 盒就是 0 顆 → <b>正比</b>";
+    document.querySelectorAll("[data-k]").forEach(b => b.setAttribute("aria-pressed", +b.dataset.k === k));
+  }
+  document.querySelectorAll("[data-k]").forEach(b => b.addEventListener("click", () => { k = +b.dataset.k; draw2(); }));
+  draw2();
+
+  const Q = [
+    ["每公斤 40 元的米，買 x 公斤付 y 元", 0], ["汽車時速 60 公里，開 x 小時走 y 公里", 0], ["正方形邊長 x，周長 y", 0],
+    ["一本書 120 頁，已讀 x 頁，剩 y 頁", 1], ["我 x 歲，媽媽 y 歲", 1], ["面積 24 的長方形，長 x、寬 y", 1],
+    ["一包 8 片餅乾，買 x 包共 y 片", 0], ["30 元平分給 x 人，每人 y 元", 1], ["圓的直徑 x，圓周長 y", 0],
+  ];
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { const [t, a] = W.pick(Q); return { q: `「${t}」，y 和 x 成正比嗎？`, choices: ["是正比", "不是正比"], ans: a, hint: "算幾組 y ÷ x，看是不是都一樣", pic: "" }; },
+    () => { const k = W.rand(2, 9), x1 = W.rand(1, 5), m = W.rand(2, 4); return { q: `y 和 x 成正比。x = ${x1} 時 y = ${k * x1}，x 變成 ${x1 * m} 時 y = ?`, ans: k * x1 * m, hint: `x 變成 ${m} 倍，y 也變成 ${m} 倍`, pic: "" }; },
+  ] });
+</script>
+</body>
+</html>

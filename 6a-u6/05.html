@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>正比的關係式</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u6" data-page="6a-u6/05">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-formula">公式怎麼來</span>
+  <h1>正比的關係式</h1>
+  <p class="lead">正比的 y ÷ x 永遠是同一個數，叫它 <b>k</b>。這一句話可以寫成三個式子。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>換換看 k</h2>
+    <div class="stage"><svg id="g" viewBox="0 0 400 240"></svg></div>
+    <div class="controls">
+      <label>每枝 k = <input type="range" id="k" min="1" max="8" value="3"> <b id="kv"></b> 元</label>
+      <label>買 x = <input type="range" id="x" min="0" max="6" value="4"> <b id="xv"></b> 枝</label>
+    </div>
+    <div class="calc" id="calc" style="font-size:1.15rem"></div>
+  </section>
+
+  <section class="box">
+    <h2><span class="n">2</span>一個關係、三個式子</h2>
+    <div id="tri"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">3</span>式子怎麼來</h2>
+    <div class="steps">
+      <div class="step"><p>① 正比：每一組 y ÷ x 都一樣 → 寫成 <b>y ÷ x = k</b>（每枝的價錢）。</p></div>
+      <div class="step"><p>② 想想 12 ÷ 4 = 3 → 反過來 <b>12 = 3 × 4</b>。所以 y ÷ x = k 也可以寫成 <b>y = k × x</b>（總價 = 單價 × 枝數）。</p></div>
+      <div class="step"><p>③ 已知總價求枝數：12 = 3 × □ → □ = 12 ÷ 3 → <b>x = y ÷ k</b>。</p></div>
+      <div class="step"><p>④ 三個式子是同一件事，看要求誰就用哪一個！</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula">
+    <div class="label">公式</div>
+    <div class="big" style="font-size:1.4rem">y = k × x</div>
+    <div class="sub">k = y ÷ x　　x = y ÷ k</div>
+  </div>
+
+  <div class="warn"><span class="ic">💡</span><p>先找 k：「1 個是多少」就是 k。例如 5 公升油 200 元 → k = 200 ÷ 5 = 40 → 關係式 y = 40 × x。</p></div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中寫成 <code>y = kx</code>（乘號省略）。例：<code>y = 40x</code>，x = 3 時 <code>y = 120</code>；y = 200 時 <code>40x = 200</code>，<code>x = 5</code>。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">4</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  const K = document.getElementById("k"), XS = document.getElementById("x");
+  function draw() {
+    const k = +K.value, x = +XS.value;
+    const X0 = 40, Y0 = 215, sx = 52, sy = 200 / 50;
+    let s = `<line x1="${X0}" y1="${Y0}" x2="${X0 + 350}" y2="${Y0}" class="stroke"/><line x1="${X0}" y1="${Y0}" x2="${X0}" y2="8" class="stroke"/><text x="${X0 - 14}" y="${Y0 + 16}" font-size="12">0</text><text x="${X0 + 340}" y="${Y0 + 16}" font-size="12">x</text><text x="${X0 + 6}" y="18" font-size="12">y（元）</text>`;
+    for (let i = 1; i <= 6; i++) s += `<text x="${X0 + i * sx - 4}" y="${Y0 + 16}" font-size="11">${i}</text>`;
+    for (let v = 10; v <= 50; v += 10) s += `<line x1="${X0 - 4}" y1="${Y0 - v * sy}" x2="${X0 + 6 * sx}" y2="${Y0 - v * sy}" stroke="var(--line)" stroke-dasharray="3 4"/><text x="${X0 - 24}" y="${Y0 - v * sy + 4}" font-size="11">${v}</text>`;
+    s += `<line x1="${X0}" y1="${Y0}" x2="${X0 + 6 * sx}" y2="${Y0 - 6 * k * sy}" stroke="var(--red)" stroke-width="2.5"/>`;
+    const px = X0 + x * sx, py = Y0 - k * x * sy;
+    s += `<line x1="${px}" y1="${Y0}" x2="${px}" y2="${py}" stroke="var(--blue)" stroke-dasharray="4 3"/><line x1="${X0}" y1="${py}" x2="${px}" y2="${py}" stroke="var(--blue)" stroke-dasharray="4 3"/><circle cx="${px}" cy="${py}" r="6" fill="var(--blue)"/>`;
+    s += `<text x="${Math.min(px + 8, 320)}" y="${Math.max(py - 8, 24)}" font-size="14" style="fill:var(--blue)">(${x}, ${k * x})</text>`;
+    document.getElementById("g").innerHTML = s;
+    document.getElementById("kv").textContent = k; document.getElementById("xv").textContent = x;
+    document.getElementById("calc").innerHTML = `<span class="row">y = k × x = ${k} × ${x} = <b>${k * x}</b> 元</span>` + (x ? `<span class="row">反過來：k = ${k * x} ÷ ${x} = ${k}，x = ${k * x} ÷ ${k} = ${x}</span>` : `<span class="row">買 0 枝 → 0 元，直線從 0 出發</span>`);
+  }
+  [K, XS].forEach(e => e.addEventListener("input", draw)); draw();
+
+  W.tri(document.getElementById("tri"), { top: "y 總價", l: "k 單價", r: "x 枝數" });
+
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { const k = W.rand(2, 12), x = W.rand(2, 9); return { q: `y = ${k} × x，x = ${x} 時 y = ?`, ans: k * x, hint: `把 ${x} 放進 x：${k} × ${x}`, pic: "" }; },
+    () => { const k = W.rand(2, 12), x = W.rand(2, 9); return { q: `y = ${k} × x，y = ${k * x} 時 x = ?`, ans: x, hint: `x = y ÷ k = ${k * x} ÷ ${k}`, pic: "" }; },
+    () => { const k = W.rand(2, 15), x = W.rand(2, 8); return { q: `y 和 x 成正比，x = ${x} 時 y = ${k * x}。k（y ÷ x）= ?`, ans: k, hint: `k = ${k * x} ÷ ${x}`, pic: "" }; },
+    () => { const k = W.pick([20, 25, 30, 35, 40, 45]), x = W.rand(2, 6), x2 = W.rand(3, 9); return { q: `${x} 公升油 ${k * x} 元。油錢 y 和公升數 x 成正比，買 ${x2} 公升要幾元？`, ans: k * x2, unit: "元", hint: `先求 k = ${k * x} ÷ ${x} = ${k}，再 y = ${k} × ${x2}`, pic: "" }; },
+    () => { const k = W.rand(3, 9), x = W.rand(2, 6); return { q: `一枝筆 ${k} 元，y 元可以買 x 枝。關係式是哪一個？`, choices: [`y = ${k} × x`, `y = x + ${k}`, `y = x ÷ ${k}`], ans: 0, hint: "總價 = 單價 × 枝數", pic: "" }; },
+  ] });
+</script>
+</body>
+</html>
