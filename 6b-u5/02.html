@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>找出不變的量：年齡問題</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6b-u5" data-page="6b-u5/02">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-learn">學會方法</span>
+  <h1>找出不變的量：年齡問題</h1>
+  <p class="lead">每過一年，大家都大一歲，所以「差幾歲」永遠不會變！</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>時光機</h2>
+    <p style="margin:0 0 8px">今年小明 <b>8</b> 歲，爸爸 <b>36</b> 歲。</p>
+    <div class="stage"><svg id="g" viewBox="0 0 400 200"></svg></div>
+    <div class="controls"><label>過了 <input type="range" id="y" min="-7" max="30" value="0"> <b id="yv"></b> 年</label></div>
+    <div class="readout">
+      <div class="r"><small>小明</small><span id="c1"></span></div>
+      <div class="r"><small>爸爸</small><span id="c2"></span></div>
+      <div class="r" style="color:var(--red)"><small>相差</small><span id="c3"></span></div>
+      <div class="r" style="color:var(--blue)"><small>爸爸是小明的</small><span id="c4"></span></div>
+    </div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>解題步驟</h2>
+    <div class="steps">
+      <div class="step"><p>① 問題：幾年後爸爸是小明的 <b>3 倍</b>？</p></div>
+      <div class="step"><p>② 找<b>不變的量</b>：年齡差 36 − 8 = <b>28 歲</b>，永遠不變。</p></div>
+      <div class="step"><p>③ 畫圖：爸爸是小明的 3 倍 → 爸爸 = 3 段小明，比小明多 <b>2 段</b>。這 2 段 = 年齡差 28 → 1 段 = 28 ÷ 2 = <b>14</b>。</p></div>
+      <div class="step"><p>④ 那時小明 14 歲，今年 8 歲 → <b>14 − 8 = 6 年後</b>。（把滑桿拉到 6 驗算看看！）</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula">
+    <div class="label">方法</div>
+    <div class="big" style="font-size:1.3rem">年齡差不變</div>
+    <div class="big" style="font-size:1.3rem">大的是小的 k 倍時：小的 = 年齡差 ÷ (k − 1)</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中會設未知數：x 年後 <code>36 + x = 3 × (8 + x)</code>，解出 x = 6。畫線段圖是它的好幫手。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script src="../assets/gens.js"></script>
+<script>
+  const yIn = document.getElementById("y");
+  function draw() {
+    const y = +yIn.value, k = 8 + y, d = 36 + y, u = 4.8, x0 = 50;
+    let s = `<text x="4" y="62" font-size="14">小明</text><text x="4" y="132" font-size="14">爸爸</text>`;
+    s += `<rect x="${x0}" y="44" width="${k * u}" height="28" fill="var(--yellow)" stroke="var(--ink)" stroke-width="1.5"/><text x="${x0 + k * u + 6}" y="63" font-size="13">${k} 歲</text>`;
+    s += `<rect x="${x0}" y="114" width="${k * u}" height="28" fill="var(--blue)" fill-opacity=".7" stroke="var(--ink)" stroke-width="1.5"/>`;
+    s += `<rect x="${x0 + k * u}" y="114" width="${28 * u}" height="28" fill="var(--red)" fill-opacity=".7" stroke="var(--ink)" stroke-width="1.5"/>`;
+    s += `<text x="${x0 + k * u + 28 * u / 2 - 22}" y="133" font-size="13" style="fill:#fff">差 28</text><text x="${x0 + d * u - 30}" y="160" font-size="13">${d} 歲</text>`;
+    if (k > 0 && d % k === 0) for (let i = 1; i < d / k; i++) s += `<line x1="${x0 + i * k * u}" y1="110" x2="${x0 + i * k * u}" y2="146" stroke="var(--ink)" stroke-width="2" stroke-dasharray="4 3"/>`;
+    s += `<text x="${x0}" y="190" font-size="13" style="fill:var(--muted)">紅色那段（年齡差）怎麼拉都一樣長！</text>`;
+    document.getElementById("g").innerHTML = s;
+    document.getElementById("yv").textContent = y < 0 ? `${y}（${-y} 年前）` : y;
+    document.getElementById("c1").textContent = k + " 歲"; document.getElementById("c2").textContent = d + " 歲";
+    document.getElementById("c3").textContent = (d - k) + " 歲";
+    document.getElementById("c4").textContent = d % k === 0 ? `${d / k} 倍 🎯` : `約 ${(d / k).toFixed(1)} 倍`;
+  }
+  yIn.addEventListener("input", draw); draw();
+
+  W.practice(document.getElementById("prac"), { gens: [G.solve.age, () => {
+    const a = W.rand(5, 12), d = W.rand(2, 6), y = W.rand(3, 15);
+    return { q: `今年姊姊 ${a + d} 歲、妹妹 ${a} 歲。<b>${y} 年後</b>，兩人的年齡合起來是幾歲？`, ans: 2 * a + d + 2 * y, unit: "歲", hint: `每個人都加 ${y} 歲：${a + d + y} + ${a + y}`, pic: `<text x="10" y="50" font-size="14">每過 1 年</text><text x="10" y="84" font-size="14">兩人都 + 1 歲</text><text x="10" y="118" font-size="14" style="fill:var(--red)">合起來 + 2 歲</text>` }; }] });
+</script>
+</body>
+</html>

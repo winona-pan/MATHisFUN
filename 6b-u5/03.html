@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>倒推法：故事題</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+<style>
+  .tl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-weight: 900; }
+  .tl .s { padding: 8px 12px; border-radius: 12px; border: 3px solid var(--line); background: var(--card); min-width: 60px; text-align: center; }
+  .tl .s.q { border-color: var(--red); color: var(--red); }
+  .tl .s.end { border-color: var(--ink); background: var(--yellow); color: #2b2a33; }
+  .tl .s.got { border-color: var(--green); color: var(--green); }
+  .tl .a { color: var(--blue); font-size: .95rem; }
+  .tl .a.back { color: var(--red); }
+</style>
+</head>
+<body data-seq="6b-u5" data-page="6b-u5/03">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-learn">學會方法</span>
+  <h1>倒推法：故事題</h1>
+  <p class="lead">把故事畫成一條「時間線」，再從最後倒著走回去。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>小美的零用錢</h2>
+    <div class="controls" style="margin-top:0" id="tabs"></div>
+    <p id="story" style="margin:10px 0"></p>
+    <div class="tl" id="fwd"></div>
+    <div class="tl" id="bwd" style="margin-top:14px"></div>
+    <div class="controls"><button class="btn primary" id="back">倒推一步 ←</button><button class="btn" id="again">重來</button></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>解題步驟</h2>
+    <div class="steps">
+      <div class="step"><p>① 把故事照<b>發生的順序</b>畫成時間線，每一步寫上「做了什麼」。</p></div>
+      <div class="step"><p>② 從<b>最後的結果</b>開始，倒著走。</p></div>
+      <div class="step"><p>③ 每一步做<b>相反</b>的事：花掉 → 加回來；拿到 → 減掉；用掉一半 → × 2；剩下 ⅓（用掉 ⅔）→ × 3。</p></div>
+      <div class="step"><p>④ 算出答案後，<b>順著再算一次</b>驗算。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula">
+    <div class="label">口訣</div>
+    <div class="big">倒著走，做相反的事</div>
+    <div class="sub">花掉 ⇄ 加回來　用掉一半 ⇄ × 2</div>
+  </div>
+
+  <div class="warn"><span class="ic">⚠️</span><p>「用掉 ⅓」剩下的是 <b>⅔</b>，倒推要 ÷ ⅔（= × 3/2），不是 × 3！先想清楚「<b>剩下</b>幾分之幾」。</p></div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中解方程式 <code>(x ÷ 2 − 20) = 30</code> 時，也是從外面一層一層拆回去，就是倒推法。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script src="../assets/gens.js"></script>
+<script>
+  const ST = [
+    { name: "花掉一半", story: "小美有一些錢，買書用掉<b>一半</b>，再買文具花了 <b>30</b> 元，最後剩 <b>50</b> 元。原來有多少？",
+      steps: [["用掉一半", "÷ 2", "× 2"], ["花 30 元", "− 30", "+ 30"]], start: 160 },
+    { name: "媽媽給錢", story: "小華有一些錢，媽媽又給他 <b>40</b> 元，他把全部的錢平分給 <b>3</b> 個弟妹，每人拿到 <b>30</b> 元。原來有多少？",
+      steps: [["媽媽給 40", "+ 40", "− 40"], ["平分給 3 人", "÷ 3", "× 3"]], start: 50 },
+    { name: "剩下 ⅓", story: "一盒糖果，第一天吃掉 <b>⅔</b>，第二天吃了 <b>5</b> 顆，還剩 <b>7</b> 顆。原來有幾顆？",
+      steps: [["吃掉 ⅔（剩 ⅓）", "÷ 3", "× 3"], ["吃 5 顆", "− 5", "+ 5"]], start: 36 },
+  ];
+  const ap = (v, op) => { const [o, n] = op.split(" "); return o === "+" ? v + +n : o === "−" ? v - +n : o === "×" ? v * +n : v / +n; };
+  let si = 0, k = 0;
+  function draw() {
+    const S = ST[si];
+    const vals = [S.start]; S.steps.forEach(st => vals.push(ap(vals[vals.length - 1], st[1])));
+    document.getElementById("story").innerHTML = S.story;
+    let f = `<span class="s q">原來 ?</span>`;
+    S.steps.forEach((st, i) => f += `<span class="a">→ ${st[0]}（${st[1]}）→</span><span class="s ${i === S.steps.length - 1 ? "end" : ""}">${i === S.steps.length - 1 ? vals[i + 1] : "□"}</span>`);
+    document.getElementById("fwd").innerHTML = f;
+    let b = `<span style="font-size:.9rem;color:var(--muted)">倒推：</span><span class="s end">${vals[vals.length - 1]}</span>`;
+    for (let i = S.steps.length - 1; i >= S.steps.length - k; i--) b += `<span class="a back">→ ${S.steps[i][2]} →</span><span class="s ${i === 0 ? "got" : ""}">${vals[i]}</span>`;
+    if (k === S.steps.length) b += `<span style="color:var(--green)">🎉 原來是 ${S.start}</span>`;
+    document.getElementById("bwd").innerHTML = b;
+    document.getElementById("back").disabled = k >= S.steps.length;
+    document.querySelectorAll("[data-s]").forEach(x => x.setAttribute("aria-pressed", +x.dataset.s === si));
+  }
+  document.getElementById("tabs").innerHTML = ST.map((s, i) => `<button class="btn" data-s="${i}">${s.name}</button>`).join("");
+  document.querySelectorAll("[data-s]").forEach(x => x.addEventListener("click", () => { si = +x.dataset.s; k = 0; draw(); }));
+  document.getElementById("back").addEventListener("click", () => { k++; draw(); });
+  document.getElementById("again").addEventListener("click", () => { k = 0; draw(); });
+  draw();
+
+  const T = (a, b) => `<text x="10" y="56" font-size="14">${a}</text><text x="10" y="96" font-size="14" style="fill:var(--red)">${b}</text>`;
+  W.practice(document.getElementById("prac"), { gens: [
+    G.solve.backward,
+    () => { const each = W.rand(5, 30), n = W.pick([2, 3, 4]), give = W.rand(1, 5) * 10; const start = each * n - give;
+      if (start <= 0) return G.solve.backward();
+      return { q: `小強有一些錢，爸爸再給他 ${give} 元，他把全部平分給 ${n} 個人，每人 ${each} 元。小強原來有多少？`, ans: start, unit: "元", hint: `倒推：${each} × ${n} = ${each * n}，再 − ${give}`, pic: T(`? → +${give} → ÷${n} → ${each}`, `倒推：×${n}，−${give}`) }; },
+    () => { const left = W.rand(3, 12), eat = W.rand(2, 8), start = (left + eat) * 3;
+      return { q: `一盒餅乾，第一天吃掉 ⅔，第二天吃了 ${eat} 片，還剩 ${left} 片。原來有幾片？`, ans: start, unit: "片", hint: `倒推：${left} + ${eat} = ${left + eat}，那是剩下的 ⅓ → × 3`, pic: T(`吃掉 ⅔ → 剩 ⅓`, `倒推：+${eat}，×3`) }; },
+  ] });
+</script>
+</body>
+</html>

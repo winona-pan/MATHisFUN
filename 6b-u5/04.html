@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>解題綜合練習</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6b-u5" data-page="6b-u5/04">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-learn">總整理</span>
+  <h1>解題綜合練習</h1>
+  <p class="lead">六年級學過的解題方法，混在一起練：先想「這是哪一種題目」！</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>解題工具箱</h2>
+    <div id="cards"></div>
+  </section>
+
+  <section class="box">
+    <h2><span class="n">2</span>綜合練習：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script src="../assets/gens.js"></script>
+<script>
+  const T = (a, b) => `<text x="12" y="44" font-size="14">${a}</text><text x="12" y="76" font-size="14" style="fill:var(--red)">${b}</text>`;
+  W.cards(document.getElementById("cards"), [
+    { t: "線段圖（和差）", pic: `<rect x="20" y="20" width="120" height="16" fill="var(--blue)" stroke="var(--ink)"/><rect x="20" y="56" width="80" height="16" fill="var(--yellow)" stroke="var(--ink)"/><text x="104" y="70" font-size="12" style="fill:var(--red)">差</text>`, def: "知道和、差，求兩個數。", how: "小 = (和 − 差) ÷ 2<br>大 = (和 + 差) ÷ 2", link: "../6a-u9/01.html" },
+    { t: "假設法（雞兔）", pic: T("先當全部是雞", "差的腳 ÷ 2 = 兔"), def: "兩種東西混在一起。", how: "(真的 − 假設的) ÷ 每個差多少", link: "../6a-u9/03.html" },
+    { t: "倒推法", pic: T("? → … → 結果", "倒著走，做相反的事"), def: "知道最後結果，求一開始。", how: "+ ⇄ −　× ⇄ ÷", link: "03.html" },
+    { t: "排隊・種樹", pic: T("前 + 後 + 1", "兩端都種：間隔 + 1"), def: "注意要不要 +1、−1。", how: "畫出來數一數", link: "01.html" },
+    { t: "年齡問題", pic: T("年齡差不變", "小 = 差 ÷ (倍數 − 1)"), def: "找出不會變的量。", how: "年齡差永遠一樣", link: "02.html" },
+  ]);
+  W.practice(document.getElementById("prac"), { gens: Object.values(G.solve) });
+</script>
+</body>
+</html>

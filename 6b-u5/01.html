@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>用圖解題：排隊與種樹</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6b-u5" data-page="6b-u5/01">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-learn">學會方法</span>
+  <h1>用圖解題：排隊與種樹</h1>
+  <p class="lead">「要不要 +1？要不要 −1？」畫出來就不會搞錯！</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>排隊</h2>
+    <div class="stage"><svg id="g1" viewBox="0 0 400 130"></svg></div>
+    <div class="controls">
+      <label>小美前面 <input type="range" id="f" min="0" max="10" value="4"> <b id="fv"></b> 人</label>
+      <label>後面 <input type="range" id="b" min="0" max="10" value="5"> <b id="bv"></b> 人</label>
+    </div>
+    <div class="work" id="w1"></div>
+  </section>
+
+  <section class="box">
+    <h2><span class="n">2</span>種樹（間隔問題）</h2>
+    <div class="controls" style="margin-top:0">
+      <button class="btn" data-m="line" aria-pressed="true">直線，兩端都種</button>
+      <button class="btn" data-m="none">直線，兩端都不種</button>
+      <button class="btn" data-m="ring">圍成一圈</button>
+    </div>
+    <div class="stage" style="margin-top:12px"><svg id="g2" viewBox="0 0 400 170"></svg></div>
+    <div class="controls"><label>間隔數 <input type="range" id="n" min="2" max="10" value="5"> <b id="nv"></b></label></div>
+    <div class="work" id="w2"></div>
+  </section>
+
+  <div class="formula word">
+    <div class="label">記起來</div>
+    <div class="big" style="font-size:1.25rem;line-height:1.9">排隊：前面 + 後面 + 1（自己）<br>從前數第 a、從後數第 b → a + b − 1</div>
+    <div class="big" style="font-size:1.25rem;line-height:1.9">種樹：兩端都種 → 間隔 + 1；兩端不種 → 間隔 − 1；一圈 → 間隔</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中的「<b>等差數列</b>」：第 n 項 = 首項 + (n − 1) × 公差。那個「n − 1」就是今天的間隔數！</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script src="../assets/gens.js"></script>
+<script>
+  const f = document.getElementById("f"), b = document.getElementById("b");
+  function d1() {
+    const F = +f.value, B = +b.value, N = F + B + 1, gap = Math.min(30, 360 / N);
+    let s = "";
+    for (let i = 0; i < N; i++) {
+      const me = i === F, x = 20 + i * gap;
+      s += `<circle cx="${x + gap / 2}" cy="50" r="${Math.min(10, gap / 2 - 2)}" fill="${me ? "var(--red)" : i < F ? "var(--blue)" : "var(--green)"}" stroke="var(--ink)" stroke-width="1.2"/>`;
+      if (me) s += `<text x="${x + gap / 2 - 12}" y="86" font-size="13" style="fill:var(--red)">小美</text>`;
+    }
+    s += `<text x="20" y="20" font-size="12">← 前面</text><text x="340" y="20" font-size="12">後面 →</text>`;
+    s += `<text x="20" y="118" font-size="14">從前面數，小美是第 ${F + 1} 個；從後面數，是第 ${B + 1} 個</text>`;
+    document.getElementById("g1").innerHTML = s;
+    document.getElementById("fv").textContent = F; document.getElementById("bv").textContent = B;
+    document.getElementById("w1").innerHTML = `共 ${F} + ${B} + 1 = <b>${N} 人</b>　｜　用「第幾」算：${F + 1} + ${B + 1} − 1 = <b>${N}</b>（小美被數了兩次，要扣掉一次）`;
+  }
+  f.addEventListener("input", d1); b.addEventListener("input", d1); d1();
+
+  let mode = "line";
+  const nIn = document.getElementById("n");
+  function d2() {
+    const n = +nIn.value;
+    let s = "", trees = 0;
+    const tree = (x, y) => `<path d="M${x} ${y - 22} l-10 18 l20 0 Z" fill="var(--green)" stroke="var(--ink)" stroke-width="1"/><rect x="${x - 2}" y="${y - 4}" width="4" height="8" fill="#8a5a2b"/>`;
+    if (mode === "ring") {
+      s += `<circle cx="200" cy="85" r="60" fill="none" stroke="var(--blue)" stroke-width="3"/>`;
+      for (let i = 0; i < n; i++) { const [x, y] = L.pol(200, 85, 60, i * 360 / n); s += tree(x, y + 8); trees++; }
+    } else {
+      const x0 = 30, Wd = 340, y = 110;
+      s += `<line x1="${x0}" y1="${y}" x2="${x0 + Wd}" y2="${y}" stroke="var(--ink)" stroke-width="3"/>`;
+      for (let i = 0; i <= n; i++) {
+        const x = x0 + Wd * i / n;
+        if (i < n) s += `<text x="${x + Wd / n / 2 - 4}" y="${y + 24}" font-size="11" style="fill:var(--muted)">${i + 1}</text>`;
+        const end = i === 0 || i === n;
+        if (mode === "line" || !end) { s += tree(x, y); trees++; }
+        else s += `<line x1="${x}" y1="${y - 10}" x2="${x}" y2="${y + 10}" stroke="var(--red)" stroke-width="3"/>`;
+      }
+      s += `<text x="${x0}" y="160" font-size="12" style="fill:var(--muted)">灰色數字：第幾個間隔</text>`;
+    }
+    document.getElementById("g2").innerHTML = s;
+    document.getElementById("nv").textContent = n;
+    const rule = { line: `兩端都種：${n} + 1`, none: `兩端都不種：${n} − 1`, ring: `圍成一圈：= 間隔數 ${n}` }[mode];
+    document.getElementById("w2").innerHTML = `${n} 個間隔 → ${rule} = <b>${trees} 棵</b>`;
+    document.querySelectorAll("[data-m]").forEach(x => x.setAttribute("aria-pressed", x.dataset.m === mode));
+  }
+  document.querySelectorAll("[data-m]").forEach(x => x.addEventListener("click", () => { mode = x.dataset.m; d2(); }));
+  nIn.addEventListener("input", d2); d2();
+
+  W.practice(document.getElementById("prac"), { gens: [G.solve.queue, G.solve.trees] });
+</script>
+</body>
+</html>
