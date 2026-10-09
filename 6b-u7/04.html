@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>統計圖表與解題</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6b-u7" data-page="6b-u7/04">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-learn">5、6 年級總複習</span>
+  <h1>統計圖表與解題</h1>
+  <p class="lead">讀圖表、算百分率，再加上六年級學過的解題方法。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>重點卡（點「看這一課」可以回去複習）</h2>
+    <div id="cards"></div>
+  </section>
+
+  <div class="jh">
+    <h2>🎒 上國中前的提醒</h2>
+    <p>國中會學<b>平均數、中位數、眾數</b>，還有用方程式解應用題。今天的「畫圖、倒推、假設」都是很好的思考工具。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">2</span>綜合練習：隨機出題</h2>
+    <p class="hint" style="margin-top:0">可以勾選要練哪幾類。答錯會告訴你要回去看哪個公式。</p>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script src="../assets/gens.js"></script>
+<script>
+  W.cards(document.getElementById("cards"), [
+    { t: "百分率", pic: `<text x="10" y="30" font-size="14">25%</text><text x="10" y="56" font-size="14">= ¼ = 0.25</text>`, def: "部分 ÷ 全部 × 100%", how: "部分 = 全部 × 百分率<br>全部 = 部分 ÷ 百分率", link: "../6b-u4/03.html" },
+    { t: "圓形圖", pic: `<text x="10" y="30" font-size="14">1% = 3.6°</text>`, def: "整個圓 = 100%", how: "圓心角 = 百分率 × 360°", link: "../6b-u4/02.html" },
+    { t: "選圖", pic: `<text x="10" y="30" font-size="14">長條・折線・圓形</text>`, def: "比多少 → 長條；看變化 → 折線；佔多少 → 圓形", link: "../6b-u4/04.html" },
+    { t: "解題工具", pic: `<text x="10" y="30" font-size="14">畫圖、倒推</text><text x="10" y="56" font-size="14">假設、不變量</text>`, def: "線段圖、假設法、倒推法、找不變的量", link: "../6b-u5/04.html" },
+  ]);
+  W.practice(document.getElementById("prac"), { groups: [
+    { label: "統計", gens: Object.values(G.stats) },
+    { label: "解題", gens: Object.values(G.solve) },
+  ] });
+</script>
+</body>
+</html>

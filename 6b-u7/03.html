@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>關係：比、比例尺、速率</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6b-u7" data-page="6b-u7/03">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-learn">5、6 年級總複習</span>
+  <h1>關係：比、比例尺、速率</h1>
+  <p class="lead">生活中的「兩個量」：比、比例尺、速率、百分率，都是乘除的關係。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>重點卡（點「看這一課」可以回去複習）</h2>
+    <div id="cards"></div>
+  </section>
+
+  <div class="jh">
+    <h2>🎒 上國中前的提醒</h2>
+    <p>國中的<b>比例式</b>、<b>正比、反比</b>和<b>一元一次方程式</b>，都從這裡開始。記住：每一個公式都可以畫成三角形，翻過來用。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">2</span>綜合練習：隨機出題</h2>
+    <p class="hint" style="margin-top:0">可以勾選要練哪幾類。答錯會告訴你要回去看哪個公式。</p>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script src="../assets/gens.js"></script>
+<script>
+  W.cards(document.getElementById("cards"), [
+    { t: "比與比值", pic: `<text x="10" y="30" font-size="14">2 : 3</text><text x="10" y="56" font-size="14">比值 = ⅔</text>`, def: "a : b 的比值 = a ÷ b", how: "前後項同乘同除 → 相等的比", link: "../review/ratio.html" },
+    { t: "按比例分配", pic: `<text x="10" y="30" font-size="14">照 2 : 3 分</text><text x="10" y="56" font-size="14">5 份</text>`, def: "先算一份是多少。", how: "總數 ÷ 份數 × 自己的份數", link: "../index.html#6a-u6" },
+    { t: "比例尺", pic: `<text x="10" y="30" font-size="14">1 : 1000</text><text x="10" y="56" font-size="14">1 公分 = 10 公尺</text>`, def: "圖上 : 實際", how: "實際 = 圖上 × 分母（單位要換）", link: "../6a-u8/06.html" },
+    { t: "速率", pic: `<text x="10" y="30" font-size="14">距離</text><text x="10" y="56" font-size="14">÷ 時間</text>`, def: "速率 = 距離 ÷ 時間", how: "距離 = 速率 × 時間", link: "../6b-u3/04.html" },
+  ]);
+  W.practice(document.getElementById("prac"), { groups: [
+    { label: "比", gens: Object.values(G.ratio) },
+    { label: "比例尺", gens: [G.scale.real, G.scale.map] },
+    { label: "速率", gens: Object.values(G.speed) },
+  ] });
+</script>
+</body>
+</html>

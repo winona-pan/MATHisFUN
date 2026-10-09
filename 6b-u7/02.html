@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>圖形與空間</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6b-u7" data-page="6b-u7/02">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-learn">5、6 年級總複習</span>
+  <h1>圖形與空間</h1>
+  <p class="lead">面積、圓、柱體、放大縮小：公式要會用，也要會翻過來用。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>重點卡（點「看這一課」可以回去複習）</h2>
+    <div id="cards"></div>
+  </section>
+
+  <div class="jh">
+    <h2>🎒 上國中前的提醒</h2>
+    <p>國中會用字母寫公式：圓周長 <code>2πr</code>、圓面積 <code>πr²</code>、柱體體積 <code>底面積 × h</code>。<b>周長（長度）和面積</b>一定要分清楚。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">2</span>綜合練習：隨機出題</h2>
+    <p class="hint" style="margin-top:0">可以勾選要練哪幾類。答錯會告訴你要回去看哪個公式。</p>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script src="../assets/gens.js"></script>
+<script>
+  W.cards(document.getElementById("cards"), [
+    { t: "圓周長", pic: `<text x="10" y="30" font-size="14">圓周長</text><text x="10" y="56" font-size="14">= 直徑 × 3.14</text>`, def: "直徑 × 3.14", how: "翻過來：直徑 = 圓周長 ÷ 3.14", link: "../6a-u7/03.html" },
+    { t: "圓面積", pic: `<text x="10" y="30" font-size="14">圓面積</text><text x="10" y="56" font-size="14">= r × r × 3.14</text>`, def: "半徑 × 半徑 × 3.14", how: "翻過來：÷ 3.14 再找自己乘自己", link: "../6b-u2/01.html" },
+    { t: "扇形", pic: `<text x="10" y="30" font-size="14">× 圓心角/360</text>`, def: "弧長、面積都 × 圓心角/360", how: "扇形周長 = 弧長 + 2 條半徑", link: "../6b-u2/02.html" },
+    { t: "放大縮小", pic: `<text x="10" y="30" font-size="14">邊 ×k</text><text x="10" y="56" font-size="14">面積 ×k×k</text>`, def: "邊 × 倍數、角不變", how: "面積 × 倍數 × 倍數", link: "../6a-u8/04.html" },
+    { t: "柱體", pic: `<text x="10" y="30" font-size="14">底面積 × 高</text>`, def: "體積 = 底面積 × 高", how: "表面積 = 底面積 × 2 + 底面周長 × 高", link: "../6b-u6/05.html" },
+    { t: "平面圖形面積", pic: `<text x="10" y="30" font-size="14">底 × 高 ÷ 2</text>`, def: "長方形、平行四邊形、三角形", how: "三角形 = 底 × 高 ÷ 2", link: "../review/area-shapes.html" },
+  ]);
+  W.practice(document.getElementById("prac"), { groups: [
+    { label: "圓", gens: Object.values(G.circle) },
+    { label: "柱體", gens: Object.values(G.solid) },
+    { label: "放大縮小・面積", gens: [G.scale.side, G.scale.area, ...Object.values(G.area)] },
+  ] });
+</script>
+</body>
+</html>

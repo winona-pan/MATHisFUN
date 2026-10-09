@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>數與計算</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6b-u7" data-page="6b-u7/01">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-learn">5、6 年級總複習</span>
+  <h1>數與計算</h1>
+  <p class="lead">分數、小數、四則運算、因數倍數：計算是國中的基本功！</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>重點卡（點「看這一課」可以回去複習）</h2>
+    <div id="cards"></div>
+  </section>
+
+  <div class="jh">
+    <h2>🎒 上國中前的提醒</h2>
+    <p>國中第一課就是<b>負數</b>和<b>分數的四則運算</b>。分數加減要通分、除法要乘倒數，一定要很熟。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">2</span>綜合練習：隨機出題</h2>
+    <p class="hint" style="margin-top:0">可以勾選要練哪幾類。答錯會告訴你要回去看哪個公式。</p>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script src="../assets/gens.js"></script>
+<script>
+  W.cards(document.getElementById("cards"), [
+    { t: "最大公因數・最小公倍數", pic: `<text x="10" y="30" font-size="14">12 和 18</text><text x="10" y="56" font-size="14">公因數 6、公倍數 36</text>`, def: "短除法找共同的質數。", how: "公因數：左邊相乘<br>公倍數：外圍全部相乘", link: "../index.html#6a-u1" },
+    { t: "分數除法", pic: `<text x="10" y="30" font-size="14">÷ ⅔</text><text x="10" y="56" font-size="14">= × 3/2</text>`, def: "除以一個分數 = 乘以它的倒數。", how: "a/b ÷ c/d = a/b × d/c", link: "../index.html#6a-u2" },
+    { t: "小數除法", pic: `<text x="10" y="30" font-size="14">1.2 ÷ 0.4</text><text x="10" y="56" font-size="14">= 12 ÷ 4</text>`, def: "除數變成整數，被除數跟著移。", how: "兩個數一起 ×10，商不變", link: "../index.html#6a-u5" },
+    { t: "四則運算", pic: `<text x="10" y="30" font-size="14">括號 → 乘除</text><text x="10" y="56" font-size="14">→ 加減</text>`, def: "括號 → 乘除 → 加減。", how: "分數、小數先換成同一種", link: "../6b-u1/01.html" },
+    { t: "分配律", pic: `<text x="10" y="30" font-size="14">(a + b) × c</text><text x="10" y="56" font-size="14">= a×c + b×c</text>`, def: "(a + b) × c = a × c + b × c", how: "簡便計算：湊整", link: "../6b-u1/03.html" },
+  ]);
+  W.practice(document.getElementById("prac"), { groups: [
+    { label: "因數倍數", gens: [G.number.gcd, G.number.lcm] },
+    { label: "分數・小數", gens: [G.number.fracDiv, G.number.decDiv, G.number.mixed] },
+    { label: "四則・分配律", gens: [G.number.order, G.number.distrib] },
+  ] });
+</script>
+</body>
+</html>
