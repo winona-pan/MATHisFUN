@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>整數除法直式</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u5" data-page="review/long-division">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-pre">先備知識・4 年級學過</span>
+  <h1>整數除法直式</h1>
+  <p class="lead">從最高位開始：除、乘、減、拉下來，一直重複。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>一步一步算</h2>
+    <div class="controls" style="margin-top:0" id="exs"></div>
+    <div class="stage" style="margin-top:12px"><svg id="g" viewBox="0 0 300 260" style="max-width:420px;margin:0 auto"></svg></div>
+    <div class="controls"><button class="btn primary" id="step">下一步 →</button><button class="btn" id="again">重來</button></div>
+    <div class="work" id="w"></div>
+  </section>
+
+  <div class="formula pre">
+    <div class="label">口訣</div>
+    <div class="big">除 → 乘 → 減 → 拉下來</div>
+    <div class="sub">驗算：除數 × 商 + 餘數 = 被除數</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中八年級的「<b>多項式除法</b>」也是用直式，步驟一模一樣：除、乘、減、拉下來！</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">2</span>練習一下</h2>
+    <div class="quiz">
+      <div class="q" data-answer="23" data-hint="92 ÷ 4">
+        <p class="qt">92 ÷ 4 = ?</p>
+        <div class="row"><input type="text" inputmode="decimal"> <button class="btn">對答案</button></div>
+      </div>
+      <div class="q" data-answer="2" data-hint="7 × 12 = 84，86 − 84">
+        <p class="qt">86 ÷ 7 = 12 餘 □，□ = ?</p>
+        <div class="row"><input type="text" inputmode="decimal"> <button class="btn">對答案</button></div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  const EX = [["156", 12], ["735", 5], ["86", 7], ["924", 6]];
+  let ex = EX[0], k = 0;
+  function draw() {
+    const all = W.longdiv(ex[0], ex[1], { maxDec: 0 }), r = W.longdiv(ex[0], ex[1], { maxDec: 0, upto: k });
+    const g = document.getElementById("g");
+    g.setAttribute("viewBox", `0 0 300 ${Math.max(140, all.height)}`);
+    g.innerHTML = r.svg;
+    document.getElementById("step").disabled = k >= all.steps;
+    document.getElementById("w").innerHTML = k >= all.steps ? `${ex[0]} ÷ ${ex[1]} = <b>${all.q}</b>${all.rem ? ` 餘 <b>${all.rem}</b>` : ""}　驗算：${ex[1]} × ${all.q}${all.rem ? ` + ${all.rem}` : ""} = ${ex[0]} ✓` : "按「下一步」：除 → 乘 → 減 → 拉下來";
+    document.querySelectorAll("[data-e]").forEach(b => b.setAttribute("aria-pressed", EX[+b.dataset.e] === ex));
+  }
+  document.getElementById("exs").innerHTML = EX.map((e, i) => `<button class="btn" data-e="${i}">${e[0]} ÷ ${e[1]}</button>`).join("");
+  document.querySelectorAll("[data-e]").forEach(b => b.addEventListener("click", () => { ex = EX[+b.dataset.e]; k = 0; draw(); }));
+  document.getElementById("step").addEventListener("click", () => { k++; draw(); });
+  document.getElementById("again").addEventListener("click", () => { k = 0; draw(); });
+  draw();
+</script>
+</body>
+</html>

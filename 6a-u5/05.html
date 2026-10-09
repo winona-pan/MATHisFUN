@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>小數除法：答案變大還是變小</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u5" data-page="6a-u5/05">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-learn">學會方法</span>
+  <h1>答案變大還是變小？</h1>
+  <p class="lead">不用算完，先估計：除以 0.5 答案會變大，除以 2 答案會變小。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>8 ÷ □ 和 8 × □</h2>
+    <div class="stage"><svg id="g" viewBox="0 0 400 200"></svg></div>
+    <div class="controls"><label>□ = <input type="range" id="d" min="0" max="8" value="1"> <b id="dv"></b></label></div>
+    <div class="work" id="w"></div>
+  </section>
+
+  <div class="formula word">
+    <div class="label">記起來</div>
+    <div class="big" style="font-size:1.25rem;line-height:1.9">÷ 比 1 小的數（0.5、0.2…）→ 變大<br>× 比 1 小的數 → 變小</div>
+    <div class="sub">先估計大小，再算，就不會把小數點點錯</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中會比較 <code>x</code>、<code>x²</code>、<code>1/x</code> 的大小，同樣要看 x 比 1 大還是小。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">2</span>一直練：比大小</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  const DS = [0.2, 0.4, 0.5, 0.8, 1, 1.6, 2, 2.5, 4];
+  const dIn = document.getElementById("d");
+  function draw() {
+    const d = DS[+dIn.value], q = 8 / d, m = 8 * d, X = 20, U = 360 / 40;
+    let s = `<line x1="${X}" y1="110" x2="${X + 40 * U}" y2="110" class="stroke"/>`;
+    for (let t = 0; t <= 40; t += 4) s += `<line x1="${X + t * U}" y1="104" x2="${X + t * U}" y2="116" class="stroke"/><text x="${X + t * U - 6}" y="134" font-size="11">${t}</text>`;
+    s += `<circle cx="${X + 8 * U}" cy="110" r="8" fill="var(--ink)"/><text x="${X + 8 * U - 6}" y="96" font-size="13">8</text>`;
+    s += `<circle cx="${X + q * U}" cy="110" r="7" fill="var(--red)"/><text x="${X + q * U - 26}" y="160" font-size="13" style="fill:var(--red)">8 ÷ ${d} = ${W.num(q)}</text>`;
+    s += `<circle cx="${X + m * U}" cy="110" r="7" fill="var(--blue)"/><text x="${X + m * U - 26}" y="186" font-size="13" style="fill:var(--blue)">8 × ${d} = ${W.num(m)}</text>`;
+    document.getElementById("g").innerHTML = s;
+    document.getElementById("dv").textContent = d;
+    document.getElementById("w").innerHTML = d < 1 ? `${d} 比 1 小：<b style="color:var(--red)">÷ 變大</b>、<b style="color:var(--blue)">× 變小</b>` : d > 1 ? `${d} 比 1 大：<b style="color:var(--red)">÷ 變小</b>、<b style="color:var(--blue)">× 變大</b>` : "× 1、÷ 1 都不變";
+  }
+  dIn.addEventListener("input", draw); draw();
+
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { const a = W.rand(3, 50), v = W.pick([0.2, 0.25, 0.5, 0.75, 0.9, 1.2, 1.5, 2.4]), op = W.pick(["÷", "×"]), r = op === "÷" ? a / v : a * v;
+      return { q: `不用算：${a} ${op} ${v} 的答案，跟 ${a} 比？`, choices: [`比 ${a} 大`, `比 ${a} 小`], ans: r > a ? 0 : 1, hint: `${v} ${v > 1 ? "比 1 大" : "比 1 小"}`, pic: `<text x="20" y="80" font-size="28">${a} ${op} ${v}</text>` }; },
+  ] });
+</script>
+</body>
+</html>

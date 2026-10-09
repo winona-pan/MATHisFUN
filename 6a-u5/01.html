@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>小數 ÷ 整數</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u5" data-page="6a-u5/01">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-learn">學會方法</span>
+  <h1>小數 ÷ 整數</h1>
+  <p class="lead">跟整數除法一樣算，只要記得：商的小數點，<b>對齊</b>被除數的小數點，往上點。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>直式一步一步</h2>
+    <div class="controls" style="margin-top:0" id="exs"></div>
+    <div class="stage" style="margin-top:12px"><svg id="g" viewBox="0 0 300 260" style="max-width:420px;margin:0 auto"></svg></div>
+    <div class="controls"><button class="btn primary" id="step">下一步 →</button><button class="btn" id="again">重來</button></div>
+    <div class="work" id="w"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>為什麼小數點要對齊？</h2>
+    <div class="steps">
+      <div class="step"><p>① 7.5 元平分給 3 人：7.5 元 = 75 角。</p></div>
+      <div class="step"><p>② 75 角 ÷ 3 = 25 角 = <b>2.5 元</b>。</p></div>
+      <div class="step"><p>③ 直式裡，商的每一位和被除數的位置一樣（個位對個位、十分位對十分位），所以小數點要<b>對齊往上點</b>。</p></div>
+      <div class="step"><p>④ 除不完時，在後面<b>補 0</b> 繼續除（灰色的 0），小數的大小不變。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula word">
+    <div class="label">方法</div>
+    <div class="big" style="font-size:1.3rem">像整數一樣除，商的小數點對齊往上點</div>
+    <div class="sub">除不完 → 後面補 0 繼續除</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中理化算平均、密度常常會遇到小數除法，直式一定要會。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  const EX = [["7.5", 3], ["8.4", 4], ["2.7", 6], ["13.2", 4], ["1", 8]];
+  let ex = EX[0], k = 0;
+  function draw() {
+    const all = W.longdiv(ex[0], ex[1]), r = W.longdiv(ex[0], ex[1], { upto: k });
+    const g = document.getElementById("g");
+    g.setAttribute("viewBox", `0 0 300 ${Math.max(140, all.height)}`);
+    g.innerHTML = r.svg;
+    document.getElementById("step").disabled = k >= all.steps;
+    document.getElementById("w").innerHTML = k >= all.steps ? `${ex[0]} ÷ ${ex[1]} = <b>${all.q}</b>　驗算：${all.q} × ${ex[1]} = ${ex[0]} ✓` : "紅色的小數點：商和被除數對齊";
+    document.querySelectorAll("[data-e]").forEach(b => b.setAttribute("aria-pressed", EX[+b.dataset.e] === ex));
+  }
+  document.getElementById("exs").innerHTML = EX.map((e, i) => `<button class="btn" data-e="${i}">${e[0]} ÷ ${e[1]}</button>`).join("");
+  document.querySelectorAll("[data-e]").forEach(b => b.addEventListener("click", () => { ex = EX[+b.dataset.e]; k = 0; draw(); }));
+  document.getElementById("step").addEventListener("click", () => { k++; draw(); });
+  document.getElementById("again").addEventListener("click", () => { k = 0; draw(); });
+  draw();
+
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { const d = W.rand(2, 9), q = W.rand(11, 99) / 10, a = Math.round(q * d * 10) / 10; return { q: `${a} ÷ ${d} = ?`, ans: q, hint: `像 ${Math.round(a * 10)} ÷ ${d} 一樣算，再點小數點`, viewBox: "0 0 300 260", pic: W.longdiv(String(a), d, { upto: 0 }).svg }; },
+    () => { const d = W.pick([4, 5, 8]), n = W.rand(1, 9); if (n % d === 0) return { q: `9 ÷ 4 = ?`, ans: 2.25, hint: "補 0 繼續除", pic: "" }; return { q: `${n} ÷ ${d} = ?（除不完就補 0）`, ans: n / d, hint: "整數後面點小數點、補 0 繼續除", viewBox: "0 0 300 260", pic: W.longdiv(String(n), d, { upto: 0 }).svg }; },
+  ] });
+</script>
+</body>
+</html>

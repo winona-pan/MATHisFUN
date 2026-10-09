@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>餘數的小數點</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u5" data-page="6a-u5/03">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-learn">學會方法</span>
+  <h1>餘數的小數點</h1>
+  <p class="lead">7.6 公尺的緞帶，每 0.3 公尺剪一段，可以剪幾段？剩多少？</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>剪緞帶</h2>
+    <div class="stage"><svg id="g" viewBox="0 0 400 170"></svg></div>
+    <div class="controls">
+      <button class="btn" data-e="0" aria-pressed="true">7.6 ÷ 0.3</button>
+      <button class="btn" data-e="1">5.3 ÷ 0.4</button>
+      <button class="btn" data-e="2">2.9 ÷ 0.6</button>
+    </div>
+    <div class="calc" id="calc" style="font-size:1.15rem"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>為什麼餘數是 0.1，不是 1？</h2>
+    <div class="steps">
+      <div class="step"><p>① 一起 × 10：7.6 ÷ 0.3 → 76 ÷ 3 = 25 餘 1。</p></div>
+      <div class="step"><p>② 可是 76 是「76 個 0.1 公尺」，所以餘數 1 其實是 <b>1 個 0.1 公尺 = 0.1 公尺</b>。</p></div>
+      <div class="step"><p>③ 規則：<b>商不變</b>，但<b>餘數要用原來的小數點</b>（往回移一樣多位）。</p></div>
+      <div class="step"><p>④ 一定要驗算：0.3 × 25 + 0.1 = 7.5 + 0.1 = 7.6 ✓</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula word">
+    <div class="label">記起來</div>
+    <div class="big" style="font-size:1.3rem">商照算，餘數的小數點對齊「原來的」被除數</div>
+    <div class="sub">驗算：除數 × 商 + 餘數 = 被除數</div>
+  </div>
+
+  <div class="warn"><span class="ic">⚠️</span><p>餘數一定要<b>比除數小</b>！算出 7.6 ÷ 0.3 餘 1，1 比 0.3 大，就知道錯了。</p></div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中的「<b>帶餘除法</b>」寫成：被除數 = 除數 × 商 + 餘數，而且 0 ≤ 餘數 &lt; 除數。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  const EX = [[7.6, 0.3], [5.3, 0.4], [2.9, 0.6]];
+  let e = 0;
+  function draw() {
+    const [a, b] = EX[e], A = Math.round(a * 10), B = Math.round(b * 10), q = Math.floor(A / B), r = A - q * B, U = 360 / a;
+    let s = `<rect x="20" y="40" width="${a * U}" height="30" fill="var(--card)" stroke="var(--ink)" stroke-width="1.5"/>`;
+    for (let i = 0; i < q; i++) s += `<rect x="${20 + i * b * U}" y="40" width="${b * U}" height="30" fill="${i % 2 ? "var(--yellow)" : "var(--blue)"}" fill-opacity=".7" stroke="var(--ink)" stroke-width=".8"/>`;
+    s += `<rect x="${20 + q * b * U}" y="40" width="${r / 10 * U}" height="30" fill="var(--red)" fill-opacity=".8" stroke="var(--ink)" stroke-width="1"/>`;
+    s += `<text x="20" y="28" font-size="14">${a} 公尺，每段 ${b} 公尺</text><text x="20" y="100" font-size="14">剪了 ${q} 段</text><text x="${Math.min(300, 20 + q * b * U - 20)}" y="100" font-size="14" style="fill:var(--red)">剩 ${r / 10} 公尺</text>`;
+    document.getElementById("g").innerHTML = s;
+    document.getElementById("calc").innerHTML = `<span class="row">${a} ÷ ${b} → ${A} ÷ ${B} = ${q} 餘 ${r}（這是 ${r} 個 0.1）</span><span class="row">所以 ${a} ÷ ${b} = <b>${q} 餘 ${r / 10}</b></span><span class="row" style="color:var(--green)">驗算：${b} × ${q} + ${r / 10} = ${a} ✓</span>`;
+    document.querySelectorAll("[data-e]").forEach(x => x.setAttribute("aria-pressed", +x.dataset.e === e));
+  }
+  document.querySelectorAll("[data-e]").forEach(x => x.addEventListener("click", () => { e = +x.dataset.e; draw(); }));
+  draw();
+
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { const B = W.rand(2, 9), q = W.rand(3, 30), r = W.rand(1, B - 1), A = B * q + r; return { q: `${A / 10} ÷ ${B / 10} = ${q} 餘 □，□ = ?`, ans: r / 10, hint: `${A} ÷ ${B} = ${q} 餘 ${r}，餘數要用原來的小數點 → ${r / 10}`, pic: "" }; },
+    () => { const B = W.rand(2, 9), q = W.rand(3, 20), r = W.rand(1, B - 1), A = B * q + r; return { q: `${A / 10} 公斤的米，每 ${B / 10} 公斤裝一袋，最多裝幾袋？`, ans: q, unit: "袋", hint: `${A} ÷ ${B}，只看商`, pic: "" }; },
+  ] });
+</script>
+</body>
+</html>

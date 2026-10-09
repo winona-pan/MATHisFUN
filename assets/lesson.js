@@ -180,6 +180,19 @@
         { path: "6a-u4/05", t: "小數、分數的比" },
       ],
     },
+    "6a-u5": {
+      name: "六上 第 5 單元・小數除法",
+      pages: [
+        { path: "review/decimal-place-value", t: "小數的位值", pre: true },
+        { path: "review/long-division", t: "整數除法直式", pre: true },
+        { path: "review/decimal-multiply", t: "小數乘法", pre: true },
+        { path: "6a-u5/01", t: "小數 ÷ 整數" },
+        { path: "6a-u5/02", t: "除數是小數怎麼辦" },
+        { path: "6a-u5/03", t: "餘數的小數點" },
+        { path: "6a-u5/04", t: "商取概數" },
+        { path: "6a-u5/05", t: "答案變大還是變小" },
+      ],
+    },
   };
 
   const body = document.body;

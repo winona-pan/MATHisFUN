@@ -104,6 +104,54 @@
     return s;
   };
 
+  /* ---------- 直式除法 ----------
+     W.longdiv("7.5", 3, { maxDec: 3, upto: 步驟數 }) → { svg, q, rem, steps }
+     被除數可以有小數點，除數是整數 */
+  W.longdiv = function (divd, dvs, o = {}) {
+    const maxDec = o.maxDec == null ? 3 : o.maxDec;
+    let ds = String(divd);
+    let point = ds.indexOf(".");
+    const digits = ds.replace(".", "").split("").map(Number);
+    if (point < 0) point = digits.length;
+    let rem = 0, started = false;
+    const q = [], steps = [];
+    for (let i = 0; i < digits.length || (rem && i - point < maxDec); i++) {
+      if (i >= digits.length) digits.push(0);
+      const cur = rem * 10 + digits[i], qd = Math.floor(cur / dvs);
+      q.push(qd);
+      if (qd > 0) { steps.push({ col: i, cur, prod: qd * dvs, rem: cur - qd * dvs }); started = true; }
+      rem = cur - qd * dvs;
+    }
+    const lastCol = digits.length - 1;
+    const CW = 20, X0 = 74, Y0 = 46, RH = 30;
+    const upto = o.upto == null ? steps.length : o.upto;
+    const colX = c => X0 + c * CW;
+    let s = "";
+    // 被除數
+    const hasPoint = point < digits.length;
+    digits.forEach((d, i) => { const extra = i >= String(divd).replace(".", "").length; s += `<text x="${colX(i)}" y="${Y0}" font-size="20" text-anchor="middle" style="fill:${extra ? "var(--muted)" : "var(--ink)"}">${d}</text>`; });
+    if (hasPoint) s += `<text x="${colX(point) - CW / 2}" y="${Y0}" font-size="22" text-anchor="middle" style="fill:var(--red)">.</text>`;
+    s += `<text x="${X0 - 34}" y="${Y0}" font-size="20" text-anchor="end">${dvs}</text><path d="M${X0 - 28} ${Y0 + 8} Q${X0 - 18} ${Y0 - 6} ${X0 - 22} ${Y0 - 22} L${colX(lastCol) + CW / 2 + 6} ${Y0 - 22}" fill="none" stroke="var(--ink)" stroke-width="2"/>`;
+    // 商
+    let firstNZ = q.findIndex(x => x > 0); if (firstNZ < 0) firstNZ = q.length - 1;
+    const startQ = Math.min(firstNZ, point - 1);
+    const shownCols = upto >= steps.length ? q.length : (steps[upto] ? steps[upto].col : q.length);
+    q.forEach((d, i) => { if (i >= startQ && i < shownCols) s += `<text x="${colX(i)}" y="${Y0 - 30}" font-size="20" text-anchor="middle" style="fill:var(--blue)">${d}</text>`; });
+    if (hasPoint && point - 1 < shownCols) s += `<text x="${colX(point) - CW / 2}" y="${Y0 - 30}" font-size="22" text-anchor="middle" style="fill:var(--red)">.</text>`;
+    // 每一步
+    let y = Y0;
+    steps.slice(0, upto).forEach((st, j) => {
+      if (j > 0) { y += RH; const str = String(st.cur); [...str].forEach((ch, k) => s += `<text x="${colX(st.col - str.length + 1 + k)}" y="${y}" font-size="20" text-anchor="middle">${ch}</text>`); }
+      y += RH; const ps = String(st.prod);
+      [...ps].forEach((ch, k) => s += `<text x="${colX(st.col - ps.length + 1 + k)}" y="${y}" font-size="20" text-anchor="middle" style="fill:var(--orange)">${ch}</text>`);
+      s += `<line x1="${colX(st.col - Math.max(ps.length, String(st.cur).length) + 1) - CW / 2}" y1="${y + 8}" x2="${colX(st.col) + CW / 2}" y2="${y + 8}" stroke="var(--ink)" stroke-width="1.6"/>`;
+    });
+    if (upto >= steps.length && steps.length) { y += RH; const last = steps[steps.length - 1]; const rs = String(rem); [...rs].forEach((ch, k) => s += `<text x="${colX(lastCol - rs.length + 1 + k)}" y="${y}" font-size="20" text-anchor="middle" style="fill:${rem ? "var(--red)" : "var(--green)"}">${ch}</text>`); }
+    let qs = q.slice(startQ).join("");
+    if (hasPoint) { const ip = point - startQ; qs = qs.slice(0, ip) + "." + qs.slice(ip); qs = qs.replace(/\.?0+$/, m => (m.startsWith(".") ? "" : m.replace(/0+$/, ""))); }
+    return { svg: s, q: qs, rem, steps: steps.length, height: y + 20, width: colX(lastCol) + 30 };
+  };
+
   /* ---------- 隨機出題 ----------
      W.practice(el, { gens: [fn...] } 或 { groups: [{ label, gens, on }] })
      每個 fn() 回傳 { q, ans, unit, hint, pic, pre, choices } */

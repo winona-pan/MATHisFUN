@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>商取概數</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u5" data-page="6a-u5/04">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-learn">學會方法</span>
+  <h1>商取概數</h1>
+  <p class="lead">10 ÷ 3 = 3.333… 一直除不完！題目會說「四捨五入到第幾位」。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>放大鏡看數線</h2>
+    <div class="stage"><svg id="g" viewBox="0 0 400 190"></svg></div>
+    <div class="controls">
+      <label>算式 <select id="ex"><option value="10,3">10 ÷ 3</option><option value="5,7">5 ÷ 7</option><option value="2,3">2 ÷ 3</option><option value="17,6">17 ÷ 6</option></select></label>
+      <label>取到 <select id="p"><option value="0">整數</option><option value="1" selected>小數第 1 位</option><option value="2">小數第 2 位</option></select></label>
+    </div>
+    <div class="work" id="w"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>方法</h2>
+    <div class="steps">
+      <div class="step"><p>① 要取到小數第 1 位，就要<b>多算一位</b>（算到第 2 位）。</p></div>
+      <div class="step"><p>② 看多算的那一位：<b>0～4 捨去</b>，<b>5～9 進位</b>。</p></div>
+      <div class="step"><p>③ 10 ÷ 3 = 3.33… → 第 2 位是 3，捨去 → <b>3.3</b>。</p></div>
+      <div class="step"><p>④ 數線上看：3.33 離 3.3 比較近，所以取 3.3。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula word">
+    <div class="label">方法</div>
+    <div class="big" style="font-size:1.3rem">多算一位，再四捨五入</div>
+    <div class="sub">0～4 捨、5～9 入</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中理化實驗數據要取「<b>有效數字</b>」，也是四捨五入。符號寫成 <code>10 ÷ 3 ≈ 3.3</code>（≈ 是「大約等於」）。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  const exS = document.getElementById("ex"), pS = document.getElementById("p");
+  const trunc = (v, k) => (Math.floor(v * 10 ** k) / 10 ** k).toFixed(k); // 只切掉、不四捨五入
+  function draw() {
+    const [a, b] = exS.value.split(",").map(Number), p = +pS.value, v = a / b, step = 10 ** -p;
+    const lo = Math.floor(v / step) * step, hi = lo + step, rnd = Math.round(v / step) * step;
+    const X0 = 40, Wd = 320, pos = x => X0 + (x - lo) / step * Wd;
+    let s = `<line x1="${X0}" y1="100" x2="${X0 + Wd}" y2="100" class="stroke"/>`;
+    for (let k = 0; k <= 10; k++) s += `<line x1="${X0 + k * Wd / 10}" y1="${k % 5 ? 94 : 88}" x2="${X0 + k * Wd / 10}" y2="${k % 5 ? 106 : 112}" class="stroke" style="stroke-width:${k % 5 ? 1 : 2}"/>`;
+    s += `<text x="${X0 - 14}" y="134" font-size="15">${lo.toFixed(p)}</text><text x="${X0 + Wd - 14}" y="134" font-size="15">${hi.toFixed(p)}</text><text x="${X0 + Wd / 2 - 20}" y="134" font-size="11" style="fill:var(--muted)">中間（5）</text>`;
+    s += `<circle cx="${pos(v)}" cy="100" r="8" fill="var(--red)"/><text x="${pos(v) - 30}" y="76" font-size="14" style="fill:var(--red)">${trunc(v, p + 2)}…</text>`;
+    s += `<path d="M${pos(v)} 116 L${pos(rnd)} 156" stroke="var(--green)" stroke-width="3" marker-end=""/><circle cx="${pos(rnd)}" cy="160" r="6" fill="var(--green)"/><text x="${pos(rnd) - 16}" y="184" font-size="15" style="fill:var(--green)">≈ ${rnd.toFixed(p)}</text>`;
+    document.getElementById("g").innerHTML = s;
+    const next = Math.floor(v * 10 ** (p + 1)) % 10;
+    document.getElementById("w").innerHTML = `${a} ÷ ${b} = ${trunc(v, p + 1)}… → 看第 ${p + 1} 位小數：${next}，${next >= 5 ? "5～9 進位" : "0～4 捨去"} → <b>≈ ${rnd.toFixed(p)}</b>`;
+  }
+  exS.addEventListener("change", draw); pS.addEventListener("change", draw); draw();
+
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { let a, b; do { a = W.rand(1, 30); b = W.pick([3, 6, 7, 9, 11, 12]); } while (a % b === 0); const p = W.rand(0, 2), v = Math.round(a / b * 10 ** p) / 10 ** p;
+      return { q: `${a} ÷ ${b} 的商，四捨五入到${["整數", "小數第 1 位", "小數第 2 位"][p]}是多少？`, ans: v, hint: `${a} ÷ ${b} = ${trunc(a / b, p + 1)}…，看第 ${p + 1} 位小數`, pic: "" }; },
+  ] });
+</script>
+</body>
+</html>
