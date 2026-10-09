@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>數學好好玩</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fdf8ef;
+    --card: #ffffff;
+    --ink: #2b2a33;
+    --muted: #6b6878;
+    --line: #e8e1d3;
+    --red: #e4572e;
+    --blue: #2e86de;
+    --green: #3aa76d;
+    --yellow: #f2b632;
+    --purple: #8e6bd8;
+    --shade: #fde3a7;
+    --ch1: #2e86de;
+    --ch1-soft: #e3f0fc;
+    --ch2: #3aa76d;
+    --ch2-soft: #e2f5ea;
+    --grid: #e6e6ee;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1b1a22; --card: #26252f; --ink: #f2f0f7; --muted: #a9a6b8; --line: #3a3846;
+      --shade: #6b5420; --ch1-soft: #1d3147; --ch2-soft: #1d3a2b; --grid: #3a3846;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1b1a22; --card: #26252f; --ink: #f2f0f7; --muted: #a9a6b8; --line: #3a3846;
+    --shade: #6b5420; --ch1-soft: #1d3147; --ch2-soft: #1d3a2b; --grid: #3a3846;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Noto Sans TC", system-ui, sans-serif;
+    line-height: 1.5;
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 24px 16px 64px; }
+
+  header { text-align: center; padding: 16px 0 8px; }
+  header h1 { font-size: clamp(2rem, 6vw, 3.2rem); font-weight: 900; margin: 0; letter-spacing: .06em; }
+  header h1 .dot { color: var(--red); }
+  header p { color: var(--muted); margin: 4px 0 0; font-size: 1.05rem; }
+
+  .legend { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin: 16px 0 8px; font-size: .95rem; color: var(--muted); }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+
+  .chapter { margin-top: 40px; }
+  .chapter-head {
+    display: flex; align-items: center; gap: 16px;
+    padding: 16px 20px; border-radius: 20px;
+    background: var(--soft); border: 2px solid var(--accent);
+  }
+  .chapter-head svg { width: 72px; height: 72px; flex: none; }
+  .chapter-head h2 { margin: 0; font-size: clamp(1.4rem, 4vw, 1.9rem); font-weight: 900; }
+  .chapter-head .tag {
+    display: inline-block; font-size: .85rem; font-weight: 700; padding: 2px 10px;
+    border-radius: 999px; background: var(--accent); color: #fff; margin-bottom: 4px;
+  }
+  .ch1 { --accent: var(--ch1); --soft: var(--ch1-soft); }
+  .ch2 { --accent: var(--ch2); --soft: var(--ch2-soft); }
+
+  .grid {
+    display: grid; gap: 18px; margin-top: 18px;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  }
+  .card {
+    position: relative; display: flex; flex-direction: column;
+    background: var(--card); border: 2px solid var(--line); border-radius: 18px;
+    padding: 12px 12px 14px; color: inherit; text-decoration: none;
+    transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+  }
+  .card:hover, .card:focus-visible { transform: translateY(-4px); border-color: var(--accent); box-shadow: 0 8px 20px rgba(0,0,0,.08); outline: none; }
+  .card .num {
+    position: absolute; top: -12px; left: -10px;
+    width: 38px; height: 38px; border-radius: 50%;
+    background: var(--accent); color: #fff; font-weight: 900; font-size: 1.1rem;
+    display: grid; place-items: center; border: 3px solid var(--bg);
+  }
+  .card .pic { background: var(--soft); border-radius: 12px; aspect-ratio: 4 / 3; display: grid; place-items: center; overflow: hidden; }
+  .card .pic svg { width: 100%; height: 100%; }
+  .card h3 { margin: 10px 4px 0; font-size: 1.25rem; font-weight: 900; }
+  .card .hint { margin: 2px 4px 0; color: var(--muted); font-size: .98rem; }
+  .card .status { margin: 10px 4px 0; font-size: .85rem; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; }
+  .card.ready .status { color: var(--green); }
+  .card.soon { cursor: default; }
+  .card.soon .pic { filter: saturate(.75); }
+  .card.soon .status { color: var(--muted); }
+  .badge { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+  .badge.ready { background: var(--green); }
+  .badge.soon { background: var(--line); border: 2px solid var(--muted); }
+
+  .toast {
+    position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%) translateY(120px);
+    background: var(--ink); color: var(--bg); padding: 10px 20px; border-radius: 999px;
+    font-weight: 700; opacity: 0; transition: transform .25s ease, opacity .25s ease; pointer-events: none;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+  /* SVG 共用樣式 */
+  svg text { font-family: "Noto Sans TC", system-ui, sans-serif; font-weight: 700; fill: var(--ink); }
+  .stroke { stroke: var(--ink); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+  .stroke:not([fill]) { fill: none; }
+  .gridline { stroke: var(--grid); stroke-width: 1; }
+
+  /* 滑過卡片時的小動畫 */
+  .spin { transform-box: fill-box; transform-origin: center; }
+  .card:hover .spin { animation: spin 2.4s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .roll { transition: transform 1.2s ease-in-out; }
+  .card:hover .roll { transform: translateX(78px); }
+  .grow { transform-box: fill-box; transform-origin: left bottom; transition: transform .6s ease; }
+  .card:hover .grow { transform: scale(1.12); }
+  .pulse { transform-box: fill-box; transform-origin: center; }
+  .card:hover .pulse { animation: pulse 1s ease-in-out infinite alternate; }
+  @keyframes pulse { to { transform: scale(1.1); } }
+  @media (prefers-reduced-motion: reduce) {
+    .card:hover .spin, .card:hover .pulse { animation: none; }
+    .roll, .grow, .card { transition: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>數學好好玩<span class="dot">!</span></h1>
+    <p>看圖、動手玩，一步一步學</p>
+  </header>
+
+  <div class="legend">
+    <span><i class="badge ready"></i> 可以玩了</span>
+    <span><i class="badge soon"></i> 準備中</span>
+  </div>
+
+  <div id="chapters"></div>
+</div>
+<div class="toast" id="toast">這一課還在準備中 🛠️</div>
+
+<script>
+/* ===========================================================
+   目錄資料：新增或完成一課時，只要改這裡。
+   ready: true  → 卡片可以點，連到 href
+   ready: false → 顯示「準備中」
+   =========================================================== */
+const CHAPTERS = [
+  {
+    id: "ch1", tag: "第一章 · 現在學", title: "圓",
+    icon: `<svg viewBox="0 0 72 72"><circle cx="36" cy="36" r="28" fill="#fff" stroke="var(--ch1)" stroke-width="5"/><circle cx="36" cy="36" r="4" fill="var(--red)"/><line x1="36" y1="36" x2="64" y2="36" stroke="var(--red)" stroke-width="4" stroke-linecap="round"/></svg>`,
+    lessons: [
+      { title: "認識圓", hint: "圓心、半徑、直徑", href: "circle/01-parts.html", ready: false, pic: "parts" },
+      { title: "圓周率 π", hint: "滾一圈 ≈ 直徑的 3.14 倍", href: "circle/02-pi.html", ready: false, pic: "pi" },
+      { title: "圓周長", hint: "直徑 × 3.14", href: "circle/03-circumference.html", ready: false, pic: "circumference" },
+      { title: "圓面積", hint: "切開拼成長方形", href: "circle/04-area.html", ready: false, pic: "area" },
+      { title: "扇形", hint: "圓心角 ÷ 360 是幾分之幾", href: "circle/05-sector.html", ready: false, pic: "sector" },
+      { title: "扇形周長", hint: "兩條半徑 + 弧長", href: "circle/06-sector-perimeter.html", ready: false, pic: "sectorPerimeter" },
+      { title: "陰影面積", hint: "大的減小的", href: "circle/07-shaded.html", ready: false, pic: "shaded" },
+    ],
+  },
+  {
+    id: "ch2", tag: "第二章 · 下一章", title: "放大、縮小與比例尺",
+    icon: `<svg viewBox="0 0 72 72"><rect x="6" y="42" width="16" height="16" rx="2" fill="var(--yellow)" stroke="var(--ink)" stroke-width="2.5"/><rect x="30" y="18" width="36" height="40" rx="3" fill="var(--yellow)" stroke="var(--ink)" stroke-width="2.5"/><path d="M14 34 Q20 14 30 14" fill="none" stroke="var(--ch2)" stroke-width="3.5" stroke-linecap="round"/><path d="M25 9 l6 5 l-6 5" fill="none" stroke="var(--ch2)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+    lessons: [
+      { title: "放大圖與縮小圖", hint: "形狀一樣，大小不同", href: "scale/01-enlarge-reduce.html", ready: false, pic: "enlarge" },
+      { title: "對應邊、對應角", hint: "角一樣大，邊同倍數", href: "scale/02-corresponding.html", ready: false, pic: "corresponding" },
+      { title: "畫放大圖、縮小圖", hint: "在方格上數格子畫", href: "scale/03-draw.html", ready: false, pic: "draw" },
+      { title: "面積變幾倍？", hint: "邊 2 倍，面積 4 倍", href: "scale/04-area-ratio.html", ready: false, pic: "areaRatio" },
+      { title: "認識比例尺", hint: "地圖上的 1 公分 = 真的多遠", href: "scale/05-scale.html", ready: false, pic: "scaleBar" },
+      { title: "用比例尺算距離", hint: "圖上 ↔ 實際", href: "scale/06-distance.html", ready: false, pic: "distance" },
+    ],
+  },
+];
+
+/* 每一課的小插圖（viewBox 160 x 120） */
+const PICS = {
+  parts: `
+    <circle cx="80" cy="60" r="44" fill="var(--card)" class="stroke"/>
+    <g class="spin" style="transform-origin:80px 60px">
+      <line x1="36" y1="60" x2="124" y2="60" stroke="var(--blue)" stroke-width="4" stroke-linecap="round"/>
+      <line x1="80" y1="60" x2="111" y2="29" stroke="var(--red)" stroke-width="4" stroke-linecap="round"/>
+    </g>
+    <circle cx="80" cy="60" r="5" fill="var(--ink)"/>
+    <text x="124" y="22" font-size="13" fill="var(--red)" style="fill:var(--red)">半徑</text>
+    <text x="58" y="80" font-size="13" style="fill:var(--blue)">直徑</text>`,
+  pi: `
+    <line x1="10" y1="96" x2="150" y2="96" class="stroke"/>
+    <g class="roll">
+      <circle cx="30" cy="78" r="18" fill="var(--card)" class="stroke"/>
+      <line x1="30" y1="78" x2="30" y2="96" stroke="var(--red)" stroke-width="3"/>
+      <circle cx="30" cy="96" r="3.5" fill="var(--red)"/>
+    </g>
+    <g stroke-width="5" stroke-linecap="butt">
+      <line x1="12" y1="108" x2="48" y2="108" stroke="var(--blue)"/>
+      <line x1="48" y1="108" x2="84" y2="108" stroke="var(--yellow)"/>
+      <line x1="84" y1="108" x2="120" y2="108" stroke="var(--blue)"/>
+      <line x1="120" y1="108" x2="125" y2="108" stroke="var(--red)"/>
+    </g>
+    <text x="54" y="36" font-size="22">3.14…</text>`,
+  circumference: `
+    <circle cx="48" cy="54" r="30" fill="none" stroke="var(--red)" stroke-width="5" stroke-dasharray="150 40" transform="rotate(90 48 54)"/>
+    <line x1="18" y1="54" x2="78" y2="54" stroke="var(--blue)" stroke-width="3" stroke-dasharray="4 4"/>
+    <path d="M48 84 L150 84" stroke="var(--red)" stroke-width="5" stroke-linecap="round"/>
+    <path d="M96 60 l12 10 l-12 10" class="stroke" style="stroke:var(--muted)"/>
+    <text x="70" y="108" font-size="14">直徑 × 3.14</text>`,
+  area: `
+    <g transform="translate(36 58)">
+      ${Array.from({length: 8}, (_, i) => {
+        const a1 = i * 45 * Math.PI / 180, a2 = (i + 1) * 45 * Math.PI / 180, r = 28;
+        return `<path d="M0 0 L${(r*Math.cos(a1)).toFixed(1)} ${(r*Math.sin(a1)).toFixed(1)} A${r} ${r} 0 0 1 ${(r*Math.cos(a2)).toFixed(1)} ${(r*Math.sin(a2)).toFixed(1)} Z" fill="${i % 2 ? 'var(--yellow)' : 'var(--blue)'}" stroke="var(--ink)" stroke-width="1.5"/>`;
+      }).join("")}
+    </g>
+    <path d="M70 58 l10 0" class="stroke"/><path d="M76 53 l5 5 l-5 5" class="stroke"/>
+    <g transform="translate(86 44)">
+      ${Array.from({length: 8}, (_, i) => {
+        const x = i * 7.5;
+        return i % 2 === 0
+          ? `<path d="M${x} 28 L${x+7.5} 0 L${x+15} 28 Q${x+7.5} 31 ${x} 28 Z" fill="var(--blue)" stroke="var(--ink)" stroke-width="1.5"/>`
+          : `<path d="M${x} 0 Q${x+7.5} -3 ${x+15} 0 L${x+7.5} 28 Z" fill="var(--yellow)" stroke="var(--ink)" stroke-width="1.5"/>`;
+      }).join("")}
+    </g>
+    <text x="92" y="94" font-size="12">像長方形</text>`,
+  sector: `
+    <circle cx="56" cy="62" r="40" fill="var(--card)" class="stroke"/>
+    <path class="pulse" d="M56 62 L96 62 A40 40 0 0 0 56 22 Z" fill="var(--yellow)" stroke="var(--ink)" stroke-width="2.5"/>
+    <path d="M70 62 A14 14 0 0 0 56 48" fill="none" stroke="var(--red)" stroke-width="3"/>
+    <text x="30" y="80" font-size="13" style="fill:var(--red)">90°</text>
+    <text x="106" y="48" font-size="15">90</text>
+    <line x1="104" y1="56" x2="138" y2="56" class="stroke"/>
+    <text x="104" y="74" font-size="15">360</text>
+    <text x="110" y="100" font-size="18" style="fill:var(--red)">= ¼</text>`,
+  sectorPerimeter: `
+    <path d="M50 92 L50 28" stroke="var(--blue)" stroke-width="5" stroke-linecap="round"/>
+    <path d="M50 92 L114 92" stroke="var(--blue)" stroke-width="5" stroke-linecap="round"/>
+    <path d="M50 28 A64 64 0 0 1 114 92" fill="none" stroke="var(--red)" stroke-width="5" stroke-linecap="round"/>
+    <text x="22" y="64" font-size="12" style="fill:var(--blue)">半徑</text>
+    <text x="68" y="110" font-size="12" style="fill:var(--blue)">半徑</text>
+    <text x="104" y="40" font-size="12" style="fill:var(--red)">弧長</text>`,
+  shaded: `
+    <rect x="44" y="16" width="88" height="88" fill="var(--shade)" class="stroke"/>
+    <path d="M44 104 L44 16 A88 88 0 0 1 132 104 Z" fill="var(--card)" stroke="var(--ink)" stroke-width="2.5"/>
+    <rect x="44" y="16" width="88" height="88" class="stroke"/>
+    <text x="104" y="34" font-size="20">?</text>`,
+  enlarge: `
+    ${gridLines(160, 120, 12)}
+    <path d="M12 96 L12 72 L24 60 L36 72 L36 96 Z" fill="var(--yellow)" class="stroke"/>
+    <path class="grow" d="M60 108 L60 60 L84 36 L108 60 L108 108 Z" fill="var(--yellow)" stroke="var(--ink)" stroke-width="2.5"/>
+    <text x="116" y="30" font-size="16" style="fill:var(--green)">×2</text>`,
+  corresponding: `
+    <path d="M14 96 L58 96 L22 56 Z" fill="var(--card)" stroke="var(--ink)" stroke-width="2"/>
+    <path d="M14 96 L58 96" stroke="var(--red)" stroke-width="4"/>
+    <path d="M14 96 L22 56" stroke="var(--blue)" stroke-width="4"/>
+    <path d="M24 96 A10 10 0 0 0 16 87" fill="none" stroke="var(--purple)" stroke-width="3"/>
+    <path d="M74 106 L150 106 L88 38 Z" fill="var(--card)" stroke="var(--ink)" stroke-width="2"/>
+    <path d="M74 106 L150 106" stroke="var(--red)" stroke-width="4"/>
+    <path d="M74 106 L88 38" stroke="var(--blue)" stroke-width="4"/>
+    <path d="M84 106 A10 10 0 0 0 76 97" fill="none" stroke="var(--purple)" stroke-width="3"/>
+    <text x="108" y="34" font-size="13" style="fill:var(--purple)">角一樣</text>`,
+  draw: `
+    ${gridLines(160, 120, 10)}
+    <path d="M10 70 L30 70 L30 90 L10 90 Z" fill="var(--blue)" opacity=".85"/>
+    <path d="M10 70 L20 60 L30 70 Z" fill="var(--red)" opacity=".85"/>
+    <path d="M44 80 l16 0" class="stroke"/><path d="M55 75 l5 5 l-5 5" class="stroke"/>
+    <path d="M80 60 L120 60 L120 100 L80 100 Z" fill="var(--blue)" opacity=".85"/>
+    <path d="M80 60 L100 40 L120 60 Z" fill="var(--red)" opacity=".85"/>
+    <path d="M136 20 l12 12 l-30 30 l-14 2 l2 -14 Z" fill="var(--yellow)" stroke="var(--ink)" stroke-width="2"/>`,
+  areaRatio: `
+    <rect x="16" y="64" width="28" height="28" fill="var(--yellow)" class="stroke"/>
+    <text x="24" y="84" font-size="13">1</text>
+    <path d="M54 78 l14 0" class="stroke"/><path d="M63 73 l5 5 l-5 5" class="stroke"/>
+    <g>
+      <rect x="80" y="36" width="28" height="28" fill="var(--yellow)" class="stroke"/>
+      <rect x="108" y="36" width="28" height="28" fill="var(--yellow)" class="stroke"/>
+      <rect x="80" y="64" width="28" height="28" fill="var(--yellow)" class="stroke"/>
+      <rect x="108" y="64" width="28" height="28" fill="var(--yellow)" class="stroke"/>
+    </g>
+    <text x="94" y="108" font-size="12">邊 ×2</text>
+    <text x="78" y="26" font-size="14" style="fill:var(--red)">面積 ×4</text>`,
+  scaleBar: `
+    <rect x="14" y="12" width="132" height="76" rx="8" fill="var(--ch2-soft)" stroke="var(--ink)" stroke-width="2"/>
+    <path d="M24 70 C50 30, 80 80, 110 36 S140 50, 138 40" fill="none" stroke="var(--blue)" stroke-width="4"/>
+    <path d="M40 30 l10 0 l0 10 l-10 0 Z" fill="var(--red)"/>
+    <g transform="translate(20 100)">
+      <rect x="0" y="0" width="30" height="8" fill="var(--ink)"/>
+      <rect x="30" y="0" width="30" height="8" fill="var(--card)" stroke="var(--ink)" stroke-width="1.5"/>
+      <rect x="60" y="0" width="30" height="8" fill="var(--ink)"/>
+      <text x="96" y="9" font-size="11">1 : 1000</text>
+    </g>`,
+  distance: `
+    <rect x="10" y="12" width="70" height="70" rx="6" fill="var(--ch2-soft)" stroke="var(--ink)" stroke-width="2"/>
+    <circle cx="24" cy="66" r="5" fill="var(--red)"/><circle cx="66" cy="28" r="5" fill="var(--red)"/>
+    <line x1="24" y1="66" x2="66" y2="28" stroke="var(--red)" stroke-width="2.5" stroke-dasharray="4 3"/>
+    <text x="20" y="100" font-size="12">3 公分</text>
+    <path d="M88 56 l14 0" class="stroke"/><path d="M97 51 l5 5 l-5 5" class="stroke"/>
+    <path d="M112 78 l12 -30 l12 30 Z" fill="var(--green)" stroke="var(--ink)" stroke-width="2"/>
+    <path d="M128 82 l10 -22 l10 22 Z" fill="var(--green)" stroke="var(--ink)" stroke-width="2"/>
+    <text x="108" y="100" font-size="12">30 公尺</text>`,
+};
+
+function gridLines(w, h, step) {
+  let s = "";
+  for (let x = step; x < w; x += step) s += `<line x1="${x}" y1="0" x2="${x}" y2="${h}" class="gridline"/>`;
+  for (let y = step; y < h; y += step) s += `<line x1="0" y1="${y}" x2="${w}" y2="${y}" class="gridline"/>`;
+  return s;
+}
+
+function render() {
+  const root = document.getElementById("chapters");
+  root.innerHTML = CHAPTERS.map(ch => `
+    <section class="chapter ${ch.id}">
+      <div class="chapter-head">
+        ${ch.icon}
+        <div>
+          <span class="tag">${ch.tag}</span>
+          <h2>${ch.title}</h2>
+        </div>
+      </div>
+      <div class="grid">
+        ${ch.lessons.map((l, i) => `
+          <a class="card ${l.ready ? "ready" : "soon"}" href="${l.ready ? l.href : "#"}" ${l.ready ? "" : 'data-soon="1"'}>
+            <span class="num">${i + 1}</span>
+            <div class="pic"><svg viewBox="0 0 160 120" aria-hidden="true">${PICS[l.pic] || ""}</svg></div>
+            <h3>${l.title}</h3>
+            <p class="hint">${l.hint}</p>
+            <span class="status"><i class="badge ${l.ready ? "ready" : "soon"}"></i>${l.ready ? "開始玩 →" : "準備中"}</span>
+          </a>`).join("")}
+      </div>
+    </section>`).join("");
+
+  const toast = document.getElementById("toast");
+  let timer;
+  root.addEventListener("click", e => {
+    const card = e.target.closest("[data-soon]");
+    if (!card) return;
+    e.preventDefault();
+    toast.classList.add("show");
+    clearTimeout(timer);
+    timer = setTimeout(() => toast.classList.remove("show"), 1600);
+  });
+}
+render();
+</script>
+</body>
+</html>
