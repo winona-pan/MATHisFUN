@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>分數、小數混合計算</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6b-u1" data-page="6b-u1/01">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-learn">學會方法</span>
+  <h1>分數、小數混合計算</h1>
+  <p class="lead">算式裡同時有分數和小數，先換成「同一種」再算。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>換成分數？還是換成小數？</h2>
+    <div class="controls" style="margin-top:0" id="exs"></div>
+    <div class="controls">
+      <button class="btn" data-m="f" aria-pressed="true">都換成分數</button>
+      <button class="btn" data-m="d">都換成小數</button>
+    </div>
+    <div class="calc" id="calc" style="margin-top:10px"></div>
+    <div class="work" id="tip"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>怎麼選？</h2>
+    <div class="steps">
+      <div class="step"><p>① 分數能<b>剛好</b>換成小數（像 ½、¼、⅕），兩種方法都可以。</p></div>
+      <div class="step"><p>② 分數換成小數<b>除不完</b>（像 ⅓、⅙），一定要<b>換成分數</b>算，答案才準。</p></div>
+      <div class="step"><p>③ 有<b>乘、除</b>的時候，換成分數常常可以先<b>約分</b>，比較好算。</p></div>
+      <div class="step"><p>④ 順序規則一樣：<b>括號 → 乘除 → 加減</b>。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula word">
+    <div class="label">方法</div>
+    <div class="big" style="font-size:1.35rem">先換成同一種 → 照順序算</div>
+    <div class="sub">遇到除不完的分數（⅓、⅙、⅐…）→ 用分數</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中會加入<b>負數</b>，例如 <code>−½ + 0.25</code>。方法一樣：先換成同一種，再算。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：隨機出題</h2>
+    <p class="hint" style="margin-top:0">答案可以寫分數（例如 5/6）或小數。</p>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  // 例題：分數法、小數法的每一行
+  const EX = [
+    { name: "½ + 0.25", f: ["½ + 0.25", "= ½ + ¼", "= 2/4 + 1/4", "= <b>¾</b>"], d: ["½ + 0.25", "= 0.5 + 0.25", "= <b>0.75</b>"], tip: "½ 能換成 0.5，兩種方法都可以，答案一樣（¾ = 0.75）。" },
+    { name: "⅓ + 0.5", f: ["⅓ + 0.5", "= ⅓ + ½", "= 2/6 + 3/6", "= <b>5/6</b>"], d: ["⅓ + 0.5", "= 0.333… + 0.5", "= 0.833…　😵 除不完！"], tip: "⅓ 換成小數除不完 → 一定要用分數算。" },
+    { name: "0.6 × 5/6", f: ["0.6 × 5/6", "= 3/5 × 5/6", "= (3 × 5)/(5 × 6)　← 5 可以約掉", "= 3/6 = <b>½</b>"], d: ["0.6 × 5/6", "= 0.6 × 0.833…", "= 0.4999…　😵 不準"], tip: "有乘法的時候，換成分數還可以先約分，最快！" },
+    { name: "2 − 0.5 × ⅔", f: ["2 − 0.5 × ⅔", "= 2 − ½ × ⅔　← 先算乘法", "= 2 − ⅓", "= <b>5/3</b>（= 1⅔）"], d: ["2 − 0.5 × ⅔", "= 2 − 0.5 × 0.666…", "😵 又除不完了"], tip: "記得先乘除後加減，再選用分數。" },
+  ];
+  let ex = 0, m = "f";
+  function draw() {
+    const E = EX[ex];
+    document.getElementById("calc").innerHTML = E[m].map(r => `<span class="row">${r}</span>`).join("");
+    document.getElementById("tip").textContent = "💡 " + E.tip;
+    document.querySelectorAll("[data-ex]").forEach(b => b.setAttribute("aria-pressed", +b.dataset.ex === ex));
+    document.querySelectorAll("[data-m]").forEach(b => b.setAttribute("aria-pressed", b.dataset.m === m));
+  }
+  document.getElementById("exs").innerHTML = EX.map((e, i) => `<button class="btn" data-ex="${i}">${e.name}</button>`).join("");
+  document.querySelectorAll("[data-ex]").forEach(b => b.addEventListener("click", () => { ex = +b.dataset.ex; draw(); }));
+  document.querySelectorAll("[data-m]").forEach(b => b.addEventListener("click", () => { m = b.dataset.m; draw(); }));
+  draw();
+
+  const DECS = [0.5, 0.25, 0.75, 0.2, 0.4, 0.6, 0.8, 1.5, 0.3];
+  const DENS = [2, 3, 4, 5, 6, 8];
+  const randFrac = () => { const d = W.pick(DENS); return W.F(W.rand(1, d - 1), d); };
+  const pic = s => `<text x="10" y="70" font-size="20">${s}</text><text x="10" y="120" font-size="13" style="fill:var(--muted)">先換成同一種</text>`;
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { const a = randFrac(), x = W.pick(DECS), b = W.Fdec(x), op = W.pick(["+", "−", "×"]);
+      let r = op === "+" ? W.Fadd(a, b) : op === "×" ? W.Fmul(a, b) : W.Fsub(a, b);
+      if (op === "−" && W.Fval(r) < 0) { r = W.Fsub(b, a); return { q: `${x} − ${W.Fstr(a)} = ?`, ans: W.Fval(r), show: W.Fstr(r), hint: `${x} = ${W.Fstr(b)}，通分再減`, pic: pic(`${x} − ${W.Fstr(a)}`) }; }
+      return { q: `${W.Fstr(a)} ${op} ${x} = ?`, ans: W.Fval(r), show: W.Fstr(r), hint: `${x} = ${W.Fstr(b)}，換成分數再算`, pic: pic(`${W.Fstr(a)} ${op} ${x}`) }; },
+    () => { const a = W.rand(1, 3), x = W.pick(DECS), b = randFrac(), r = W.Fsub(W.F(a + 1), W.Fmul(W.Fdec(x), b));
+      if (W.Fval(r) < 0) return { q: `${x} × ${W.Fstr(b)} = ?`, ans: W.Fval(W.Fmul(W.Fdec(x), b)), show: W.Fstr(W.Fmul(W.Fdec(x), b)), hint: "換成分數，先約分再乘", pic: pic(`${x} × ${W.Fstr(b)}`) };
+      return { q: `${a + 1} − ${x} × ${W.Fstr(b)} = ?`, ans: W.Fval(r), show: W.Fstr(r), hint: `先算乘法：${x} × ${W.Fstr(b)} = ${W.Fstr(W.Fmul(W.Fdec(x), b))}`, pic: pic(`${a + 1} − ${x} × ${W.Fstr(b)}`) }; },
+  ] });
+</script>
+</body>
+</html>

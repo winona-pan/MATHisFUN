@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>交換律、結合律</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+<style>#arr { transition: transform .8s ease; transform-box: fill-box; transform-origin: center; }</style>
+</head>
+<body data-seq="6b-u1" data-page="6b-u1/02">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-formula">公式怎麼來</span>
+  <h1>交換律、結合律</h1>
+  <p class="lead">換個順序、換個組合，答案會變嗎？</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>乘法交換律：把方塊轉一下</h2>
+    <div class="stage"><svg id="g1" viewBox="0 0 400 230"></svg></div>
+    <div class="controls">
+      <label>排 <input type="range" id="ra" min="2" max="5" value="3"></label>
+      <label>每排 <input type="range" id="rb" min="2" max="7" value="5"></label>
+      <button class="btn primary" id="rot">↻ 轉 90 度</button>
+    </div>
+    <div class="work" id="w1"></div>
+  </section>
+
+  <section class="box">
+    <h2><span class="n">2</span>結合律：先合哪兩個都可以</h2>
+    <div class="controls" style="margin-top:0">
+      <button class="btn" data-k="add" aria-pressed="true">加法 (2 + 3) + 4</button>
+      <button class="btn" data-k="mul">乘法 (2 × 3) × 4</button>
+    </div>
+    <div class="stage" style="margin-top:12px"><svg id="g2" viewBox="0 0 400 200"></svg></div>
+    <div class="controls"><button class="btn primary" id="sw">換一種組合 ⇄</button></div>
+    <div class="work" id="w2"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">3</span>整理一下</h2>
+    <div class="steps">
+      <div class="step"><p>① <b>交換律</b>：兩個數<b>換位置</b>，答案不變。3 + 5 = 5 + 3、3 × 5 = 5 × 3。</p></div>
+      <div class="step"><p>② <b>結合律</b>：三個數一起加（或一起乘），<b>先算哪兩個都可以</b>。(2 + 3) + 4 = 2 + (3 + 4)。</p></div>
+      <div class="step"><p>③ 有什麼用？可以<b>挑好算的先算</b>：25 × 7 × 4 = 7 × (25 × 4) = 7 × 100 = 700。</p></div>
+      <div class="step"><p>④ <b>減法、除法不可以！</b> 5 − 3 ≠ 3 − 5、8 ÷ 2 ≠ 2 ÷ 8。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula">
+    <div class="label">公式</div>
+    <div class="big">a + b = b + a　　a × b = b × a</div>
+    <div class="big" style="font-size:1.3rem">(a + b) + c = a + (b + c)　(a × b) × c = a × (b × c)</div>
+    <div class="sub">只有加法、乘法可以這樣做</div>
+  </div>
+
+  <div class="warn"><span class="ic">⚠️</span><p>減法、除法<b>不能</b>交換也不能結合：(12 − 5) − 2 = 5，但 12 − (5 − 2) = 9。</p></div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中直接用字母寫：<code>a + b = b + a</code>、<code>ab = ba</code>。之後算 <code>3x + 5 + 2x</code> 時，就是用交換律把 x 放在一起：<code>5x + 5</code>。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">4</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  const ra = document.getElementById("ra"), rb = document.getElementById("rb");
+  let turned = false;
+  function draw1() {
+    const a = +ra.value, b = +rb.value, C = 26;
+    let s = `<g id="arr" style="transform:rotate(${turned ? 90 : 0}deg)">`;
+    for (let r = 0; r < a; r++) for (let c = 0; c < b; c++)
+      s += `<circle cx="${200 - (b - 1) * C / 2 + c * C}" cy="${110 - (a - 1) * C / 2 + r * C}" r="10" fill="${r % 2 ? "var(--blue)" : "var(--yellow)"}" stroke="var(--ink)" stroke-width="1.2"/>`;
+    s += `</g>`;
+    document.getElementById("g1").innerHTML = s;
+    document.getElementById("w1").innerHTML = turned
+      ? `轉過來：${b} 排，每排 ${a} 個 → <b>${b} × ${a} = ${a * b}</b>　還是 ${a * b} 個！`
+      : `${a} 排，每排 ${b} 個 → <b>${a} × ${b} = ${a * b}</b>`;
+  }
+  ra.addEventListener("input", () => { turned = false; draw1(); }); rb.addEventListener("input", () => { turned = false; draw1(); });
+  document.getElementById("rot").addEventListener("click", () => {
+    turned = !turned;
+    document.getElementById("arr").style.transform = `rotate(${turned ? 90 : 0}deg)`;
+    setTimeout(() => {
+      const a = +ra.value, b = +rb.value;
+      document.getElementById("w1").innerHTML = turned
+        ? `轉過來：${b} 排，每排 ${a} 個 → <b>${b} × ${a} = ${a * b}</b>　還是 ${a * b} 個！`
+        : `${a} 排，每排 ${b} 個 → <b>${a} × ${b} = ${a * b}</b>`;
+    }, 800);
+  });
+  draw1();
+
+  let kind = "add", left = true;
+  function draw2() {
+    let s = "";
+    if (kind === "add") {
+      const n = [2, 3, 4], col = ["var(--red)", "var(--blue)", "var(--yellow)"];
+      let x = 20;
+      n.forEach((k, i) => {
+        const grouped = left ? i < 2 : i > 0;
+        for (let j = 0; j < k; j++) { s += `<rect x="${x}" y="70" width="34" height="34" rx="6" fill="${col[i]}" stroke="var(--ink)" stroke-width="1.5"/>`; x += 38; }
+        x += 14;
+      });
+      const g = left ? [20, 20 + 5 * 38 + 14] : [20 + 2 * 38 + 14, 20 + 9 * 38 + 28];
+      s += `<rect x="${g[0] - 6}" y="60" width="${g[1] - g[0] + 2}" height="54" rx="12" fill="none" stroke="var(--green)" stroke-width="3" stroke-dasharray="6 4"/>`;
+      s += `<text x="20" y="150" font-size="18">${left ? "(2 + 3) + 4 = 5 + 4 = 9" : "2 + (3 + 4) = 2 + 7 = 9"}</text>`;
+      document.getElementById("w2").innerHTML = `綠色框框是先算的兩個。換一種組合，還是 <b>9</b> 個！`;
+    } else {
+      // 4 組，每組 2 × 3
+      for (let g = 0; g < 4; g++) for (let r = 0; r < 2; r++) for (let c = 0; c < 3; c++)
+        s += `<circle cx="${30 + g * 92 + c * 22}" cy="${70 + r * 22}" r="8" fill="${["var(--red)", "var(--blue)", "var(--yellow)", "var(--green)"][g]}" stroke="var(--ink)" stroke-width="1"/>`;
+      if (left) for (let g = 0; g < 4; g++) s += `<rect x="${16 + g * 92}" y="56" width="72" height="50" rx="10" fill="none" stroke="var(--ink)" stroke-width="2" stroke-dasharray="5 4"/>`;
+      else for (let r = 0; r < 2; r++) s += `<rect x="16" y="${58 + r * 22}" width="${3 * 92 + 70}" height="24" rx="10" fill="none" stroke="var(--ink)" stroke-width="2" stroke-dasharray="5 4"/>`;
+      s += `<text x="20" y="150" font-size="18">${left ? "(2 × 3) × 4 = 6 × 4 = 24" : "2 × (3 × 4) = 2 × 12 = 24"}</text>`;
+      s += `<text x="20" y="178" font-size="13" style="fill:var(--muted)">${left ? "看成：4 盒，每盒 2 × 3 = 6 顆" : "看成：2 排，每排 3 × 4 = 12 顆"}</text>`;
+      document.getElementById("w2").innerHTML = `一樣的 24 顆，換個方法圈，答案不變！`;
+    }
+    document.getElementById("g2").innerHTML = s;
+    document.querySelectorAll("[data-k]").forEach(b => b.setAttribute("aria-pressed", b.dataset.k === kind));
+  }
+  document.querySelectorAll("[data-k]").forEach(b => b.addEventListener("click", () => { kind = b.dataset.k; left = true; draw2(); }));
+  document.getElementById("sw").addEventListener("click", () => { left = !left; draw2(); });
+  draw2();
+
+  const P = `<text x="10" y="50" font-size="15">挑好算的</text><text x="10" y="85" font-size="15">先湊在一起</text><text x="10" y="125" font-size="13" style="fill:var(--red)">25×4=100　125×8=1000</text>`;
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { const [a, b] = W.pick([[25, 4], [125, 8], [50, 2], [20, 5]]), c = W.rand(3, 19);
+      return { q: `${a} × ${c} × ${b} = ?（先把好算的湊在一起）`, ans: a * b * c, hint: `交換、結合：${c} × (${a} × ${b}) = ${c} × ${a * b}`, pic: P }; },
+    () => { const a = W.rand(11, 89), b = W.rand(11, 89), c = 100 - a;
+      return { q: `${a} + ${b} + ${c} = ?（先把好算的湊在一起）`, ans: a + b + c, hint: `${a} + ${c} = 100，再加 ${b}`, pic: P }; },
+    () => { const opts = ["5 − 3 = 3 − 5", "4 × 7 = 7 × 4", "8 ÷ 2 = 2 ÷ 8", "(9 − 4) − 2 = 9 − (4 − 2)"];
+      return { q: "哪一個算式是<b>對的</b>？", choices: opts, ans: 1, hint: "只有加法、乘法可以交換", pic: P }; },
+  ] });
+</script>
+</body>
+</html>

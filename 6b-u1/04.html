@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>簡便計算</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6b-u1" data-page="6b-u1/04">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-learn">學會方法</span>
+  <h1>簡便計算</h1>
+  <p class="lead">用交換律、結合律、分配律，把難算的變成好算的：湊成 10、100、1000！</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>看高手怎麼算</h2>
+    <div class="controls" style="margin-top:0" id="exs"></div>
+    <div class="calc" id="calc" style="margin-top:10px"></div>
+    <div class="controls"><button class="btn primary" id="step">下一步 →</button><button class="btn" id="again">重來</button></div>
+  </section>
+
+  <div class="formula word">
+    <div class="label">好朋友數（背起來）</div>
+    <div class="big" style="font-size:1.3rem;line-height:1.9">25 × 4 = 100　125 × 8 = 1000　50 × 2 = 100<br>0.25 × 4 = 1　0.125 × 8 = 1　99 = 100 − 1</div>
+  </div>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>三個招式</h2>
+    <div class="steps">
+      <div class="step"><p>① <b>湊整</b>（交換律、結合律）：把能湊成整十、整百的放在一起先算。</p></div>
+      <div class="step"><p>② <b>拆開</b>（分配律）：99 × 6 = (100 − 1) × 6 = 600 − 6 = 594。</p></div>
+      <div class="step"><p>③ <b>提出來</b>（分配律反過來）：4.7 × 3 + 5.3 × 3 = (4.7 + 5.3) × 3 = 10 × 3 = 30。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中的<b>乘法公式</b>也是簡便計算：<code>99² = (100 − 1)²</code>、<code>51 × 49 = (50 + 1)(50 − 1) = 2500 − 1</code>。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  const EX = [
+    { name: "25 × 17 × 4", rows: ["25 × 17 × 4", "= 17 × [[25 × 4]]　← 交換、湊整", "= 17 × 100", "= <b>1700</b>"] },
+    { name: "125 × 32", rows: ["125 × 32", "= 125 × [[8 × 4]]　← 32 拆成 8 × 4", "= (125 × 8) × 4", "= 1000 × 4 = <b>4000</b>"] },
+    { name: "99 × 23", rows: ["99 × 23", "= [[(100 − 1)]] × 23　← 99 拆成 100 − 1", "= 2300 − 23", "= <b>2277</b>"] },
+    { name: "3.6 × 7 + 6.4 × 7", rows: ["3.6 × 7 + 6.4 × 7", "= [[(3.6 + 6.4)]] × 7　← 提出 7", "= 10 × 7", "= <b>70</b>"] },
+    { name: "0.25 × 3.7 × 40", rows: ["0.25 × 3.7 × 40", "= 3.7 × [[(0.25 × 40)]]　← 0.25 × 4 = 1", "= 3.7 × 10", "= <b>37</b>"] },
+  ];
+  let ex = 0, k = 0;
+  const show = r => r.replace(/\[\[(.+?)\]\]/g, '<span class="hl">$1</span>');
+  function draw() {
+    const E = EX[ex];
+    document.getElementById("calc").innerHTML = E.rows.slice(0, k + 1).map((r, i) => `<span class="row">${i === k ? show(r) : r.replace(/\[\[|\]\]/g, "")}</span>`).join("");
+    document.getElementById("step").disabled = k >= E.rows.length - 1;
+    document.querySelectorAll("[data-ex]").forEach(b => b.setAttribute("aria-pressed", +b.dataset.ex === ex));
+  }
+  document.getElementById("exs").innerHTML = EX.map((e, i) => `<button class="btn" data-ex="${i}">${e.name}</button>`).join("");
+  document.querySelectorAll("[data-ex]").forEach(b => b.addEventListener("click", () => { ex = +b.dataset.ex; k = 0; draw(); }));
+  document.getElementById("step").addEventListener("click", () => { k++; draw(); });
+  document.getElementById("again").addEventListener("click", () => { k = 0; draw(); });
+  draw();
+
+  const P = t => `<text x="10" y="50" font-size="15">找好朋友數</text><text x="10" y="90" font-size="15" style="fill:var(--red)">${t}</text>`;
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { const [a, b] = W.pick([[25, 4], [125, 8], [50, 2], [20, 5]]), c = W.rand(3, 49); return { q: `${a} × ${c} × ${b} = ?`, ans: a * b * c, hint: `${a} × ${b} = ${a * b}`, pic: P(`${a} × ${b} = ${a * b}`) }; },
+    () => { const c = W.rand(3, 40), k2 = W.pick([99, 101, 199, 98, 102]), base = Math.round(k2 / 100) * 100, d = k2 - base;
+      return { q: `${k2} × ${c} = ?`, ans: k2 * c, hint: `${k2} = ${base} ${d > 0 ? "+" : "−"} ${Math.abs(d)} → ${base * c} ${d > 0 ? "+" : "−"} ${Math.abs(d) * c}`, pic: P(`${k2} = ${base} ${d > 0 ? "+" : "−"} ${Math.abs(d)}`) }; },
+    () => { const [a, b] = W.pick([[4.7, 5.3], [2.6, 7.4], [1.8, 8.2], [0.35, 0.65], [36, 64]]), c = W.rand(3, 25);
+      return { q: `${a} × ${c} + ${b} × ${c} = ?`, ans: Math.round((a + b) * c * 100) / 100, hint: `(${a} + ${b}) × ${c} = ${W.num(a + b)} × ${c}`, pic: P(`${a} + ${b} = ${W.num(a + b)}`) }; },
+    () => { const c = W.rand(3, 9) * 4; return { q: `125 × ${c} = ?`, ans: 125 * c, hint: `${c} = 4 × ${c / 4}，125 × 4 = 500，再 × ${c / 4}`, pic: P("125 × 8 = 1000，125 × 4 = 500") }; },
+  ] });
+</script>
+</body>
+</html>

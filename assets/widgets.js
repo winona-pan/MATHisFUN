@@ -19,6 +19,19 @@
     return parseFloat(s);
   };
 
+  /* ---------- 分數計算 ---------- */
+  W.F = (n, d = 1) => { if (d < 0) { n = -n; d = -d; } const g = W.gcd(n, d) || 1; return { n: n / g, d: d / g }; };
+  W.Fadd = (a, b) => W.F(a.n * b.d + b.n * a.d, a.d * b.d);
+  W.Fsub = (a, b) => W.F(a.n * b.d - b.n * a.d, a.d * b.d);
+  W.Fmul = (a, b) => W.F(a.n * b.n, a.d * b.d);
+  W.Fdiv = (a, b) => W.F(a.n * b.d, a.d * b.n);
+  W.Fval = a => a.n / a.d;
+  W.Fstr = a => (a.d === 1 ? String(a.n) : `${a.n}/${a.d}`);
+  // 漂亮的分數（HTML 上下排）
+  W.Fhtml = a => (a.d === 1 ? String(a.n) : `<span class="fr"><span>${a.n}</span><span>${a.d}</span></span>`);
+  // 小數 → 分數
+  W.Fdec = x => { const s = String(x), k = s.includes(".") ? s.split(".")[1].length : 0; return W.F(Math.round(x * 10 ** k), 10 ** k); };
+
   /* ---------- 隨機出題 ----------
      W.practice(el, { gens: [fn...] } 或 { groups: [{ label, gens, on }] })
      每個 fn() 回傳 { q, ans, unit, hint, pic, pre, choices } */

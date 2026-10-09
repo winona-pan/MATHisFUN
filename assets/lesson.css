@@ -248,3 +248,7 @@ svg text { font-family: "Noto Sans TC", system-ui, sans-serif; font-weight: 700;
   .chain .node { min-width: 78px; padding: 6px 3px; }
   .calc { font-size: 1.25rem; }
 }
+
+/* 上下排的分數 */
+.fr { display: inline-flex; flex-direction: column; align-items: center; vertical-align: middle; line-height: 1.05; font-size: .85em; margin: 0 2px; }
+.fr span:first-child { border-bottom: 2px solid currentColor; padding: 0 3px; }

@@ -44,6 +44,17 @@
         { path: "6a-u9/04", t: "倒推法" },
       ],
     },
+    "6b-u1": {
+      name: "六下 第 1 單元・小數與分數的四則運算",
+      pages: [
+        { path: "review/order-of-operations", t: "四則運算的順序", pre: true },
+        { path: "review/fraction-decimal", t: "分數和小數互換", pre: true },
+        { path: "6b-u1/01", t: "分數、小數混合計算" },
+        { path: "6b-u1/02", t: "交換律、結合律" },
+        { path: "6b-u1/03", t: "分配律" },
+        { path: "6b-u1/04", t: "簡便計算" },
+      ],
+    },
   };
 
   const body = document.body;
