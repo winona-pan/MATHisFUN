@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>長方體、正方體體積</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6b-u6" data-page="review/box-volume">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-pre">先備知識・5 年級學過</span>
+  <h1>長方體、正方體體積</h1>
+  <p class="lead">體積 = 裡面可以放幾個 1 立方公分的小方塊。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>疊方塊</h2>
+    <div class="stage"><svg id="g" viewBox="0 0 400 280"></svg></div>
+    <div class="controls">
+      <label>長 <input type="range" id="l" min="1" max="6" value="4"> <b id="lv"></b></label>
+      <label>寬 <input type="range" id="w" min="1" max="5" value="3"> <b id="wv"></b></label>
+      <label>高（疊幾層）<input type="range" id="h" min="1" max="5" value="2"> <b id="hv"></b></label>
+    </div>
+    <div class="work" id="out"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>公式怎麼來</h2>
+    <div class="steps">
+      <div class="step"><p>① 一個 1 公分 × 1 公分 × 1 公分的小方塊，體積是 <b>1 立方公分</b>。</p></div>
+      <div class="step"><p>② 最下面一層：長 4、寬 3 → 一層有 4 × 3 = <b>12 個</b>（就是底面的面積）。</p></div>
+      <div class="step"><p>③ 疊 2 層 → 12 × 2 = <b>24 個</b>。所以體積 = 長 × 寬 × 高。</p></div>
+      <div class="step"><p>④ 換個說法：<b>體積 = 底面積 × 高</b>（一層有幾個 × 疊幾層）。這句話下一課超重要！</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula pre">
+    <div class="label">記起來</div>
+    <div class="big">長方體體積 = 長 × 寬 × 高</div>
+    <div class="big" style="font-size:1.3rem">= 底面積 × 高</div>
+    <div class="sub">正方體 = 邊長 × 邊長 × 邊長</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中寫成 <code>cm³</code>（立方公分），正方體體積 = <code>a³</code>（a 乘自己 3 次）。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>練習一下</h2>
+    <div class="quiz">
+      <div class="q" data-answer="60" data-hint="5 × 4 × 3">
+        <p class="qt">長 5、寬 4、高 3 公分的長方體，體積是幾立方公分？</p>
+        <div class="row"><input type="text" inputmode="decimal"> 立方公分 <button class="btn">對答案</button></div>
+      </div>
+      <div class="q" data-answer="64" data-hint="4 × 4 × 4">
+        <p class="qt">邊長 4 公分的正方體，體積是幾立方公分？</p>
+        <div class="row"><input type="text" inputmode="decimal"> 立方公分 <button class="btn">對答案</button></div>
+      </div>
+      <div class="q" data-answer="5" data-hint="翻過來：高 = 體積 ÷ 底面積 = 60 ÷ 12">
+        <p class="qt">長方體體積 60 立方公分，底面積 12 平方公分，高是幾公分？</p>
+        <div class="row"><input type="text" inputmode="decimal"> 公分 <button class="btn">對答案</button></div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script>
+  const l = document.getElementById("l"), w = document.getElementById("w"), h = document.getElementById("h");
+  function cube(i, j, k, s, cx, cy, top) {
+    const c = Math.cos(Math.PI / 6) * s, d = Math.sin(Math.PI / 6) * s;
+    const X = (a, b) => cx + (a - b) * c, Y = (a, b, z) => cy + (a + b) * d - z * s;
+    const p = (a, b, z) => `${X(a, b).toFixed(1)},${Y(a, b, z).toFixed(1)}`;
+    const col = top ? "var(--orange)" : "var(--yellow)";
+    return `<polygon points="${p(i, j, k + 1)} ${p(i + 1, j, k + 1)} ${p(i + 1, j + 1, k + 1)} ${p(i, j + 1, k + 1)}" fill="${col}" stroke="var(--ink)" stroke-width="1"/>
+      <polygon points="${p(i, j + 1, k + 1)} ${p(i + 1, j + 1, k + 1)} ${p(i + 1, j + 1, k)} ${p(i, j + 1, k)}" fill="${col}" fill-opacity=".7" stroke="var(--ink)" stroke-width="1"/>
+      <polygon points="${p(i + 1, j, k + 1)} ${p(i + 1, j + 1, k + 1)} ${p(i + 1, j + 1, k)} ${p(i + 1, j, k)}" fill="${col}" fill-opacity=".5" stroke="var(--ink)" stroke-width="1"/>`;
+  }
+  function draw() {
+    const L = +l.value, Wd = +w.value, H = +h.value, s = 24, cx = 200 + (Wd - L) * s * 0.43, cy = 140;
+    let out = "";
+    const list = [];
+    for (let k = 0; k < H; k++) for (let i = 0; i < L; i++) for (let j = 0; j < Wd; j++) list.push([i, j, k]);
+    list.sort((a, b) => a[2] - b[2] || (a[0] + a[1]) - (b[0] + b[1]));
+    list.forEach(([i, j, k]) => out += cube(i, j, k, s, cx, cy, k === H - 1));
+    document.getElementById("g").innerHTML = out;
+    document.getElementById("lv").textContent = L; document.getElementById("wv").textContent = Wd; document.getElementById("hv").textContent = H;
+    document.getElementById("out").innerHTML = `一層 ${L} × ${Wd} = ${L * Wd} 個，疊 ${H} 層（最上面那層是橘色）<br>體積 = ${L} × ${Wd} × ${H} = <b>${L * Wd * H} 立方公分</b>　（底面積 ${L * Wd} × 高 ${H}）`;
+  }
+  [l, w, h].forEach(x => x.addEventListener("input", draw)); draw();
+</script>
+</body>
+</html>

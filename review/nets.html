@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>立體形體與展開圖</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+<style>
+  .scene { height: 300px; display: grid; place-items: center; perspective: 900px; }
+  .net { position: relative; width: 70px; height: 70px; transform-style: preserve-3d; transform: rotateX(-28deg) rotateY(30deg) translateY(-20px); }
+  .f { position: absolute; width: 70px; height: 70px; box-sizing: border-box; border: 2px solid #2b2a33; transform-style: preserve-3d; display: grid; place-items: center; font-weight: 900; color: #2b2a33; }
+  .f > span { pointer-events: none; }
+  .base { left: 0; top: 0; background: rgba(242,182,50,.9); }
+  .up { left: -2px; top: -72px; transform-origin: 50% 100%; background: rgba(46,134,222,.75); }
+  .down { left: -2px; top: 68px; transform-origin: 50% 0; background: rgba(58,167,109,.8); }
+  .left { left: -72px; top: -2px; transform-origin: 100% 50%; background: rgba(228,87,46,.75); }
+  .right { left: 68px; top: -2px; transform-origin: 0 50%; background: rgba(142,107,216,.75); }
+  .lid { left: -2px; top: 68px; transform-origin: 50% 0; background: rgba(240,138,36,.85); }
+</style>
+</head>
+<body data-seq="6b-u6" data-page="review/nets">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-pre">先備知識・5 年級學過</span>
+  <h1>立體形體與展開圖</h1>
+  <p class="lead">把立體的盒子剪開、攤平，就是「展開圖」。反過來，展開圖可以摺回盒子。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>摺摺看</h2>
+    <div class="stage scene">
+      <div class="net" id="net">
+        <div class="f base"><span>1</span>
+          <div class="f up" id="fu"><span>2</span></div>
+          <div class="f left" id="fl"><span>3</span></div>
+          <div class="f right" id="fr"><span>4</span></div>
+          <div class="f down" id="fd"><span>5</span><div class="f lid" id="fi"><span>6</span></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="controls">
+      <label>攤平 ⇄ 摺起來 <input type="range" id="t" min="0" max="90" value="0"></label>
+      <button class="btn primary" id="play">▶ 摺起來</button>
+    </div>
+    <p class="hint">👉 摺起來時，1 號面在最底下（最後面）。正方體有 <b>6 個面</b>，展開圖就是 6 個正方形連在一起。</p>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>想一想</h2>
+    <div class="steps">
+      <div class="step"><p>① 正方體：<b>6 個面、12 條邊、8 個頂點</b>，每個面都是正方形。</p></div>
+      <div class="step"><p>② 展開圖可以算<b>表面積</b>：6 個面的面積加起來。</p></div>
+      <div class="step"><p>③ 不是每種排法都摺得起來！6 個排成一直線就不行（會重疊、少一個面）。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula pre">
+    <div class="label">記起來</div>
+    <div class="big" style="font-size:1.3rem">正方體：6 面、12 邊、8 頂點</div>
+    <div class="sub">表面積 = 6 個面加起來</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中會學更多立體圖形（角錐、圓錐），一樣用展開圖來算表面積。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>練習一下</h2>
+    <div class="quiz">
+      <div class="q" data-hint="試著在腦中摺摺看：一直線的會繞成一圈，沒有上下蓋">
+        <p class="qt">哪一個可以摺成正方體？</p>
+        <div class="choices">
+          <button class="choice" data-right><svg viewBox="0 0 100 80"><g fill="var(--yellow)" stroke="var(--ink)" stroke-width="1.5"><rect x="35" y="2" width="18" height="18"/><rect x="17" y="20" width="18" height="18"/><rect x="35" y="20" width="18" height="18"/><rect x="53" y="20" width="18" height="18"/><rect x="35" y="38" width="18" height="18"/><rect x="35" y="56" width="18" height="18"/></g></svg></button>
+          <button class="choice"><svg viewBox="0 0 120 80"><g fill="var(--yellow)" stroke="var(--ink)" stroke-width="1.5"><rect x="4" y="30" width="18" height="18"/><rect x="22" y="30" width="18" height="18"/><rect x="40" y="30" width="18" height="18"/><rect x="58" y="30" width="18" height="18"/><rect x="76" y="30" width="18" height="18"/><rect x="94" y="30" width="18" height="18"/></g></svg></button>
+          <button class="choice"><svg viewBox="0 0 100 80"><g fill="var(--yellow)" stroke="var(--ink)" stroke-width="1.5"><rect x="22" y="22" width="18" height="18"/><rect x="40" y="22" width="18" height="18"/><rect x="58" y="22" width="18" height="18"/><rect x="22" y="40" width="18" height="18"/><rect x="40" y="40" width="18" height="18"/><rect x="58" y="40" width="18" height="18"/></g></svg></button>
+        </div>
+      </div>
+      <div class="q" data-answer="54" data-hint="一個面 3 × 3 = 9，有 6 個面">
+        <p class="qt">邊長 3 公分的正方體，表面積是幾平方公分？</p>
+        <div class="row"><input type="text" inputmode="decimal"> 平方公分 <button class="btn">對答案</button></div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script>
+  const tIn = document.getElementById("t");
+  function draw() {
+    const a = +tIn.value;
+    document.getElementById("fu").style.transform = `rotateX(${-a}deg)`;
+    document.getElementById("fd").style.transform = `rotateX(${a}deg)`;
+    document.getElementById("fl").style.transform = `rotateY(${a}deg)`;
+    document.getElementById("fr").style.transform = `rotateY(${-a}deg)`;
+    document.getElementById("fi").style.transform = `rotateX(${a}deg)`;
+  }
+  tIn.addEventListener("input", draw);
+  document.getElementById("play").addEventListener("click", () => {
+    const from = +tIn.value > 45 ? 90 : 0, to = 90 - from, st = performance.now();
+    const step = now => { const k = Math.min(1, (now - st) / 1600); tIn.value = from + (to - from) * k; draw(); if (k < 1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  });
+  draw();
+</script>
+</body>
+</html>

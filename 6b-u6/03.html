@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>圓柱體積</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6b-u6" data-page="6b-u6/03">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-formula">公式怎麼來</span>
+  <h1>圓柱體積</h1>
+  <p class="lead">圓柱也是柱體：底面積（圓面積）× 高。像一疊硬幣！</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>一疊硬幣</h2>
+    <div class="stage"><svg id="g" viewBox="0 0 400 260"></svg></div>
+    <div class="controls">
+      <label>半徑 <input type="range" id="r" min="1" max="6" value="3"> <b id="rv"></b> 公分</label>
+      <label>高 <input type="range" id="h" min="1" max="8" value="4"> <b id="hv"></b> 公分</label>
+    </div>
+    <div class="readout">
+      <div class="r" style="color:var(--orange)"><small>底面積（圓面積）</small><span id="c1"></span></div>
+      <div class="r" style="color:var(--red)"><small>體積 = 底面積 × 高</small><span id="c2"></span></div>
+    </div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>公式怎麼來</h2>
+    <div class="steps">
+      <div class="step"><p>① 圓柱的底面是<b>圓</b>，底面積 = 半徑 × 半徑 × 3.14（六下第 2 單元學過）。</p></div>
+      <div class="step"><p>② 一片厚 1 公分的圓片，體積 = 底面積 × 1。</p></div>
+      <div class="step"><p>③ 高幾公分就疊幾片：<b>圓柱體積 = 半徑 × 半徑 × 3.14 × 高</b>。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula">
+    <div class="label">公式</div>
+    <div class="big">圓柱體積 = 半徑 × 半徑 × 3.14 × 高</div>
+    <div class="sub">翻過來：高 = 體積 ÷ 底面積</div>
+  </div>
+
+  <div class="warn"><span class="ic">⚠️</span><p>題目給<b>直徑</b>，要先 ÷ 2 變半徑！</p></div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中寫成 <code>V = πr²h</code>。圓錐的體積是圓柱的 ⅓：<code>⅓πr²h</code>。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  const rIn = document.getElementById("r"), hIn = document.getElementById("h");
+  const r2 = x => Math.round(x * 100) / 100;
+  function draw() {
+    const r = +rIn.value, h = +hIn.value, A = r * r * 3.14;
+    document.getElementById("g").innerHTML = W.solid({ cx: 200, cy: 128, cyl: true, r: 16 + r * 13, h: h * 22, ry: 0, rx: 26, layers: h });
+    document.getElementById("rv").textContent = r; document.getElementById("hv").textContent = h;
+    document.getElementById("c1").textContent = `${r} × ${r} × 3.14 = ${r2(A)}`;
+    document.getElementById("c2").textContent = `${r2(A)} × ${h} = ${r2(A * h)} 立方公分`;
+  }
+  rIn.addEventListener("input", draw); hIn.addEventListener("input", draw); draw();
+
+  const pic = W.solid({ cx: 110, cy: 75, cyl: true, r: 45, h: 70, ry: 0, rx: 24 });
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { const r = W.rand(1, 6), h = W.rand(2, 10); return { q: `半徑 <b>${r}</b>、高 <b>${h}</b> 公分的圓柱，體積？`, ans: r2(r * r * 3.14 * h), unit: "立方公分", hint: `${r} × ${r} × 3.14 × ${h}`, pic }; },
+    () => { const d = W.rand(1, 5) * 2, h = W.rand(2, 10); return { q: `直徑 <b>${d}</b>、高 <b>${h}</b> 公分的圓柱，體積？`, ans: r2((d / 2) ** 2 * 3.14 * h), unit: "立方公分", hint: `半徑 = ${d / 2}，${d / 2} × ${d / 2} × 3.14 × ${h}`, pic }; },
+    () => { const r = W.rand(1, 5), h = W.rand(2, 10), V = r2(r * r * 3.14 * h); return { q: `圓柱體積 <b>${V}</b> 立方公分，半徑 <b>${r}</b> 公分，高是幾公分？`, ans: h, unit: "公分", hint: `底面積 = ${r2(r * r * 3.14)}，高 = ${V} ÷ ${r2(r * r * 3.14)}`, pic }; },
+  ] });
+</script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>角柱與圓柱總整理</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6b-u6" data-page="6b-u6/06">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-learn">總整理</span>
+  <h1>名詞公式總整理</h1>
+  <p class="lead">角柱與圓柱：體積、表面積、展開圖，一次複習。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>名詞卡</h2>
+    <div id="cards"></div>
+  </section>
+
+  <div class="formula">
+    <div class="label">一張圖記全部</div>
+    <div class="big" style="font-size:1.2rem;line-height:2">體積 = 底面積 × 高（立方公分）<br>表面積 = 底面積 × 2 + 底面周長 × 高（平方公分）<br>圓柱側面攤開：長 = 底面圓周長、寬 = 高</div>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">2</span>綜合練習：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  const r2 = x => Math.round(x * 100) / 100;
+  const S = o => W.solid(Object.assign({ cx: 80, cy: 50, r: 30, h: 46, ry: 25, rx: 22 }, o));
+  W.cards(document.getElementById("cards"), [
+    { t: "角柱", pic: S({ n: 5 }), def: "2 個一樣的多邊形底面 + 長方形側面。", how: "n 角柱：面 n+2、邊 3n、頂點 2n", link: "01.html" },
+    { t: "圓柱", pic: S({ cyl: true, ry: 0 }), def: "2 個一樣的圓形底面 + 彎曲的側面。", link: "01.html" },
+    { t: "柱體體積", pic: S({ n: 4, layers: 4 }), def: "一片一片底面疊起來。", how: "底面積 × 高", link: "02.html" },
+    { t: "圓柱體積", pic: S({ cyl: true, ry: 0, layers: 4 }), def: "像一疊硬幣。", how: "半徑 × 半徑 × 3.14 × 高", link: "03.html" },
+    { t: "圓柱展開圖", pic: `<rect x="30" y="34" width="100" height="36" fill="var(--blue)" fill-opacity=".5" stroke="var(--ink)"/><circle cx="50" cy="20" r="14" fill="var(--yellow)" stroke="var(--ink)"/><circle cx="50" cy="84" r="14" fill="var(--yellow)" stroke="var(--ink)"/>`, def: "2 個圓 + 1 個長方形。", how: "長方形的長 = 圓周長，寬 = 高", link: "04.html" },
+    { t: "表面積", pic: S({ n: 4, hl: "side" }), def: "外面所有的面加起來。", how: "底面積 × 2 + 底面周長 × 高", link: "05.html" },
+  ]);
+  const pc = o => W.solid(Object.assign({ cx: 110, cy: 75, r: 48, h: 70, ry: 25, rx: 22 }, o));
+  W.practice(document.getElementById("prac"), { groups: [
+    { label: "體積", gens: [
+      () => { const A = W.rand(3, 30), h = W.rand(2, 12); return { q: `底面積 ${A}、高 ${h} 的角柱，體積？`, ans: A * h, unit: "立方公分", hint: "底面積 × 高", pic: pc({ n: 6 }) }; },
+      () => { const r = W.rand(1, 5), h = W.rand(2, 10); return { q: `半徑 ${r}、高 ${h} 的圓柱，體積？`, ans: r2(r * r * 3.14 * h), unit: "立方公分", hint: "r × r × 3.14 × 高", pic: pc({ cyl: true, ry: 0 }) }; },
+      () => { const A = W.rand(3, 30), h = W.rand(2, 12); return { q: `柱體體積 ${A * h}、底面積 ${A}，高？`, ans: h, unit: "公分", hint: "體積 ÷ 底面積", pic: pc({ n: 3 }) }; },
+    ] },
+    { label: "表面積・展開圖", gens: [
+      () => { const l = W.rand(2, 9), w = W.rand(2, 9), h = W.rand(2, 9); return { q: `長 ${l}、寬 ${w}、高 ${h} 的長方體，表面積？`, ans: 2 * (l * w + l * h + w * h), unit: "平方公分", hint: "底面積 × 2 + 底面周長 × 高", pic: pc({ n: 4 }) }; },
+      () => { const r = W.rand(1, 5), h = W.rand(2, 10); return { q: `半徑 ${r}、高 ${h} 的圓柱，側面積？`, ans: r2(r * 6.28 * h), unit: "平方公分", hint: "圓周長 × 高", pic: pc({ cyl: true, ry: 0, hl: "side" }) }; },
+    ] },
+    { label: "認識柱體", gens: [
+      () => { const k = W.rand(3, 8), what = W.rand(0, 2); return { q: `${k} 角柱有幾個${["面", "邊", "頂點"][what]}？`, ans: [k + 2, 3 * k, 2 * k][what], unit: "個", hint: ["n + 2", "3n", "2n"][what], pic: pc({ n: k }) }; },
+    ] },
+  ] });
+</script>
+</body>
+</html>

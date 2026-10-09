@@ -54,6 +54,56 @@
   };
   W.COLORS = ["#7cb8f0", "#f6cd6a", "#8fd4ab", "#f5a3a3", "#c3b1ee", "#f7b98a"];
 
+  /* ---------- 立體圖（角柱、圓柱）----------
+     W.solid({ cx, cy, n, r, h, ry, rx, hl, layers, cyl }) → SVG 字串
+     n 邊形的柱（cyl: true 時是圓柱），ry 左右轉、rx 往下看的角度（度） */
+  W.solid = function (o) {
+    const n = o.cyl ? 48 : o.n, r = o.r, h = o.h, ry = (o.ry || 0) * Math.PI / 180, rx = (o.rx == null ? 22 : o.rx) * Math.PI / 180;
+    const off = o.cyl ? 0 : Math.PI / n + Math.PI / 2;
+    const P = (x, y, z) => {
+      const x1 = x * Math.cos(ry) + z * Math.sin(ry), z1 = -x * Math.sin(ry) + z * Math.cos(ry);
+      const y2 = y * Math.cos(rx) - z1 * Math.sin(rx), z2 = y * Math.sin(rx) + z1 * Math.cos(rx);
+      return { X: o.cx + x1, Y: o.cy - y2, d: z2 };
+    };
+    const ring = y => Array.from({ length: n }, (_, k) => { const t = off + 2 * Math.PI * k / n; return P(r * Math.cos(t), y, r * Math.sin(t)); });
+    const B = ring(-h / 2), T = ring(h / 2);
+    const faces = [];
+    const base = o.hl === "base" ? "var(--red)" : "var(--yellow)";
+    const side = o.hl === "side" ? "var(--orange)" : "var(--blue)";
+    for (let k = 0; k < n; k++) {
+      const q = [B[k], B[(k + 1) % n], T[(k + 1) % n], T[k]];
+      faces.push({ pts: q, fill: side, op: o.cyl ? 1 : 1, shade: k % 2, stroke: o.cyl ? "none" : "var(--ink)" });
+    }
+    faces.push({ pts: B, fill: base, op: 1, stroke: "var(--ink)" }, { pts: T, fill: base, op: 1, stroke: "var(--ink)" });
+    faces.forEach(f => f.depth = f.pts.reduce((a, p) => a + p.d, 0) / f.pts.length);
+    faces.sort((a, b) => a.depth - b.depth);
+    // 側面依照朝向畫深淺，看起來比較立體
+    let s = faces.map(f => {
+      const pts = f.pts.map(p => `${p.X.toFixed(1)},${p.Y.toFixed(1)}`).join(" ");
+      const tint = f.pts.length === 4 ? `<polygon points="${pts}" fill="#000" fill-opacity="${o.cyl ? 0 : (f.shade ? 0.12 : 0)}" stroke="none"/>` : "";
+      return `<polygon points="${pts}" fill="${f.fill}" fill-opacity="${f.op}" stroke="${f.stroke === "none" ? f.fill : f.stroke}" stroke-width="${f.stroke === "none" ? 0.6 : 1.5}" stroke-linejoin="round"/>${tint}`;
+    }).join("");
+    if (o.cyl) { // 圓柱的左右輪廓線
+      const xs = B.map((p, i) => [p, T[i]]);
+      const L0 = xs.reduce((a, b) => (b[0].X < a[0].X ? b : a)), R0 = xs.reduce((a, b) => (b[0].X > a[0].X ? b : a));
+      [L0, R0].forEach(([p, q]) => s += `<line x1="${p.X}" y1="${p.Y}" x2="${q.X}" y2="${q.Y}" stroke="var(--ink)" stroke-width="1.5"/>`);
+      const cB = P(0, -h / 2, 0).d; // 底面前半圈的輪廓
+      for (let k = 0; k < n; k++) { const a = B[k], b = B[(k + 1) % n]; if ((a.d + b.d) / 2 >= cB) s += `<line x1="${a.X.toFixed(1)}" y1="${a.Y.toFixed(1)}" x2="${b.X.toFixed(1)}" y2="${b.Y.toFixed(1)}" stroke="var(--ink)" stroke-width="1.5"/>`; }
+    }
+    if (o.layers) for (let i = 1; i < o.layers; i++) {
+      const L1 = ring(-h / 2 + h * i / o.layers), y0 = -h / 2 + h * i / o.layers, cD = P(0, y0, 0).d;
+      for (let k = 0; k < n; k++) { // 只畫看得到的前面那一半
+        const a = L1[k], b = L1[(k + 1) % n];
+        if ((a.d + b.d) / 2 >= cD) s += `<line x1="${a.X.toFixed(1)}" y1="${a.Y.toFixed(1)}" x2="${b.X.toFixed(1)}" y2="${b.Y.toFixed(1)}" stroke="var(--ink)" stroke-width="1" stroke-dasharray="4 3"/>`;
+      }
+    }
+    if (o.hl === "height") {
+      const a = P(r * 1.15, -h / 2, 0), b = P(r * 1.15, h / 2, 0);
+      s += `<line x1="${a.X}" y1="${a.Y}" x2="${b.X}" y2="${b.Y}" stroke="var(--red)" stroke-width="4"/><text x="${a.X + 8}" y="${(a.Y + b.Y) / 2}" font-size="14" style="fill:var(--red)">高</text>`;
+    }
+    return s;
+  };
+
   /* ---------- 隨機出題 ----------
      W.practice(el, { gens: [fn...] } 或 { groups: [{ label, gens, on }] })
      每個 fn() 回傳 { q, ans, unit, hint, pic, pre, choices } */

@@ -104,6 +104,20 @@
         { path: "6b-u5/04", t: "解題綜合練習" },
       ],
     },
+    "6b-u6": {
+      name: "六下 第 6 單元・角柱與圓柱",
+      pages: [
+        { path: "review/box-volume", t: "長方體、正方體體積", pre: true },
+        { path: "review/nets", t: "立體形體與展開圖", pre: true },
+        { path: "6b-u2/01", t: "圓面積公式（六下 2）", pre: true },
+        { path: "6b-u6/01", t: "角柱與圓柱" },
+        { path: "6b-u6/02", t: "柱體體積 = 底面積 × 高" },
+        { path: "6b-u6/03", t: "圓柱體積" },
+        { path: "6b-u6/04", t: "圓柱的展開圖" },
+        { path: "6b-u6/05", t: "表面積" },
+        { path: "6b-u6/06", t: "名詞公式總整理" },
+      ],
+    },
   };
 
   const body = document.body;

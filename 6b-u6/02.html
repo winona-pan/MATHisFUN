@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>柱體體積 = 底面積 × 高</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6b-u6" data-page="6b-u6/02">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-formula">公式怎麼來</span>
+  <h1>柱體體積 = 底面積 × 高</h1>
+  <p class="lead">把底面當成一片薄薄的餅乾，一片一片疊起來！</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>一片一片疊</h2>
+    <div class="controls" style="margin-top:0">
+      <button class="btn" data-n="4" aria-pressed="true">四角柱</button>
+      <button class="btn" data-n="3">三角柱</button>
+      <button class="btn" data-n="6">六角柱</button>
+    </div>
+    <div class="stage" style="margin-top:12px"><svg id="g" viewBox="0 0 400 260"></svg></div>
+    <div class="controls">
+      <label>底面積 <input type="range" id="a" min="4" max="20" step="2" value="12"> <b id="av"></b> 平方公分</label>
+      <label>疊幾層（高）<input type="range" id="h" min="1" max="6" value="3"> <b id="hv"></b> 公分</label>
+    </div>
+    <div class="work" id="w"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>公式怎麼來</h2>
+    <div class="steps">
+      <div class="step"><p>① 長方體：體積 = 長 × 寬 × 高 = <b>(長 × 寬)</b> × 高 = <b>底面積 × 高</b>。</p></div>
+      <div class="step"><p>② 想像：底面積 12 平方公分、厚 1 公分的一片，體積是 <b>12 立方公分</b>。</p></div>
+      <div class="step"><p>③ 高 3 公分 → 疊 3 片 → 12 × 3 = <b>36 立方公分</b>。</p></div>
+      <div class="step"><p>④ 不管底面是三角形、六邊形、還是圓形，<b>每一片都一樣大</b>，所以所有柱體都是：<b>體積 = 底面積 × 高</b>。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <section class="box">
+    <h2><span class="n">3</span>公式三角形</h2>
+    <div id="tri"></div>
+  </section>
+
+  <div class="formula">
+    <div class="label">公式</div>
+    <div class="big">柱體體積 = 底面積 × 高</div>
+    <div class="sub">翻過來：高 = 體積 ÷ 底面積；底面積 = 體積 ÷ 高</div>
+  </div>
+
+  <div class="warn"><span class="ic">⚠️</span><p>三角柱的底面是三角形：先算<b>底面積 = 底 × 高 ÷ 2</b>（三角形的高），再 × <b>柱子的高</b>。兩個「高」不一樣！</p></div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中寫成 <code>V = B × h</code>（B 是底面積）。高中、大學的「積分」，也是把薄片一片一片加起來的想法！</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">4</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  let n = 4;
+  const aIn = document.getElementById("a"), hIn = document.getElementById("h");
+  function draw() {
+    const A = +aIn.value, H = +hIn.value, r = 30 + A * 2.6, hh = H * 30;
+    document.getElementById("g").innerHTML = W.solid({ cx: 200, cy: 128, n, r, h: hh, ry: 30, rx: 24, layers: H }) +
+      `<text x="12" y="254" font-size="13">每一片（厚 1 公分）= ${A} 立方公分，疊 ${H} 片</text>`;
+    document.getElementById("av").textContent = A; document.getElementById("hv").textContent = H;
+    document.getElementById("w").innerHTML = `體積 = 底面積 × 高 = ${A} × ${H} = <b>${A * H} 立方公分</b>`;
+    document.querySelectorAll("[data-n]").forEach(b => b.setAttribute("aria-pressed", +b.dataset.n === n));
+  }
+  document.querySelectorAll("[data-n]").forEach(b => b.addEventListener("click", () => { n = +b.dataset.n; draw(); }));
+  aIn.addEventListener("input", draw); hIn.addEventListener("input", draw); draw();
+  W.tri(document.getElementById("tri"), { top: "體積", l: "底面積", r: "高", colors: { l: "var(--orange)", r: "var(--red)" }, start: "top" });
+
+  const pic = k => W.solid({ cx: 110, cy: 75, n: k, r: 48, h: 70, ry: 25, rx: 22 });
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { const A = W.rand(3, 30), h = W.rand(2, 12), k = W.pick([3, 4, 5, 6]); return { q: `底面積 <b>${A}</b> 平方公分、高 <b>${h}</b> 公分的角柱，體積？`, ans: A * h, unit: "立方公分", hint: "底面積 × 高", pic: pic(k) }; },
+    () => { const b = W.rand(2, 8) * 2, t = W.rand(2, 9), h = W.rand(2, 10); return { q: `三角柱的底面是三角形（底 <b>${b}</b>、高 <b>${t}</b> 公分），柱高 <b>${h}</b> 公分，體積？`, ans: b * t / 2 * h, unit: "立方公分", hint: `底面積 = ${b} × ${t} ÷ 2 = ${b * t / 2}，再 × ${h}`, pic: pic(3) }; },
+    () => { const A = W.rand(3, 30), h = W.rand(2, 12); return { q: `角柱體積 <b>${A * h}</b> 立方公分，底面積 <b>${A}</b> 平方公分，高是幾公分？`, ans: h, unit: "公分", hint: "翻過來：高 = 體積 ÷ 底面積", pic: pic(5) }; },
+    () => { const l = W.rand(2, 9), w = W.rand(2, 9), h = W.rand(2, 9); return { q: `長 ${l}、寬 ${w}、高 ${h} 公分的長方體，體積？`, ans: l * w * h, unit: "立方公分", hint: `底面積 ${l} × ${w} = ${l * w}，再 × ${h}`, pic: pic(4) }; },
+  ] });
+</script>
+</body>
+</html>

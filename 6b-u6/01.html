@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>角柱與圓柱</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+<style>
+  table.t { border-collapse: collapse; margin-top: 12px; font-weight: 700; text-align: center; width: 100%; max-width: 520px; }
+  table.t th, table.t td { border: 2px solid var(--line); padding: 4px 8px; }
+  table.t th { background: var(--bg); color: var(--muted); font-size: .9rem; }
+  table.t tr.on td { background: var(--yellow); color: #2b2a33; }
+</style>
+</head>
+<body data-seq="6b-u6" data-page="6b-u6/01">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-word">名詞</span>
+  <h1>角柱與圓柱</h1>
+  <p class="lead">上下兩個一模一樣的「底面」，中間用「側面」連起來，就是柱體。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>轉轉看</h2>
+    <div class="controls" style="margin-top:0">
+      <button class="btn" data-n="3">三角柱</button>
+      <button class="btn" data-n="4" aria-pressed="true">四角柱</button>
+      <button class="btn" data-n="5">五角柱</button>
+      <button class="btn" data-n="6">六角柱</button>
+      <button class="btn" data-n="0">圓柱</button>
+    </div>
+    <div class="stage" style="margin-top:12px"><svg id="g" viewBox="0 0 400 260"></svg></div>
+    <div class="controls">
+      <label>轉 <input type="range" id="ry" min="0" max="360" value="30"></label>
+      <span style="font-weight:700">標出：</span>
+      <button class="btn" data-hl="base">底面</button>
+      <button class="btn" data-hl="side">側面</button>
+      <button class="btn" data-hl="height">高</button>
+    </div>
+    <table class="t"><thead><tr><th></th><th>底面</th><th>面</th><th>邊</th><th>頂點</th></tr></thead><tbody id="tb"></tbody></table>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>認識名字</h2>
+    <div class="steps">
+      <div class="step"><p>① <b style="color:var(--red)">底面</b>：上下兩個一樣大、互相平行的面。底面是幾邊形，就叫<b>幾角柱</b>；底面是圓形，就叫<b>圓柱</b>。</p></div>
+      <div class="step"><p>② <b style="color:var(--orange)">側面</b>：圍在旁邊的面。角柱的側面都是<b>長方形</b>；圓柱的側面是彎的，攤開也是長方形。</p></div>
+      <div class="step"><p>③ <b style="color:var(--red)">高</b>：兩個底面之間的距離。</p></div>
+      <div class="step"><p>④ 看表格找規律：n 角柱有 <b>n + 2 個面</b>、<b>3n 條邊</b>、<b>2n 個頂點</b>。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula word">
+    <div class="label">名詞</div>
+    <div class="big" style="font-size:1.3rem">柱體 = 2 個一樣的底面 + 側面</div>
+    <div class="sub">n 角柱：面 n + 2、邊 3n、頂點 2n</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中會學「<b>角錐</b>、<b>圓錐</b>」（像金字塔、冰淇淋甜筒），只有一個底面，尖尖的頂點在上面。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  let n = 4, hl = "";
+  const ry = document.getElementById("ry");
+  const NAME = { 3: "三角柱", 4: "四角柱", 5: "五角柱", 6: "六角柱", 0: "圓柱" };
+  function draw() {
+    document.getElementById("g").innerHTML = W.solid({ cx: 200, cy: 130, n: n || 4, cyl: n === 0, r: 85, h: 130, ry: +ry.value, rx: 22, hl });
+    document.getElementById("tb").innerHTML = [3, 4, 5, 6].map(k => `<tr class="${k === n ? "on" : ""}"><td>${NAME[k]}</td><td>${["", "", "", "三角形", "四邊形", "五邊形", "六邊形"][k]}</td><td>${k + 2}</td><td>${3 * k}</td><td>${2 * k}</td></tr>`).join("")
+      + `<tr class="${n === 0 ? "on" : ""}"><td>圓柱</td><td>圓形</td><td>2 個底面 + 1 個彎曲面</td><td>—</td><td>—</td></tr>`;
+    document.querySelectorAll("[data-n]").forEach(b => b.setAttribute("aria-pressed", +b.dataset.n === n));
+    document.querySelectorAll("[data-hl]").forEach(b => b.setAttribute("aria-pressed", b.dataset.hl === hl));
+  }
+  document.querySelectorAll("[data-n]").forEach(b => b.addEventListener("click", () => { n = +b.dataset.n; draw(); }));
+  document.querySelectorAll("[data-hl]").forEach(b => b.addEventListener("click", () => { hl = hl === b.dataset.hl ? "" : b.dataset.hl; draw(); }));
+  ry.addEventListener("input", draw); draw();
+
+  const pic = k => W.solid({ cx: 110, cy: 75, n: k, r: 50, h: 80, ry: 25, rx: 22 });
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { const k = W.rand(3, 8), what = W.rand(0, 2), nm = ["面", "邊", "頂點"][what], ans = [k + 2, 3 * k, 2 * k][what];
+      return { q: `<b>${k} 角柱</b>有幾個<b>${nm}</b>？`, ans, unit: "個", hint: ["面 = n + 2（2 個底面 + n 個側面）", "邊 = 3n（上下各 n 條 + 中間 n 條）", "頂點 = 2n（上下各 n 個）"][what], pic: pic(k) }; },
+    () => { const k = W.rand(3, 6); return { q: "這個柱體的底面是什麼形狀？", choices: ["三角形", "四邊形", "五邊形", "六邊形"], ans: k - 3, hint: "數一數上面那個面有幾條邊", pic: pic(k) }; },
+  ] });
+</script>
+</body>
+</html>
