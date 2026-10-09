@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>圓周長</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u7" data-page="6a-u7/01">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-word">名詞</span>
+  <h1>圓周長是什麼？</h1>
+  <p class="lead">沿著圓走一圈，走了多長？</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>把圓「拉直」</h2>
+    <div class="stage">
+      <svg id="pl" viewBox="0 0 400 270">
+        <circle cx="200" cy="85" r="55" fill="var(--card)" stroke="var(--line)" stroke-width="5"/>
+        <path id="arc" fill="none" stroke="var(--red)" stroke-width="7" stroke-linecap="round"/>
+        <circle cx="200" cy="85" r="4" fill="var(--ink)"/>
+        <circle id="ant" r="8" fill="var(--yellow)" stroke="var(--ink)" stroke-width="2"/>
+        <line x1="27" y1="220" x2="373" y2="220" stroke="var(--line)" stroke-width="7" stroke-linecap="round"/>
+        <line id="line" x1="27" y1="220" y2="220" stroke="var(--red)" stroke-width="7" stroke-linecap="round"/>
+        <text x="27" y="250" font-size="14" style="fill:var(--muted)">起點</text>
+        <text id="lineLabel" y="205" font-size="15" style="fill:var(--red)"></text>
+      </svg>
+    </div>
+    <div class="controls">
+      <label>走了 <input type="range" id="p" min="0" max="100" value="35"> <b id="pv"></b></label>
+      <button class="btn primary" id="play">▶ 走一圈</button>
+    </div>
+    <p class="hint">👉 圓上的紅線走多長，下面的直線就有多長。走完一整圈，下面這條直線就是<b>圓周長</b>。</p>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>想一想</h2>
+    <div class="steps">
+      <div class="step has-pic">
+        <div class="pic"><svg viewBox="0 0 160 120"><rect x="40" y="20" width="80" height="80" fill="var(--card)" stroke="var(--blue)" stroke-width="5"/><text x="70" y="14" font-size="12">邊</text><text x="124" y="64" font-size="12">邊</text><text x="70" y="116" font-size="12">邊</text><text x="20" y="64" font-size="12">邊</text></svg></div>
+        <p>正方形的周長：4 條邊加起來，用尺量就好。</p>
+      </div>
+      <div class="step has-pic">
+        <div class="pic"><svg viewBox="0 0 160 120"><circle cx="80" cy="60" r="44" fill="var(--card)" stroke="var(--red)" stroke-width="5"/><text x="64" y="66" font-size="22">?</text></svg></div>
+        <p>可是圓<b>彎彎的，沒有直直的邊</b>，尺沒辦法直接量。怎麼辦？</p>
+      </div>
+      <div class="step has-pic">
+        <div class="pic"><svg viewBox="0 0 160 120"><circle cx="50" cy="50" r="30" fill="var(--card)" stroke="var(--red)" stroke-width="5" stroke-dasharray="150 40"/><path d="M50 80 L150 80" stroke="var(--red)" stroke-width="5" stroke-linecap="round"/><rect x="40" y="90" width="110" height="16" fill="var(--yellow)" class="stroke"/></svg></div>
+        <p>用<b>繩子</b>圍著圓繞一圈，再把繩子<b>拉直</b>，用尺量！</p>
+      </div>
+      <div class="step"><p>繞圓一圈的長度，就叫做 <b style="color:var(--red)">圓周長</b>。<br>圓周長就是「圓的周長」。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula word">
+    <div class="label">名詞</div>
+    <div class="big"><span style="color:var(--red)">圓周長</span>：繞圓一圈的長度</div>
+    <div class="sub">「周長」= 繞外圍一圈的長度，圓也一樣</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中會把「圓上一段彎彎的線」叫做<b>弧</b>，整圈就是<b>圓周</b>。下一課會發現：圓周長跟直徑有一個神奇的關係！</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>練習一下</h2>
+    <div class="quiz">
+      <div class="q" data-hint="圓周長是繞圓「一圈」的長度">
+        <p class="qt">哪一個紅色的部分是<b>圓周長</b>？</p>
+        <div class="choices">
+          <button class="choice"><svg viewBox="0 0 100 80"><circle cx="50" cy="40" r="30" fill="var(--card)" class="stroke"/><line x1="20" y1="40" x2="80" y2="40" stroke="var(--red)" stroke-width="5"/></svg></button>
+          <button class="choice" data-right><svg viewBox="0 0 100 80"><circle cx="50" cy="40" r="30" fill="var(--card)" stroke="var(--red)" stroke-width="5"/></svg></button>
+          <button class="choice"><svg viewBox="0 0 100 80"><circle cx="50" cy="40" r="30" fill="var(--red)" fill-opacity=".6" class="stroke"/></svg></button>
+        </div>
+      </div>
+      <div class="q" data-hint="看上面的動畫，拉直以後的紅線比直徑長很多">
+        <p class="qt">同一個圓，<b>圓周長</b>和<b>直徑</b>哪一個比較長？</p>
+        <div class="choices">
+          <button class="choice" data-right>圓周長</button><button class="choice">直徑</button><button class="choice">一樣長</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script>
+  const R = 55, C = 2 * Math.PI * R, p = document.getElementById("p");
+  function draw() {
+    const t = +p.value / 100, deg = t * 360;
+    document.getElementById("pv").textContent = t >= 1 ? "一整圈！" : Math.round(t * 100) + "%";
+    document.getElementById("arc").setAttribute("d", deg > 0 ? L.arcPath(200, 85, R, deg) : "");
+    const [ax, ay] = L.pol(200, 85, R, deg);
+    const ant = document.getElementById("ant");
+    ant.setAttribute("cx", ax); ant.setAttribute("cy", ay);
+    const x2 = 27 + C * t;
+    document.getElementById("line").setAttribute("x2", x2);
+    const lab = document.getElementById("lineLabel");
+    lab.textContent = t >= 1 ? "這就是圓周長！" : "";
+    lab.setAttribute("x", 140);
+  }
+  p.addEventListener("input", draw);
+  document.getElementById("play").addEventListener("click", () => {
+    const start = performance.now();
+    const step = now => {
+      const t = Math.min(1, (now - start) / 2500);
+      p.value = t * 100; draw();
+      if (t < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  });
+  draw();
+</script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>圓心、半徑、直徑</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u7" data-page="review/circle-parts">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-pre">先備知識・3 年級學過</span>
+  <h1>圓心、半徑、直徑</h1>
+  <p class="lead">學圓周長之前，先把圓的三個名字記熟。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>動手玩</h2>
+    <div class="stage">
+      <svg id="pl" viewBox="0 0 400 300">
+        <g id="many"></g>
+        <circle id="c" cx="200" cy="150" r="100" fill="var(--card)" class="stroke"/>
+        <line id="dia" stroke="var(--blue)" stroke-width="6" stroke-linecap="round"/>
+        <line id="rad" stroke="var(--red)" stroke-width="6" stroke-linecap="round"/>
+        <circle cx="200" cy="150" r="6" fill="var(--ink)"/>
+        <text x="208" y="172" font-size="15">圓心</text>
+        <text id="radLabel" font-size="16" style="fill:var(--red)">半徑</text>
+        <text id="diaLabel" font-size="16" style="fill:var(--blue)">直徑</text>
+        <circle id="h" r="14" fill="var(--yellow)" stroke="var(--ink)" stroke-width="2.5" class="handle"/>
+      </svg>
+    </div>
+    <p class="hint">👉 拖拉黃色的點繞著圓轉。半徑不管轉到哪裡，長度都一樣。</p>
+    <div class="controls">
+      <label>圓的大小 <input type="range" id="size" min="2" max="5" step="1" value="4"></label>
+      <button class="btn" id="showDia" aria-pressed="false">顯示直徑</button>
+      <button class="btn" id="showMany" aria-pressed="false">畫很多條半徑</button>
+    </div>
+    <div class="readout">
+      <div class="r" style="color:var(--red)"><small>半徑</small><span id="rv"></span> 公分</div>
+      <div class="r" style="color:var(--blue)"><small>直徑</small><span id="dv"></span> 公分</div>
+    </div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>三個名字</h2>
+    <div class="steps">
+      <div class="step has-pic">
+        <div class="pic"><svg viewBox="0 0 160 120"><circle cx="80" cy="60" r="44" fill="var(--card)" class="stroke"/><circle cx="80" cy="60" r="7" fill="var(--red)"/></svg></div>
+        <p><b>圓心</b>：圓正中間的那一個點。</p>
+      </div>
+      <div class="step has-pic">
+        <div class="pic"><svg viewBox="0 0 160 120"><circle cx="80" cy="60" r="44" fill="var(--card)" class="stroke"/><line x1="80" y1="60" x2="124" y2="60" stroke="var(--red)" stroke-width="5"/><line x1="80" y1="60" x2="80" y2="16" stroke="var(--red)" stroke-width="5"/><line x1="80" y1="60" x2="49" y2="91" stroke="var(--red)" stroke-width="5"/><circle cx="80" cy="60" r="5" fill="var(--ink)"/></svg></div>
+        <p><b style="color:var(--red)">半徑</b>：從圓心連到圓上的線。<br>同一個圓的半徑<b>每一條都一樣長</b>。</p>
+      </div>
+      <div class="step has-pic">
+        <div class="pic"><svg viewBox="0 0 160 120"><circle cx="80" cy="60" r="44" fill="var(--card)" class="stroke"/><line x1="36" y1="60" x2="80" y2="60" stroke="var(--red)" stroke-width="5"/><line x1="80" y1="60" x2="124" y2="60" stroke="var(--red)" stroke-width="5" stroke-dasharray="8 4"/><circle cx="80" cy="60" r="5" fill="var(--ink)"/><text x="44" y="52" font-size="12" style="fill:var(--red)">半徑</text><text x="88" y="52" font-size="12" style="fill:var(--red)">半徑</text><path d="M36 78 L124 78" stroke="var(--blue)" stroke-width="5"/><text x="66" y="98" font-size="13" style="fill:var(--blue)">直徑</text></svg></div>
+        <p><b style="color:var(--blue)">直徑</b>：<b>穿過圓心</b>、兩頭都碰到圓的線。<br>一條直徑 = 兩條半徑接起來。</p>
+      </div>
+      <div class="step has-pic">
+        <div class="pic"><svg viewBox="0 0 160 120"><circle cx="80" cy="70" r="40" fill="none" stroke="var(--line)" stroke-width="3" stroke-dasharray="6 5"/><line x1="80" y1="70" x2="80" y2="16" stroke="var(--ink)" stroke-width="4"/><line x1="120" y1="70" x2="80" y2="16" stroke="var(--ink)" stroke-width="4"/><circle cx="80" cy="16" r="6" fill="var(--yellow)" stroke="var(--ink)" stroke-width="2"/><circle cx="80" cy="70" r="4" fill="var(--red)"/><line x1="80" y1="96" x2="120" y2="96" stroke="var(--red)" stroke-width="4"/><text x="88" y="114" font-size="12" style="fill:var(--red)">張開 = 半徑</text></svg></div>
+        <p>用<b>圓規</b>畫圓：針腳插的地方是<b>圓心</b>，兩隻腳張開的距離就是<b style="color:var(--red)">半徑</b>。</p>
+      </div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula pre">
+    <div class="label">記起來</div>
+    <div class="big"><span style="color:var(--blue)">直徑</span> = <span style="color:var(--red)">半徑</span> × 2</div>
+    <div class="big" style="font-size:1.3rem"><span style="color:var(--red)">半徑</span> = <span style="color:var(--blue)">直徑</span> ÷ 2</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中會用英文字母代替文字：半徑寫成 <code>r</code>（radius），直徑寫成 <code>d</code>（diameter）。</p>
+    <p>所以「直徑 = 半徑 × 2」會寫成 <code>d = 2r</code>。<br>（<code>2r</code> 就是 2 × r，國中會把乘號省略。）</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>練習一下</h2>
+    <div class="quiz">
+      <div class="q" data-answer="8" data-hint="直徑 = 半徑 × 2">
+        <p class="qt">半徑 4 公分，直徑是幾公分？</p>
+        <div class="row"><input type="text" inputmode="decimal"> 公分 <button class="btn">對答案</button></div>
+      </div>
+      <div class="q" data-answer="7" data-hint="半徑 = 直徑 ÷ 2">
+        <p class="qt">直徑 14 公分，半徑是幾公分？</p>
+        <div class="row"><input type="text" inputmode="decimal"> 公分 <button class="btn">對答案</button></div>
+      </div>
+      <div class="q" data-hint="直徑一定要穿過圓心喔！">
+        <p class="qt">哪一條藍線是<b>直徑</b>？</p>
+        <div class="choices">
+          <button class="choice"><svg viewBox="0 0 100 80"><circle cx="50" cy="40" r="30" fill="var(--card)" class="stroke"/><circle cx="50" cy="40" r="3" fill="var(--ink)"/><line x1="24" y1="25" x2="76" y2="25" stroke="var(--blue)" stroke-width="4"/></svg></button>
+          <button class="choice" data-right><svg viewBox="0 0 100 80"><circle cx="50" cy="40" r="30" fill="var(--card)" class="stroke"/><circle cx="50" cy="40" r="3" fill="var(--ink)"/><line x1="29" y1="19" x2="71" y2="61" stroke="var(--blue)" stroke-width="4"/></svg></button>
+          <button class="choice"><svg viewBox="0 0 100 80"><circle cx="50" cy="40" r="30" fill="var(--card)" class="stroke"/><circle cx="50" cy="40" r="3" fill="var(--ink)"/><line x1="50" y1="40" x2="80" y2="40" stroke="var(--blue)" stroke-width="4"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script>
+  const svg = document.getElementById("pl");
+  const c = document.getElementById("c"), rad = document.getElementById("rad"), dia = document.getElementById("dia");
+  const h = document.getElementById("h"), many = document.getElementById("many");
+  const radLabel = document.getElementById("radLabel"), diaLabel = document.getElementById("diaLabel");
+  const size = document.getElementById("size");
+  const CM = 25; // 1 公分 = 25 單位
+  let angle = 60, showDia = false, showMany = false;
+
+  function draw() {
+    const cm = +size.value, r = cm * CM;
+    c.setAttribute("r", r);
+    const [x, y] = L.pol(200, 150, r, angle);
+    const [ox, oy] = L.pol(200, 150, r, angle + 180);
+    rad.setAttribute("x1", 200); rad.setAttribute("y1", 150); rad.setAttribute("x2", x); rad.setAttribute("y2", y);
+    dia.setAttribute("x1", ox); dia.setAttribute("y1", oy); dia.setAttribute("x2", x); dia.setAttribute("y2", y);
+    dia.style.display = diaLabel.style.display = showDia ? "" : "none";
+    h.setAttribute("cx", x); h.setAttribute("cy", y);
+    const [lx, ly] = L.pol(200, 150, r / 2, angle - 18);
+    radLabel.setAttribute("x", lx - 16); radLabel.setAttribute("y", ly);
+    const [dx, dy] = L.pol(200, 150, r / 2, angle + 180 + 18);
+    diaLabel.setAttribute("x", dx - 16); diaLabel.setAttribute("y", dy);
+    many.innerHTML = showMany ? Array.from({ length: 12 }, (_, i) => {
+      const [mx, my] = L.pol(200, 150, r, i * 30);
+      return `<line x1="200" y1="150" x2="${mx}" y2="${my}" stroke="var(--red)" stroke-opacity=".35" stroke-width="3"/>`;
+    }).join("") : "";
+    document.getElementById("rv").textContent = cm;
+    document.getElementById("dv").textContent = cm * 2;
+  }
+  L.drag(svg, h, p => {
+    angle = Math.atan2(p.y - 150, p.x - 200) * 180 / Math.PI + 90;
+    draw();
+  });
+  size.addEventListener("input", draw);
+  document.getElementById("showDia").addEventListener("click", e => {
+    showDia = !showDia; e.currentTarget.setAttribute("aria-pressed", showDia); draw();
+  });
+  document.getElementById("showMany").addEventListener("click", e => {
+    showMany = !showMany; e.currentTarget.setAttribute("aria-pressed", showMany); draw();
+  });
+  draw();
+</script>
+</body>
+</html>

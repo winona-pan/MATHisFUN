@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>組合圖形的周長</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+<style>
+  .eq { margin-top: 12px; font-size: 1.2rem; font-weight: 900; min-height: 2em; line-height: 1.8; }
+  .eq .t { display: inline-block; padding: 0 8px; border-radius: 8px; margin: 2px; }
+  .eq .line { background: var(--k-learn-soft); color: var(--blue); }
+  .eq .curve { background: var(--k-formula-soft); color: var(--red); }
+</style>
+</head>
+<body data-seq="6a-u7" data-page="6a-u7/07">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-learn">學會方法</span>
+  <h1>組合圖形的周長</h1>
+  <p class="lead">沿著外圍一段一段走，直線加曲線。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>一段一段加</h2>
+    <div class="controls" style="margin-top:0">
+      <button class="btn" data-shape="track" aria-pressed="true">🏃 操場跑道</button>
+      <button class="btn" data-shape="door">🚪 拱門</button>
+      <button class="btn" data-shape="corner">📐 正方形角落</button>
+    </div>
+    <div class="stage" style="margin-top:12px"><svg id="pl" viewBox="0 0 400 270"></svg></div>
+    <p class="hint" id="desc"></p>
+    <div class="controls">
+      <button class="btn primary" id="next">下一段 →</button>
+      <button class="btn" id="reset">重來</button>
+    </div>
+    <div class="eq" id="eq"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>解題步驟</h2>
+    <div class="steps">
+      <div class="step"><p>① 用手指<b>沿著外圍</b>走一圈，看看經過哪幾段。</p></div>
+      <div class="step"><p>② 分成 <b style="color:var(--blue)">直線</b> 和 <b style="color:var(--red)">曲線</b>。</p></div>
+      <div class="step"><p>③ 每段曲線問自己：它是<b>幾分之幾個圓</b>？半圓 → 圓周長 ÷ 2；四分之一圓 → 圓周長 ÷ 4。</p></div>
+      <div class="step"><p>④ 全部<b>加起來</b>。<b>圖形裡面的線不算！</b></p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="warn"><span class="ic">⚠️</span><p><b>裡面的線不算周長！</b>例如拱門中間那條虛線，是幫忙看的，不是外圍。</p></div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中常把直線和曲線分開寫，答案像這樣：<code>30 + 5π</code> 公分。</p>
+    <p>直線部分是一般的數字，曲線部分帶著 π。這跟我們現在「直線加曲線」的想法一模一樣！</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>練習一下</h2>
+    <div class="quiz">
+      <div class="q" data-answer="162.8" data-hint="兩條直線 50 + 50；兩個半圓合起來 = 一個直徑 20 的圓 = 62.8">
+        <div class="qpic"><svg viewBox="0 0 280 120"><path d="M90 20 L190 20 A40 40 0 0 1 190 100 L90 100 A40 40 0 0 1 90 20 Z" fill="var(--card)" class="stroke"/><text x="126" y="14" font-size="13">50 公尺</text><line x1="230" y1="20" x2="230" y2="100" stroke="var(--blue)" stroke-width="2" stroke-dasharray="4 3"/><text x="236" y="64" font-size="12">直徑 20</text></svg></div>
+        <p class="qt">這個跑道一圈有多長？</p>
+        <div class="row"><input type="text" inputmode="decimal"> 公尺 <button class="btn">對答案</button></div>
+      </div>
+      <div class="q" data-answer="18.28" data-hint="下面三條邊 4 + 4 + 4 = 12；上面半圓弧 = 4 × 3.14 ÷ 2 = 6.28">
+        <div class="qpic"><svg viewBox="0 0 280 140"><path d="M100 130 L100 70 A40 40 0 0 1 180 70 L180 130 Z" fill="var(--card)" class="stroke"/><line x1="100" y1="70" x2="180" y2="70" stroke="var(--muted)" stroke-width="2" stroke-dasharray="5 4"/><text x="128" y="110" font-size="13">邊長 4</text></svg></div>
+        <p class="qt">正方形邊長 4 公分，上面接一個半圓。整個圖形的周長是幾公分？</p>
+        <div class="row"><input type="text" inputmode="decimal"> 公分 <button class="btn">對答案</button></div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script>
+  // 每個圖形：外圍分成幾段（type: line 直線 / curve 曲線）
+  const SHAPES = {
+    track: {
+      unit: "公尺",
+      desc: "跑道：兩條直線各長 100 公尺，兩頭是直徑 60 公尺的半圓。",
+      base: `<path d="M120 82 L280 82 A48 48 0 0 1 280 178 L120 178 A48 48 0 0 1 120 82 Z" fill="var(--green)" fill-opacity=".25"/>
+             <line x1="280" y1="82" x2="280" y2="178" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="4 4"/>
+             <text x="286" y="134" font-size="12" style="fill:var(--muted)">直徑 60</text>`,
+      pieces: [
+        { type: "line", d: "M120 82 L280 82", label: "100", lx: 186, ly: 72, why: "上面直線" },
+        { type: "curve", d: "M280 82 A48 48 0 0 1 280 178", label: "60 × 3.14 ÷ 2 = 94.2", lx: 250, ly: 210, why: "右邊半圓弧", v: 94.2 },
+        { type: "line", d: "M280 178 L120 178", label: "100", lx: 186, ly: 198, why: "下面直線" },
+        { type: "curve", d: "M120 178 A48 48 0 0 1 120 82", label: "94.2", lx: 40, ly: 134, why: "左邊半圓弧", v: 94.2 },
+      ],
+    },
+    door: {
+      unit: "公分",
+      desc: "拱門：正方形邊長 10 公分，上面接一個半圓（直徑 10 公分）。",
+      base: `<path d="M140 230 L140 110 A60 60 0 0 1 260 110 L260 230 Z" fill="var(--yellow)" fill-opacity=".3"/>
+             <line x1="140" y1="110" x2="260" y2="110" stroke="var(--muted)" stroke-width="2" stroke-dasharray="6 5"/>
+             <text x="160" y="104" font-size="12" style="fill:var(--muted)">裡面的線不算</text>`,
+      pieces: [
+        { type: "curve", d: "M140 110 A60 60 0 0 1 260 110", label: "10 × 3.14 ÷ 2 = 15.7", lx: 132, ly: 38, why: "上面半圓弧", v: 15.7 },
+        { type: "line", d: "M260 110 L260 230", label: "10", lx: 270, ly: 176, why: "右邊" },
+        { type: "line", d: "M260 230 L140 230", label: "10", lx: 194, ly: 252, why: "下面" },
+        { type: "line", d: "M140 230 L140 110", label: "10", lx: 116, ly: 176, why: "左邊" },
+      ],
+    },
+    corner: {
+      unit: "公分",
+      desc: "正方形邊長 10 公分，從左下角畫一個半徑 10 公分的四分之一圓，剩下右上角那一塊。",
+      base: `<rect x="140" y="70" width="120" height="120" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="5 4"/>
+             <path d="M140 70 L260 70 L260 190 A120 120 0 0 0 140 70 Z" fill="var(--yellow)" fill-opacity=".45"/>
+             <circle cx="140" cy="190" r="4" fill="var(--ink)"/>
+             <line x1="140" y1="190" x2="225" y2="105" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="4 4"/>
+             <text x="160" y="170" font-size="12" style="fill:var(--muted)">半徑 10</text>`,
+      pieces: [
+        { type: "line", d: "M140 70 L260 70", label: "10", lx: 194, ly: 60, why: "上面" },
+        { type: "line", d: "M260 70 L260 190", label: "10", lx: 270, ly: 134, why: "右邊" },
+        { type: "curve", d: "M260 190 A120 120 0 0 0 140 70", label: "10 × 2 × 3.14 ÷ 4 = 15.7", lx: 80, ly: 230, why: "四分之一圓弧", v: 15.7 },
+      ],
+    },
+  };
+  let shape = "track", k = 0;
+  const svg = document.getElementById("pl");
+  function val(p) { return p.v !== undefined ? p.v : parseFloat(p.label); }
+  function draw() {
+    const S = SHAPES[shape];
+    document.getElementById("desc").textContent = S.desc;
+    let s = S.base;
+    S.pieces.forEach((p, i) => {
+      const on = i < k, col = p.type === "line" ? "var(--blue)" : "var(--red)";
+      s += `<path d="${p.d}" fill="none" stroke="${on ? col : "var(--ink)"}" stroke-width="${on ? 8 : 2.5}" stroke-linecap="round" ${on ? "" : 'stroke-opacity=".5"'}/>`;
+      if (on) s += `<text x="${p.lx}" y="${p.ly}" font-size="13" style="fill:${col}">${p.label}</text>`;
+    });
+    svg.innerHTML = s;
+    const terms = S.pieces.slice(0, k).map(p => `<span class="t ${p.type}">${val(p)}</span>`);
+    let eq = terms.join(" + ");
+    if (k === S.pieces.length) eq += ` = <span style="color:var(--green)">${L.fmt(S.pieces.reduce((a, p) => a + val(p), 0))} ${S.unit}</span> 🎉`;
+    else if (k > 0) eq += ` + …（下一段：${S.pieces[k].why}）`;
+    else eq = `<span style="color:var(--muted);font-size:1rem">按「下一段」開始沿著外圍走</span>`;
+    document.getElementById("eq").innerHTML = eq;
+    document.getElementById("next").disabled = k >= S.pieces.length;
+  }
+  document.querySelectorAll("[data-shape]").forEach(b => b.addEventListener("click", () => {
+    shape = b.dataset.shape; k = 0;
+    document.querySelectorAll("[data-shape]").forEach(x => x.setAttribute("aria-pressed", x === b));
+    draw();
+  }));
+  document.getElementById("next").addEventListener("click", () => { k++; draw(); });
+  document.getElementById("reset").addEventListener("click", () => { k = 0; draw(); });
+  draw();
+</script>
+</body>
+</html>

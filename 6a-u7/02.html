@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>圓周率 π</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+<style>
+  table.rec { border-collapse: collapse; margin-top: 12px; width: 100%; max-width: 520px; font-weight: 700; text-align: center; }
+  table.rec th, table.rec td { border: 2px solid var(--line); padding: 6px; }
+  table.rec th { background: var(--bg); font-size: .9rem; color: var(--muted); }
+  table.rec td.k { color: var(--red); font-size: 1.15rem; }
+</style>
+</head>
+<body data-seq="6a-u7" data-page="6a-u7/02">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-formula">公式怎麼來</span>
+  <h1>圓周率 π 怎麼來？</h1>
+  <p class="lead">讓圓滾一圈，看看圓周長是直徑的幾倍。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>滾滾看</h2>
+    <div class="stage">
+      <svg id="pl" viewBox="0 0 400 230">
+        <g id="ruler"></g>
+        <line x1="10" y1="170" x2="395" y2="170" class="stroke"/>
+        <g id="wheel">
+          <circle id="wc" r="30" fill="var(--card)" class="stroke"/>
+          <line id="wd" stroke="var(--blue)" stroke-width="3" stroke-dasharray="5 4"/>
+          <circle id="dot" r="6" fill="var(--red)" stroke="var(--ink)" stroke-width="1.5"/>
+        </g>
+        <path id="trail" stroke="var(--red)" stroke-width="5" stroke-linecap="round"/>
+        <text id="msg" x="200" y="30" text-anchor="middle" font-size="18"></text>
+      </svg>
+    </div>
+    <div class="controls">
+      <span style="font-weight:700">直徑：</span>
+      <button class="btn" data-d="1">1 公分</button>
+      <button class="btn" data-d="2">2 公分</button>
+      <button class="btn" data-d="3" aria-pressed="true">3 公分</button>
+      <button class="btn primary" id="roll">▶ 滾一圈</button>
+    </div>
+    <p class="hint">👉 紅點從地上出發，滾到紅點再碰到地，剛好是一圈。下面的藍黃色格子，每一格都是一條<b>直徑</b>那麼長。</p>
+    <table class="rec">
+      <thead><tr><th>直徑</th><th>滾一圈（圓周長）</th><th>圓周長 ÷ 直徑</th></tr></thead>
+      <tbody id="rows"><tr><td colspan="3" style="color:var(--muted)">滾滾看，會記錄在這裡</td></tr></tbody>
+    </table>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>公式怎麼來</h2>
+    <div class="steps">
+      <div class="step"><p>① 圓滾一圈走的距離，就是<b style="color:var(--red)">圓周長</b>。</p></div>
+      <div class="step has-pic">
+        <div class="pic"><svg viewBox="0 0 160 120"><g stroke-width="10"><line x1="10" y1="60" x2="50" y2="60" stroke="var(--blue)"/><line x1="50" y1="60" x2="90" y2="60" stroke="var(--yellow)"/><line x1="90" y1="60" x2="130" y2="60" stroke="var(--blue)"/><line x1="130" y1="60" x2="136" y2="60" stroke="var(--red)"/></g><text x="24" y="44" font-size="12">1</text><text x="64" y="44" font-size="12">2</text><text x="104" y="44" font-size="12">3</text><text x="124" y="90" font-size="12" style="fill:var(--red)">多一點</text></svg></div>
+        <p>② 拿直徑去量：圓周長是直徑的 <b>3 倍多一點點</b>。</p>
+      </div>
+      <div class="step"><p>③ 不管換<b>大圓、小圓</b>，圓周長 ÷ 直徑 都一樣是 <b style="color:var(--red)">3.14…</b>（看上面的表格）。</p></div>
+      <div class="step"><p>④ 這個<b>永遠不變的倍數</b>，數學家給它取名叫 <b style="color:var(--red)">圓周率</b>，用符號 <b style="font-size:1.4em">π</b> 表示（唸「派」）。我們通常用 <b>3.14</b> 來算。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula">
+    <div class="label">記起來</div>
+    <div class="big"><span style="color:var(--red)">圓周率</span> = 圓周長 ÷ 直徑 ≈ 3.14</div>
+    <div class="sub">任何圓，圓周長都是直徑的 3.14 倍左右</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>π 其實是 <code>3.14159265358979…</code>，小數點後面<b>永遠算不完、也不會重複</b>。3.14 只是「差不多」的值。</p>
+    <p>所以國中常常不乘出來，直接把 π 寫在答案裡，例如圓周長 <code>6π</code> 公分。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>練習一下</h2>
+    <div class="quiz">
+      <div class="q" data-hint="是 3 倍多一點點">
+        <p class="qt">圓周率大約是多少？</p>
+        <div class="choices"><button class="choice">2</button><button class="choice">3</button><button class="choice" data-right>3.14</button><button class="choice">4</button></div>
+      </div>
+      <div class="q" data-hint="不管圓多大，圓周長 ÷ 直徑 都一樣">
+        <p class="qt">大的圓和小的圓，<b>圓周率</b>一樣嗎？</p>
+        <div class="choices"><button class="choice">大圓比較大</button><button class="choice">小圓比較大</button><button class="choice" data-right>一樣</button></div>
+      </div>
+      <div class="q" data-answer="3.14" data-hint="圓周長 ÷ 直徑 = 圓周率">
+        <p class="qt">一枚硬幣直徑 2 公分，它的圓周長大約是直徑的幾倍？</p>
+        <div class="row"><input type="text" inputmode="decimal"> 倍 <button class="btn">對答案</button></div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script>
+  const CM = 30, X0 = 52, GROUND = 170;
+  let d = 3, rolling = false;
+  const done = {};
+  const wheel = document.getElementById("wheel");
+  function setup() {
+    const r = d * CM / 2;
+    document.getElementById("wc").setAttribute("r", r);
+    let s = "";
+    for (let i = 0; i < 4; i++) {
+      const x = X0 + i * d * CM, w = Math.min(d * CM, 395 - x);
+      if (w <= 0) break;
+      s += `<rect x="${x}" y="${GROUND + 8}" width="${w}" height="14" fill="${i % 2 ? "var(--yellow)" : "var(--blue)"}" stroke="var(--ink)" stroke-width="1"/>
+            <text x="${x + Math.min(w, d * CM) / 2 - 4}" y="${GROUND + 42}" font-size="13">${i + 1}</text>`;
+    }
+    document.getElementById("ruler").innerHTML = s;
+    pose(0);
+    document.getElementById("msg").textContent = "";
+  }
+  function pose(dist) {
+    const r = d * CM / 2, cx = X0 + dist, cy = GROUND - r, ang = dist / r; // 弧度
+    // 紅點一開始在最下面（碰地的地方），往右滾時順時針轉
+    const px = cx - r * Math.sin(ang), py = cy + r * Math.cos(ang);
+    document.getElementById("wc").setAttribute("cx", cx); document.getElementById("wc").setAttribute("cy", cy);
+    const wd = document.getElementById("wd");
+    wd.setAttribute("x1", px); wd.setAttribute("y1", py); wd.setAttribute("x2", 2 * cx - px); wd.setAttribute("y2", 2 * cy - py);
+    document.getElementById("dot").setAttribute("cx", px); document.getElementById("dot").setAttribute("cy", py);
+    document.getElementById("trail").setAttribute("d", dist > 0 ? `M${X0} ${GROUND} L${X0 + dist} ${GROUND}` : "");
+  }
+  function roll() {
+    if (rolling) return;
+    rolling = true;
+    const total = Math.PI * d * CM, start = performance.now(), dur = 2600;
+    const step = now => {
+      const t = Math.min(1, (now - start) / dur);
+      pose(total * t);
+      if (t < 1) return requestAnimationFrame(step);
+      rolling = false;
+      const c = 3.14 * d;
+      document.getElementById("msg").textContent = `滾一圈 ≈ ${L.fmt(c)} 公分，是直徑的 3.14 倍`;
+      done[d] = c;
+      document.getElementById("rows").innerHTML = Object.keys(done).sort().map(k =>
+        `<tr><td>${k} 公分</td><td>${L.fmt(done[k])} 公分</td><td class="k">3.14</td></tr>`).join("");
+    };
+    requestAnimationFrame(step);
+  }
+  document.querySelectorAll("[data-d]").forEach(b => b.addEventListener("click", () => {
+    if (rolling) return;
+    d = +b.dataset.d;
+    document.querySelectorAll("[data-d]").forEach(x => x.setAttribute("aria-pressed", x === b));
+    setup();
+  }));
+  document.getElementById("roll").addEventListener("click", roll);
+  setup();
+</script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>扇形、圓心角、弧</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u7" data-page="6a-u7/04">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-word">名詞</span>
+  <h1>扇形、圓心角、弧</h1>
+  <p class="lead">把圓切一塊下來，像一片披薩 🍕</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>切切看</h2>
+    <div class="stage">
+      <svg id="pl" viewBox="0 0 400 280">
+        <circle cx="200" cy="145" r="110" fill="var(--card)" stroke="var(--line)" stroke-width="3" stroke-dasharray="6 5"/>
+        <path id="sec" fill="var(--yellow)" fill-opacity=".75"/>
+        <path id="arc" fill="none" stroke="var(--red)" stroke-width="8" stroke-linecap="round"/>
+        <line id="r1" x1="200" y1="145" x2="200" y2="35" stroke="var(--blue)" stroke-width="6" stroke-linecap="round"/>
+        <line id="r2" x1="200" y1="145" stroke="var(--blue)" stroke-width="6" stroke-linecap="round"/>
+        <path id="ang" fill="none" stroke="var(--purple)" stroke-width="4"/>
+        <circle cx="200" cy="145" r="6" fill="var(--ink)"/>
+        <text id="tArc" font-size="17" style="fill:var(--red)">弧</text>
+        <text id="tAng" font-size="15" style="fill:var(--purple)"></text>
+        <text x="172" y="28" font-size="15" style="fill:var(--blue)">半徑</text>
+        <circle id="h" r="14" fill="var(--yellow)" stroke="var(--ink)" stroke-width="2.5" class="handle"/>
+      </svg>
+    </div>
+    <p class="hint">👉 拖拉黃色的點，把扇形變大變小。</p>
+    <div class="controls">
+      <button class="btn" data-a="60">60°</button>
+      <button class="btn" data-a="90">90°</button>
+      <button class="btn" data-a="120">120°</button>
+      <button class="btn" data-a="180">180°</button>
+      <button class="btn" data-a="270">270°</button>
+    </div>
+    <div class="readout">
+      <div class="r" style="color:var(--purple)"><small>圓心角</small><span id="av"></span>°</div>
+      <div class="r"><small>是整個圓的</small><span id="fv"></span></div>
+      <div class="r" id="nameBox" style="color:var(--red)"><small>它叫做</small><span id="nv"></span></div>
+    </div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>認識名字</h2>
+    <div class="steps">
+      <div class="step has-pic">
+        <div class="pic"><svg viewBox="0 0 160 120"><circle cx="80" cy="64" r="46" fill="none" stroke="var(--line)" stroke-width="2" stroke-dasharray="5 4"/><path d="M80 64 L80 18 A46 46 0 0 1 126 64 Z" fill="var(--yellow)" class="stroke"/></svg></div>
+        <p><b>扇形</b>：由<b style="color:var(--blue)">兩條半徑</b>和<b style="color:var(--red)">一段弧</b>圍成的圖形。</p>
+      </div>
+      <div class="step has-pic">
+        <div class="pic"><svg viewBox="0 0 160 120"><circle cx="80" cy="64" r="46" fill="none" stroke="var(--line)" stroke-width="2" stroke-dasharray="5 4"/><path d="M80 18 A46 46 0 0 1 126 64" fill="none" stroke="var(--red)" stroke-width="6" stroke-linecap="round"/><text x="116" y="30" font-size="14" style="fill:var(--red)">弧</text></svg></div>
+        <p><b style="color:var(--red)">弧</b>：圓上<b>彎彎的一段</b>。</p>
+      </div>
+      <div class="step has-pic">
+        <div class="pic"><svg viewBox="0 0 160 120"><line x1="80" y1="64" x2="80" y2="18" stroke="var(--blue)" stroke-width="5"/><line x1="80" y1="64" x2="126" y2="64" stroke="var(--blue)" stroke-width="5"/><path d="M80 46 A18 18 0 0 1 98 64" fill="none" stroke="var(--purple)" stroke-width="4"/><circle cx="80" cy="64" r="4" fill="var(--ink)"/><text x="88" y="44" font-size="12" style="fill:var(--purple)">圓心角</text></svg></div>
+        <p><b style="color:var(--purple)">圓心角</b>：兩條半徑夾起來的角，<b>角的頂點在圓心</b>。</p>
+      </div>
+      <div class="step"><p>整個圓是 360°，所以圓心角 90° 的扇形是圓的 <b>90/360 = ¼</b>；180° 的扇形就是<b>半圓</b>（½）。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula word">
+    <div class="label">名詞</div>
+    <div class="big" style="font-size:1.35rem">扇形 = <span style="color:var(--blue)">2 條半徑</span> + <span style="color:var(--red)">1 段弧</span></div>
+    <div class="big" style="font-size:1.35rem">扇形是整個圓的 <span style="color:var(--purple)">圓心角</span> / 360</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中常用希臘字母 <code>θ</code>（唸 theta）代表圓心角，例如「圓心角 θ 的扇形是圓的 <code>θ/360</code>」。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>練習一下</h2>
+    <div class="quiz">
+      <div class="q" data-hint="扇形要有兩條半徑，尖尖的地方在圓心">
+        <p class="qt">哪一個黃色的圖形是<b>扇形</b>？</p>
+        <div class="choices">
+          <button class="choice"><svg viewBox="0 0 100 80"><circle cx="50" cy="44" r="30" fill="none" stroke="var(--line)" stroke-width="2"/><path d="M24 59 A30 30 0 0 1 76 59 Z" fill="var(--yellow)" class="stroke"/></svg></button>
+          <button class="choice"><svg viewBox="0 0 100 80"><circle cx="50" cy="44" r="30" fill="none" stroke="var(--line)" stroke-width="2"/><path d="M50 44 L50 14 L80 44 Z" fill="var(--yellow)" class="stroke"/></svg></button>
+          <button class="choice" data-right><svg viewBox="0 0 100 80"><circle cx="50" cy="44" r="30" fill="none" stroke="var(--line)" stroke-width="2"/><path d="M50 44 L50 14 A30 30 0 0 1 80 44 Z" fill="var(--yellow)" class="stroke"/></svg></button>
+        </div>
+      </div>
+      <div class="q" data-hint="180° 是一圈的一半">
+        <p class="qt">圓心角 180° 的扇形，又叫做什麼？</p>
+        <div class="choices"><button class="choice">四分之一圓</button><button class="choice" data-right>半圓</button><button class="choice">整個圓</button></div>
+      </div>
+      <div class="q" data-hint="120 ÷ 360 = ?">
+        <p class="qt">圓心角 120° 的扇形，是整個圓的幾分之幾？</p>
+        <div class="choices"><button class="choice">½</button><button class="choice" data-right>⅓</button><button class="choice">¼</button><button class="choice">⅙</button></div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script>
+  const svg = document.getElementById("pl"), h = document.getElementById("h");
+  const CX = 200, CY = 145, R = 110;
+  let a = 90;
+  const gcd = (x, y) => y ? gcd(y, x % y) : x;
+  function draw() {
+    document.getElementById("sec").setAttribute("d", L.sectorPath(CX, CY, R, a));
+    document.getElementById("arc").setAttribute("d", L.arcPath(CX, CY, R, a));
+    const [x, y] = L.pol(CX, CY, R, a);
+    const r2 = document.getElementById("r2");
+    r2.setAttribute("x2", x); r2.setAttribute("y2", y);
+    h.setAttribute("cx", x); h.setAttribute("cy", y);
+    document.getElementById("ang").setAttribute("d", L.arcPath(CX, CY, 30, a));
+    const [tx, ty] = L.pol(CX, CY, R + 22, a / 2);
+    const tArc = document.getElementById("tArc");
+    tArc.setAttribute("x", tx - 8); tArc.setAttribute("y", ty + 6);
+    const [ax, ay] = L.pol(CX, CY, 50, a / 2);
+    const tAng = document.getElementById("tAng");
+    tAng.setAttribute("x", ax - 14); tAng.setAttribute("y", ay + 5); tAng.textContent = a + "°";
+    const g = gcd(a, 360);
+    document.getElementById("av").textContent = a;
+    document.getElementById("fv").textContent = a === 360 ? "整個圓" : `${a}/360 = ${a / g}/${360 / g}`;
+    document.getElementById("nv").textContent = a === 180 ? "半圓" : a === 90 ? "四分之一圓" : a === 360 ? "圓" : "扇形";
+  }
+  L.drag(svg, h, p => {
+    let d = Math.atan2(p.y - CY, p.x - CX) * 180 / Math.PI + 90;
+    if (d < 0) d += 360;
+    a = Math.max(10, Math.round(d / 10) * 10);
+    draw();
+  });
+  document.querySelectorAll("[data-a]").forEach(b => b.addEventListener("click", () => { a = +b.dataset.a; draw(); }));
+  draw();
+</script>
+</body>
+</html>

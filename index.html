@@ -220,7 +220,7 @@
      formula 公式怎麼來（重點：讓他看懂公式的由來）
      learn   學會方法、解題
    做好一課：在那張卡片加上 ready: true。
-   檔名：先備知識 → review/<id>.html；單元內 → 6a-u7/05.html（第幾張卡）
+   檔名：先備知識 → review/<id>.html；單元內 → 6a-u7/03.html（不算先備，第幾張）
    =========================================================== */
 const SEMESTERS = {
   "6a": {
@@ -287,16 +287,16 @@ const SEMESTERS = {
         { k: "formula", t: "正比的關係式", h: "y ÷ x 永遠一樣" },
       ]},
       { no: 7, title: "圓周長與扇形周長", status: "now", pic: "parts", items: [
-        { k: "pre", t: "圓心、半徑、直徑", h: "直徑 = 半徑 × 2", g: "3年級", id: "circle-parts", pic: "parts" },
-        { k: "pre", t: "角度與量角器", h: "繞一整圈是 360°", g: "4年級", id: "angles", pic: "angle360" },
-        { k: "pre", t: "小數乘法", h: "× 3.14 會用到", g: "5年級", id: "decimal-multiply", pic: "decMul" },
-        { k: "word", t: "圓周長", h: "沿著圓走一圈的長度", pic: "perimeterWalk" },
-        { k: "formula", t: "圓周率 π 怎麼來", h: "滾一圈 ≈ 直徑的 3.14 倍", pic: "pi" },
-        { k: "formula", t: "圓周長公式", h: "直徑 × 3.14", pic: "circumference" },
-        { k: "word", t: "扇形、圓心角、弧", h: "像一片披薩", pic: "sector" },
-        { k: "formula", t: "弧長怎麼算", h: "圓周長 × 圓心角 / 360", pic: "arc" },
-        { k: "formula", t: "扇形周長", h: "兩條半徑 + 弧長", pic: "sectorPerimeter" },
-        { k: "learn", t: "組合圖形的周長", h: "一段一段加起來", pic: "compound" },
+        { k: "pre", t: "圓心、半徑、直徑", h: "直徑 = 半徑 × 2", g: "3年級", id: "circle-parts", pic: "parts", ready: true },
+        { k: "pre", t: "角度與量角器", h: "繞一整圈是 360°", g: "4年級", id: "angles", pic: "angle360", ready: true },
+        { k: "pre", t: "小數乘法", h: "× 3.14 會用到", g: "5年級", id: "decimal-multiply", pic: "decMul", ready: true },
+        { k: "word", t: "圓周長", h: "沿著圓走一圈的長度", pic: "perimeterWalk", ready: true },
+        { k: "formula", t: "圓周率 π 怎麼來", h: "滾一圈 ≈ 直徑的 3.14 倍", pic: "pi", ready: true },
+        { k: "formula", t: "圓周長公式", h: "直徑 × 3.14", pic: "circumference", ready: true },
+        { k: "word", t: "扇形、圓心角、弧", h: "像一片披薩", pic: "sector", ready: true },
+        { k: "formula", t: "弧長怎麼算", h: "圓周長 × 圓心角 / 360", pic: "arc", ready: true },
+        { k: "formula", t: "扇形周長", h: "兩條半徑 + 弧長", pic: "sectorPerimeter", ready: true },
+        { k: "learn", t: "組合圖形的周長", h: "一段一段加起來", pic: "compound", ready: true },
       ]},
       { no: 8, title: "放大、縮小與比例尺", status: "next", pic: "enlarge", items: [
         { k: "pre", t: "長度單位換算", h: "1 公里 = 1000 公尺，1 公尺 = 100 公分", g: "2–4年級", id: "length-units", pic: "units" },
@@ -683,13 +683,16 @@ let currentSem = "6a";
 let currentKind = "all";
 try { currentSem = localStorage.getItem("sem") || currentSem; } catch (e) {}
 if (!SEMESTERS[currentSem]) currentSem = "6a";
+// 從課程頁按「← 目錄」回來時（例如 #6a-u7），切到那個學期
+const hashSem = location.hash.slice(1).split("-")[0];
+if (SEMESTERS[hashSem]) currentSem = hashSem;
 
 const svg = name => `<svg viewBox="0 0 160 120" aria-hidden="true">${PICS[name] || ""}</svg>`;
 
-function tile(item, unit, i) {
+function tile(item, unit, num) {
   const href = item.href || (item.k === "pre"
     ? `review/${item.id}.html`
-    : `${currentSem}-u${unit.no}/${String(i + 1).padStart(2, "0")}.html`);
+    : `${currentSem}-u${unit.no}/${String(num).padStart(2, "0")}.html`);
   const ready = !!item.ready;
   return `
     <a class="tile k-${item.k} ${ready ? "ready" : "soon"}" data-k="${item.k}" href="${ready ? href : "#"}" ${ready ? "" : 'data-soon="1"'}>
@@ -729,11 +732,11 @@ function render() {
       ${pre.length ? `
         <div data-group>
           <div class="group-title" style="color:var(--k-pre)">先複習 <small>以前學過的，忘了就點進去看</small></div>
-          <div class="tiles">${pre.map(([it, i]) => tile(it, u, i)).join("")}</div>
+          <div class="tiles">${pre.map(([it]) => tile(it, u)).join("")}</div>
         </div>` : ""}
       <div data-group>
         <div class="group-title">這個單元 <small>照順序一張一張學</small></div>
-        <div class="tiles">${main.map(([it, i]) => tile(it, u, i)).join("")}</div>
+        <div class="tiles">${main.map(([it], j) => tile(it, u, j + 1)).join("")}</div>
       </div>
     </section>`;
   }).join("");
@@ -770,6 +773,7 @@ $("#units").addEventListener("click", e => {
 });
 
 render();
+if (location.hash) { const el = document.getElementById(location.hash.slice(1)); if (el) el.scrollIntoView(); }
 </script>
 </body>
 </html>

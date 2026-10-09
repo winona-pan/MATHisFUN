@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>扇形周長</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u7" data-page="6a-u7/06">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-formula">公式怎麼來</span>
+  <h1>扇形周長</h1>
+  <p class="lead">繞扇形外圍走一圈：兩條直直的半徑，加一段彎彎的弧。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>繞一圈看看</h2>
+    <div class="stage"><svg id="pl" viewBox="0 0 400 280"></svg></div>
+    <div class="controls">
+      <label>半徑 <input type="range" id="r" min="2" max="10" value="10"> <b id="rv"></b> 公分</label>
+      <label>圓心角 <input type="range" id="a" min="30" max="330" step="30" value="90"> <b id="av"></b>°</label>
+      <button class="btn primary" id="walk">▶ 繞一圈</button>
+    </div>
+    <div class="readout">
+      <div class="r" style="color:var(--blue)"><small>半徑 + 半徑</small><span id="rr"></span></div>
+      <div class="r" style="color:var(--red)"><small>弧長</small><span id="al"></span></div>
+      <div class="r"><small>扇形周長</small><span id="pv"></span></div>
+    </div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>公式怎麼來</h2>
+    <div class="steps">
+      <div class="step"><p>① <b>周長</b> = 繞著圖形<b>外圍</b>走一圈的長度。</p></div>
+      <div class="step has-pic">
+        <div class="pic"><svg viewBox="0 0 160 120"><path d="M50 96 L50 26" stroke="var(--blue)" stroke-width="6" stroke-linecap="round"/><path d="M50 96 L120 96" stroke="var(--blue)" stroke-width="6" stroke-linecap="round"/><path d="M50 26 A70 70 0 0 1 120 96" fill="none" stroke="var(--red)" stroke-width="6" stroke-linecap="round"/><text x="22" y="64" font-size="14" style="fill:var(--blue)">①</text><text x="80" y="114" font-size="14" style="fill:var(--blue)">②</text><text x="104" y="40" font-size="14" style="fill:var(--red)">③</text></svg></div>
+        <p>② 扇形的外圍有 <b>3 段</b>：<b style="color:var(--blue)">半徑、半徑</b>、<b style="color:var(--red)">弧</b>。</p>
+      </div>
+      <div class="step"><p>③ 弧長用上一課的方法：<b style="color:var(--red)">圓周長 × 圓心角/360</b>。</p></div>
+      <div class="step"><p>④ 三段加起來：<b>扇形周長 = <span style="color:var(--blue)">半徑 × 2</span> + <span style="color:var(--red)">弧長</span></b></p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula">
+    <div class="label">公式</div>
+    <div class="big">扇形周長 = <span style="color:var(--blue)">半徑 × 2</span> + <span style="color:var(--red)">弧長</span></div>
+    <div class="sub">半圓的周長 = 直徑 + 圓周長 ÷ 2</div>
+  </div>
+
+  <div class="warn"><span class="ic">⚠️</span><p><b>最常錯：</b>只算了弧長，<b>忘了加兩條半徑</b>！「弧長」和「扇形周長」不一樣。</p></div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中會寫成：扇形周長 = <code>2r + 2πr × θ/360</code>。</p>
+    <p>例如半徑 6、圓心角 60°：周長 = 12 + 2π = <code>12 + 2π</code>（國中答案常常就停在這裡）。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>練習一下</h2>
+    <div class="quiz">
+      <div class="q" data-answer="35.7" data-hint="弧長 = 62.8 × ¼ = 15.7，還要加 2 條半徑 10 + 10">
+        <p class="qt">半徑 10 公分、圓心角 90° 的扇形，周長是幾公分？</p>
+        <div class="row"><input type="text" inputmode="decimal"> 公分 <button class="btn">對答案</button></div>
+      </div>
+      <div class="q" data-answer="25.7" data-hint="弧長 = 5 × 2 × 3.14 ÷ 2 = 15.7，再加直徑 10">
+        <p class="qt">半徑 5 公分的半圓，周長是幾公分？</p>
+        <div class="row"><input type="text" inputmode="decimal"> 公分 <button class="btn">對答案</button></div>
+      </div>
+      <div class="q" data-answer="18.28" data-hint="60/360 = ⅙；弧長 = 6 × 2 × 3.14 × ⅙ = 6.28，再加 6 + 6">
+        <p class="qt">挑戰：半徑 6 公分、圓心角 60° 的扇形，周長是幾公分？</p>
+        <div class="row"><input type="text" inputmode="decimal"> 公分 <button class="btn">對答案</button></div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script>
+  const rIn = document.getElementById("r"), aIn = document.getElementById("a"), svg = document.getElementById("pl");
+  const gcd = (x, y) => y ? gcd(y, x % y) : x;
+  let walkT = 1; // 0~1：繞了多少
+  function draw() {
+    const r = +rIn.value, a = +aIn.value, g = gcd(a, 360);
+    const arc = r * 2 * 3.14 * a / 360, per = 2 * r + arc;
+    const pr = 8.5 * r, cx = 200, cy = 105;
+    const [ex, ey] = L.pol(cx, cy, pr, a);
+    // 走的順序：圓心→上面（半徑1）→ 弧 → 回圓心（半徑2）
+    const total = 2 * pr + pr * a * Math.PI / 180;
+    const walked = walkT * total;
+    const seg1 = Math.min(walked, pr) / pr;
+    const seg2 = Math.max(0, Math.min(walked - pr, pr * a * Math.PI / 180)) / (pr * a * Math.PI / 180);
+    const seg3 = Math.max(0, walked - pr - pr * a * Math.PI / 180) / pr;
+    let s = `<circle cx="${cx}" cy="${cy}" r="${pr}" fill="none" stroke="var(--line)" stroke-width="2" stroke-dasharray="5 5"/>
+      <path d="${L.sectorPath(cx, cy, pr, a)}" fill="var(--yellow)" fill-opacity=".35"/>
+      <line x1="${cx}" y1="${cy}" x2="${cx}" y2="${cy - pr * seg1}" stroke="var(--blue)" stroke-width="7" stroke-linecap="round"/>
+      ${seg2 > 0 ? `<path d="${L.arcPath(cx, cy, pr, a * seg2)}" fill="none" stroke="var(--red)" stroke-width="7" stroke-linecap="round"/>` : ""}
+      ${seg3 > 0 ? `<line x1="${ex}" y1="${ey}" x2="${ex + (cx - ex) * seg3}" y2="${ey + (cy - ey) * seg3}" stroke="var(--blue)" stroke-width="7" stroke-linecap="round"/>` : ""}
+      <circle cx="${cx}" cy="${cy}" r="5" fill="var(--ink)"/>`;
+    // 拉直的長條
+    const S = 330 / (2 * 10 + 10 * 2 * 3.14 * 330 / 360) * 0.98;
+    const x0 = 20, y = 238, rw = r * S, aw = arc * S;
+    s += `<rect x="${x0}" y="${y}" width="${rw}" height="20" fill="var(--blue)" stroke="var(--ink)" stroke-width="1.5"/>
+      <rect x="${x0 + rw}" y="${y}" width="${rw}" height="20" fill="var(--blue)" fill-opacity=".7" stroke="var(--ink)" stroke-width="1.5"/>
+      <rect x="${x0 + 2 * rw}" y="${y}" width="${aw}" height="20" fill="var(--red)" stroke="var(--ink)" stroke-width="1.5"/>
+      <text x="${x0}" y="${y - 8}" font-size="13">拉直：半徑 + 半徑 + 弧長</text>`;
+    svg.innerHTML = s;
+    document.getElementById("rv").textContent = r;
+    document.getElementById("av").textContent = a;
+    document.getElementById("rr").textContent = `${r} × 2 = ${r * 2}`;
+    document.getElementById("al").textContent = `${L.fmt(r * 2 * 3.14)} × ${a / g}/${360 / g} = ${L.fmt(arc)}`;
+    document.getElementById("pv").textContent = `${r * 2} + ${L.fmt(arc)} = ${L.fmt(per)} 公分`;
+  }
+  rIn.addEventListener("input", draw);
+  aIn.addEventListener("input", draw);
+  document.getElementById("walk").addEventListener("click", () => {
+    const start = performance.now();
+    const step = now => {
+      walkT = Math.min(1, (now - start) / 3000);
+      draw();
+      if (walkT < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  });
+  draw();
+</script>
+</body>
+</html>

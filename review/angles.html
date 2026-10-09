@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>角度與量角器</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u7" data-page="review/angles">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-pre">先備知識・4 年級學過</span>
+  <h1>角度與量角器</h1>
+  <p class="lead">繞一整圈是 360°。等一下學扇形會一直用到！</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>轉轉看</h2>
+    <div class="stage">
+      <svg id="pl" viewBox="0 0 400 300">
+        <circle cx="200" cy="150" r="110" fill="var(--card)" class="stroke"/>
+        <g id="ticks"></g>
+        <path id="fill" fill="var(--yellow)" fill-opacity=".7" stroke="var(--ink)" stroke-width="2"/>
+        <line x1="200" y1="150" x2="200" y2="40" stroke="var(--ink)" stroke-width="4" stroke-linecap="round"/>
+        <line id="arm" x1="200" y1="150" stroke="var(--red)" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="200" cy="150" r="6" fill="var(--ink)"/>
+        <circle id="h" r="14" fill="var(--yellow)" stroke="var(--ink)" stroke-width="2.5" class="handle"/>
+        <text id="deg" x="300" y="40" font-size="30" style="fill:var(--red)"></text>
+      </svg>
+    </div>
+    <p class="hint">👉 拖拉黃色的點，看看轉了幾度、是一圈的幾分之幾。</p>
+    <div class="controls">
+      <button class="btn" data-a="90">直角 90°</button>
+      <button class="btn" data-a="180">半圈 180°</button>
+      <button class="btn" data-a="270">270°</button>
+      <button class="btn" data-a="360">一整圈 360°</button>
+    </div>
+    <div class="readout">
+      <div class="r"><small>角度</small><span id="dv"></span>°</div>
+      <div class="r"><small>是一圈的</small><span id="fv"></span></div>
+    </div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>想一想</h2>
+    <div class="steps">
+      <div class="step has-pic">
+        <div class="pic"><svg viewBox="0 0 160 120"><circle cx="80" cy="60" r="44" fill="var(--yellow)" fill-opacity=".7" class="stroke"/><text x="58" y="66" font-size="18">360°</text></svg></div>
+        <p>繞<b>一整圈</b>是 <b style="color:var(--red)">360°</b>。</p>
+      </div>
+      <div class="step has-pic">
+        <div class="pic"><svg viewBox="0 0 160 120"><circle cx="80" cy="60" r="44" fill="var(--card)" class="stroke"/><path d="M80 60 L80 16 A44 44 0 0 1 80 104 Z" fill="var(--yellow)" fill-opacity=".7" class="stroke"/><text x="90" y="66" font-size="16">180°</text></svg></div>
+        <p><b>半圈</b>是 360 ÷ 2 = <b style="color:var(--red)">180°</b>，是一圈的 ½。</p>
+      </div>
+      <div class="step has-pic">
+        <div class="pic"><svg viewBox="0 0 160 120"><circle cx="80" cy="60" r="44" fill="var(--card)" class="stroke"/><path d="M80 60 L80 16 A44 44 0 0 1 124 60 Z" fill="var(--yellow)" fill-opacity=".7" class="stroke"/><rect x="80" y="50" width="10" height="10" fill="none" stroke="var(--ink)" stroke-width="2"/><text x="96" y="46" font-size="14">90°</text></svg></div>
+        <p><b>直角</b>是 360 ÷ 4 = <b style="color:var(--red)">90°</b>，是一圈的 ¼。</p>
+      </div>
+      <div class="step">
+        <p>所以：<b>角度 ÷ 360</b> 就知道是一圈的幾分之幾。<br>例如 120° → 120/360 = <b style="color:var(--red)">⅓ 圈</b>。</p>
+      </div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula pre">
+    <div class="label">記起來</div>
+    <div class="big">一圈 = 360°　半圈 = 180°　直角 = 90°</div>
+    <div class="sub">是一圈的幾分之幾 = 角度 / 360</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中學三角形、多邊形的內角和，也是從「一圈 360°」「一直線 180°」出發。這兩個數字一定要很熟！</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>練習一下</h2>
+    <div class="quiz">
+      <div class="q" data-answer="180" data-hint="一圈 360°，半圈是一半">
+        <p class="qt">半圈是幾度？</p>
+        <div class="row"><input type="text" inputmode="decimal"> 度 <button class="btn">對答案</button></div>
+      </div>
+      <div class="q" data-hint="90 ÷ 360 = ?">
+        <p class="qt">90° 是一圈的幾分之幾？</p>
+        <div class="choices">
+          <button class="choice">½</button><button class="choice">⅓</button><button class="choice" data-right>¼</button><button class="choice">⅙</button>
+        </div>
+      </div>
+      <div class="q" data-answer="60" data-hint="360 ÷ 6 = ?">
+        <p class="qt">把一圈平分成 6 份，每份是幾度？</p>
+        <div class="row"><input type="text" inputmode="decimal"> 度 <button class="btn">對答案</button></div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script>
+  const svg = document.getElementById("pl"), h = document.getElementById("h");
+  const R = 110;
+  let a = 120;
+  document.getElementById("ticks").innerHTML = Array.from({ length: 36 }, (_, i) => {
+    const [x1, y1] = L.pol(200, 150, R, i * 10), [x2, y2] = L.pol(200, 150, R - (i % 9 ? 6 : 14), i * 10);
+    return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="var(--ink)" stroke-width="${i % 9 ? 1.5 : 3}"/>`;
+  }).join("");
+  const FR = { 30: "1/12", 45: "⅛", 60: "⅙", 90: "¼", 120: "⅓", 135: "⅜", 150: "5/12", 180: "½", 210: "7/12", 225: "⅝", 240: "⅔", 270: "¾", 300: "⅚", 315: "⅞", 330: "11/12", 360: "1（整圈）" };
+  function draw() {
+    const [x, y] = L.pol(200, 150, R, a);
+    document.getElementById("arm").setAttribute("x2", x);
+    document.getElementById("arm").setAttribute("y2", y);
+    h.setAttribute("cx", x); h.setAttribute("cy", y);
+    document.getElementById("fill").setAttribute("d", a > 0 ? L.sectorPath(200, 150, 60, a) : "");
+    document.getElementById("deg").textContent = a + "°";
+    document.getElementById("dv").textContent = a;
+    document.getElementById("fv").textContent = FR[a] || `${a}/360`;
+  }
+  L.drag(svg, h, p => {
+    let d = Math.atan2(p.y - 150, p.x - 200) * 180 / Math.PI + 90;
+    if (d < 0) d += 360;
+    a = Math.round(d / 5) * 5;
+    if (a === 0) a = 360;
+    draw();
+  });
+  document.querySelectorAll("[data-a]").forEach(b => b.addEventListener("click", () => { a = +b.dataset.a; draw(); }));
+  draw();
+</script>
+</body>
+</html>

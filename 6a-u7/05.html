@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>弧長怎麼算</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u7" data-page="6a-u7/05">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-formula">公式怎麼來</span>
+  <h1>弧長怎麼算？</h1>
+  <p class="lead">弧是圓周的一部分。是幾分之幾圈，就是圓周長的幾分之幾。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>弧佔了圓周長的多少？</h2>
+    <div class="stage"><svg id="pl" viewBox="0 0 400 270"></svg></div>
+    <div class="controls">
+      <label>半徑 <input type="range" id="r" min="2" max="10" value="10"> <b id="rv"></b> 公分</label>
+      <label>圓心角 <input type="range" id="a" min="30" max="360" step="30" value="90"> <b id="av"></b>°</label>
+    </div>
+    <div class="readout">
+      <div class="r"><small>整個圓周長</small><span id="cv"></span></div>
+      <div class="r" style="color:var(--purple)"><small>是一圈的</small><span id="fv"></span></div>
+      <div class="r" style="color:var(--red)"><small>弧長</small><span id="lv"></span></div>
+    </div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>公式怎麼來</h2>
+    <div class="steps">
+      <div class="step has-pic">
+        <div class="pic"><svg viewBox="0 0 160 120"><circle cx="80" cy="60" r="42" fill="none" stroke="var(--red)" stroke-width="6"/><circle cx="80" cy="60" r="4" fill="var(--ink)"/><text x="62" y="66" font-size="14">360°</text></svg></div>
+        <p>① 圓心角 <b>360°</b>（一整圈）的弧 = <b>整個圓周長</b>。</p>
+      </div>
+      <div class="step has-pic">
+        <div class="pic"><svg viewBox="0 0 160 120"><circle cx="80" cy="60" r="42" fill="none" stroke="var(--line)" stroke-width="4"/><path d="M80 18 A42 42 0 0 1 122 60" fill="none" stroke="var(--red)" stroke-width="6" stroke-linecap="round"/><line x1="80" y1="60" x2="80" y2="18" stroke="var(--blue)" stroke-width="2"/><line x1="80" y1="60" x2="122" y2="60" stroke="var(--blue)" stroke-width="2"/><text x="84" y="54" font-size="12">90°</text></svg></div>
+        <p>② <b>90°</b> 是一圈的 90/360 = <b>¼</b>，所以弧長是圓周長的 <b style="color:var(--red)">¼</b>。</p>
+      </div>
+      <div class="step has-pic">
+        <div class="pic"><svg viewBox="0 0 160 120"><circle cx="80" cy="60" r="42" fill="none" stroke="var(--line)" stroke-width="4"/><path d="M80 18 A42 42 0 0 1 116.4 39" fill="none" stroke="var(--red)" stroke-width="6" stroke-linecap="round"/><line x1="80" y1="60" x2="80" y2="18" stroke="var(--blue)" stroke-width="2"/><line x1="80" y1="60" x2="116.4" y2="39" stroke="var(--blue)" stroke-width="2"/><text x="84" y="48" font-size="11">60°</text></svg></div>
+        <p>③ <b>60°</b> 是一圈的 60/360 = <b>⅙</b>，所以弧長是圓周長的 <b style="color:var(--red)">⅙</b>。</p>
+      </div>
+      <div class="step"><p>④ 不管幾度都一樣：先算<b>圓周長</b>，再乘上<b>「是一圈的幾分之幾」</b>，也就是 <b style="color:var(--purple)">圓心角/360</b>。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula">
+    <div class="label">公式</div>
+    <div class="big"><span style="color:var(--red)">弧長</span> = 圓周長 × <span style="color:var(--purple)">圓心角/360</span></div>
+    <div class="big" style="font-size:1.25rem">= 半徑 × 2 × 3.14 × <span style="color:var(--purple)">圓心角/360</span></div>
+  </div>
+
+  <div class="warn"><span class="ic">💡</span><p>算的時候先約分會比較好算！例如 × 90/360 就是 × ¼，也就是 ÷ 4。</p></div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中會寫成：弧長 = <code>2πr × θ/360</code>。</p>
+    <p>例如半徑 6、圓心角 60°：弧長 = 2 × π × 6 × 60/360 = <code>2π</code>。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>練習一下</h2>
+    <div class="quiz">
+      <div class="q" data-answer="15.7" data-hint="圓周長 = 10 × 2 × 3.14 = 62.8，再 × ¼">
+        <p class="qt">半徑 10 公分、圓心角 90° 的扇形，弧長是幾公分？</p>
+        <div class="row"><input type="text" inputmode="decimal"> 公分 <button class="btn">對答案</button></div>
+      </div>
+      <div class="q" data-answer="9.42" data-hint="給的是直徑！圓周長 = 6 × 3.14，再 × ½">
+        <p class="qt">直徑 6 公分的半圓，弧長是幾公分？</p>
+        <div class="row"><input type="text" inputmode="decimal"> 公分 <button class="btn">對答案</button></div>
+      </div>
+      <div class="q" data-answer="6.28" data-hint="72/360 = ⅕；圓周長 = 5 × 2 × 3.14 = 31.4">
+        <p class="qt">挑戰：半徑 5 公分、圓心角 72° 的扇形，弧長是幾公分？</p>
+        <div class="row"><input type="text" inputmode="decimal"> 公分 <button class="btn">對答案</button></div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script>
+  const rIn = document.getElementById("r"), aIn = document.getElementById("a"), svg = document.getElementById("pl");
+  const gcd = (x, y) => y ? gcd(y, x % y) : x;
+  function draw() {
+    const r = +rIn.value, a = +aIn.value;
+    const C = r * 2 * 3.14, arc = C * a / 360;
+    const pr = 8 * r, cx = 200, cy = 100;
+    const W = 360, x0 = 20, y = 225; // 圓周長拉直畫成固定長度的長條
+    const g = gcd(a, 360);
+    let s = `<circle cx="${cx}" cy="${cy}" r="${pr}" fill="none" stroke="var(--line)" stroke-width="4"/>
+      <path d="${L.sectorPath(cx, cy, pr, a)}" fill="var(--yellow)" fill-opacity=".5"/>
+      <path d="${L.arcPath(cx, cy, pr, a)}" fill="none" stroke="var(--red)" stroke-width="7" stroke-linecap="round"/>
+      <circle cx="${cx}" cy="${cy}" r="4" fill="var(--ink)"/>
+      <text x="${x0}" y="${y - 12}" font-size="14">把整個圓周長拉直，平分成 ${360 / g} 份：</text>
+      <rect x="${x0}" y="${y}" width="${W}" height="22" fill="var(--card)" stroke="var(--ink)" stroke-width="2"/>
+      <rect x="${x0}" y="${y}" width="${W * a / 360}" height="22" fill="var(--red)" stroke="var(--ink)" stroke-width="2"/>`;
+    const parts = 360 / g;
+    if (parts <= 12) for (let i = 1; i < parts; i++) s += `<line x1="${x0 + W * i / parts}" y1="${y}" x2="${x0 + W * i / parts}" y2="${y + 22}" stroke="var(--ink)" stroke-width="1.5"/>`;
+    svg.innerHTML = s;
+    document.getElementById("rv").textContent = r;
+    document.getElementById("av").textContent = a;
+    document.getElementById("cv").textContent = `${r} × 2 × 3.14 = ${L.fmt(C)}`;
+    document.getElementById("fv").textContent = a === 360 ? "整圈" : `${a}/360 = ${a / g}/${360 / g}`;
+    document.getElementById("lv").textContent = `${L.fmt(C)} × ${a / g}/${360 / g} = ${L.fmt(arc)} 公分`;
+  }
+  rIn.addEventListener("input", draw);
+  aIn.addEventListener("input", draw);
+  draw();
+</script>
+</body>
+</html>
