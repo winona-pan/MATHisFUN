@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>圖形的規律</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u3" data-page="6a-u3/01">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-learn">學會方法</span>
+  <h1>圖形的規律</h1>
+  <p class="lead">圖形一個比一個大，每次「多了什麼」？找到就能畫出下一個！</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>火柴棒排正方形</h2>
+    <div class="controls" style="margin-top:0">
+      <button class="btn" data-p="sq" aria-pressed="true">正方形一排</button>
+      <button class="btn" data-p="tri">三角形一排</button>
+      <button class="btn" data-p="L">L 形方塊</button>
+    </div>
+    <div class="stage" style="margin-top:12px"><svg id="g" viewBox="0 0 400 220"></svg></div>
+    <div class="controls"><label>第 <input type="range" id="n" min="1" max="6" value="3"> <b id="nv"></b> 個</label></div>
+    <div class="work" id="w"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>找規律的方法</h2>
+    <div class="steps">
+      <div class="step"><p>① 把第 1、2、3 個圖<b>畫出來、數一數</b>：4、7、10 根。</p></div>
+      <div class="step"><p>② 看<b>每次多幾根</b>：7 − 4 = 3，10 − 7 = 3 → 每多一個正方形，多 3 根（紅色那 3 根）。</p></div>
+      <div class="step"><p>③ 下一個（第 4 個）就是 10 + 3 = <b>13 根</b>。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula word">
+    <div class="label">方法</div>
+    <div class="big" style="font-size:1.35rem">畫 → 數 → 看每次多幾個</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中會用字母寫規律：第 n 個有 <code>3n + 1</code> 根。這叫「<b>一次式</b>」，是代數的開始！</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：下一個有幾個？</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  const P = {
+    sq: { name: "根火柴", u: "根", f: n => 3 * n + 1, first: 4, d: 3,
+      draw(n, x0, y0, u) { let s = ""; const L = (x1, y1, x2, y2, red) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${red ? "var(--red)" : "#b5651d"}" stroke-width="5" stroke-linecap="round"/>`;
+        s += L(x0, y0, x0, y0 + u, false);
+        for (let i = 0; i < n; i++) { const red = i === n - 1 && n > 1; s += L(x0 + i * u, y0, x0 + (i + 1) * u, y0, red) + L(x0 + i * u, y0 + u, x0 + (i + 1) * u, y0 + u, red) + L(x0 + (i + 1) * u, y0, x0 + (i + 1) * u, y0 + u, red); }
+        return s; } },
+    tri: { name: "根火柴", u: "根", f: n => 2 * n + 1, first: 3, d: 2,
+      draw(n, x0, y0, u) { let s = ""; const L = (x1, y1, x2, y2, red) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${red ? "var(--red)" : "#b5651d"}" stroke-width="5" stroke-linecap="round"/>`;
+        const h = u * 0.87;
+        s += L(x0, y0 + h, x0 + u / 2, y0, false);
+        for (let i = 0; i < n; i++) { const red = i === n - 1 && n > 1; const bx = x0 + i * u / 2;
+          if (i % 2 === 0) s += L(bx, y0 + h, bx + u, y0 + h, red) + L(bx + u / 2, y0, bx + u, y0 + h, red);
+          else s += L(bx, y0, bx + u, y0, red) + L(bx + u, y0, bx + u / 2, y0 + h, red); }
+        return s; } },
+    L: { name: "個方塊", u: "個", f: n => 2 * n - 1, first: 1, d: 2,
+      draw(n, x0, y0, u) { let s = ""; const B = (x, y, red) => `<rect x="${x}" y="${y}" width="${u}" height="${u}" fill="${red ? "var(--red)" : "var(--blue)"}" fill-opacity=".7" stroke="var(--ink)" stroke-width="1.5"/>`;
+        for (let i = 0; i < n; i++) { const red = i === n - 1 && n > 1; s += B(x0, y0 + (5 - i) * u, red); if (i) s += B(x0 + i * u, y0 + 5 * u, red); }
+        return s; } },
+  };
+  let pk = "sq";
+  const nIn = document.getElementById("n");
+  function draw() {
+    const p = P[pk], n = +nIn.value;
+    let s = "";
+    if (pk === "L") s = p.draw(n, 30, 10, 32);
+    else s = p.draw(n, 20, 70, pk === "sq" ? 55 : 60);
+    s += `<text x="20" y="210" font-size="14">第 ${n} 個：${p.f(n)} ${p.name}${n > 1 ? `（紅色是比上一個多出來的 ${p.d} ${p.u}）` : ""}</text>`;
+    document.getElementById("g").innerHTML = s;
+    document.getElementById("nv").textContent = n;
+    document.getElementById("w").innerHTML = Array.from({ length: Math.min(n + 1, 6) }, (_, i) => `第 ${i + 1} 個：${i < n ? p.f(i + 1) : "?"}`).join("　→　") + `　（每次 +${p.d}）`;
+    document.querySelectorAll("[data-p]").forEach(b => b.setAttribute("aria-pressed", b.dataset.p === pk));
+  }
+  document.querySelectorAll("[data-p]").forEach(b => b.addEventListener("click", () => { pk = b.dataset.p; draw(); }));
+  nIn.addEventListener("input", draw); draw();
+
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { const k = W.pick(["sq", "tri", "L"]), p = P[k], n = W.rand(2, 3); return { q: `照這個規律，第 ${n + 1} 個圖有幾${p.name}？（第 1 個：${p.f(1)}，第 2 個：${p.f(2)}${n === 3 ? `，第 3 個：${p.f(3)}` : ""}）`, ans: p.f(n + 1), unit: p.u, hint: `每次 +${p.d}`, viewBox: k === "L" ? "0 0 220 220" : "0 0 300 150", pic: k === "L" ? p.draw(n, 10, 10, 28) : p.draw(n, 10, 40, 50) }; },
+    () => { const s = W.rand(1, 10), d = W.rand(2, 7); return { q: `${s}、${s + d}、${s + 2 * d}、${s + 3 * d}、□，□ = ?`, ans: s + 4 * d, hint: `每次 +${d}`, pic: "" }; },
+  ] });
+</script>
+</body>
+</html>

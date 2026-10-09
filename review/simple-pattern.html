@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>簡單的數量規律</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u3" data-page="review/simple-pattern">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-pre">先備知識・4–5 年級學過</span>
+  <h1>簡單的數量規律</h1>
+  <p class="lead">一排數字，每次都多（或少）一樣多，下一個就猜得到！</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>跳跳看</h2>
+    <div class="stage"><svg id="g" viewBox="0 0 400 150"></svg></div>
+    <div class="controls">
+      <label>從 <input type="range" id="s" min="1" max="10" value="2"> <b id="sv"></b> 開始</label>
+      <label>每次加 <input type="range" id="d" min="1" max="6" value="3"> <b id="dv"></b></label>
+    </div>
+    <div class="work" id="w"></div>
+  </section>
+
+  <div class="formula pre">
+    <div class="label">記起來</div>
+    <div class="big" style="font-size:1.35rem">找規律：看相鄰兩個「差多少」</div>
+    <div class="sub">2、5、8、11 → 每次 +3 → 下一個 14</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中八年級叫「<b>等差數列</b>」，每次加的數叫「<b>公差</b>」。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">2</span>練習一下</h2>
+    <div class="quiz">
+      <div class="q" data-answer="23" data-hint="每次 +4">
+        <p class="qt">3、7、11、15、19、□，□ = ?</p>
+        <div class="row"><input type="text" inputmode="decimal"> <button class="btn">對答案</button></div>
+      </div>
+      <div class="q" data-answer="34" data-hint="每次 −6">
+        <p class="qt">58、52、46、40、□，□ = ?</p>
+        <div class="row"><input type="text" inputmode="decimal"> <button class="btn">對答案</button></div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script>
+  const S = document.getElementById("s"), D = document.getElementById("d");
+  function draw() {
+    const s = +S.value, d = +D.value, terms = Array.from({ length: 6 }, (_, i) => s + i * d), max = terms[5] + d, U = 370 / max;
+    let o = `<line x1="15" y1="100" x2="385" y2="100" class="stroke"/>`;
+    terms.forEach((t, i) => {
+      o += `<circle cx="${15 + t * U}" cy="100" r="7" fill="${i === 5 ? "var(--red)" : "var(--blue)"}"/><text x="${15 + t * U - 6}" y="128" font-size="12">${i === 5 ? "?" : t}</text>`;
+      if (i) o += `<path d="M${15 + terms[i - 1] * U} 92 Q${15 + (terms[i - 1] + t) / 2 * U} 50 ${15 + t * U} 92" fill="none" stroke="var(--green)" stroke-width="2"/><text x="${15 + (terms[i - 1] + t) / 2 * U - 8}" y="56" font-size="11" style="fill:var(--green)">+${d}</text>`;
+    });
+    document.getElementById("g").innerHTML = o;
+    document.getElementById("sv").textContent = s; document.getElementById("dv").textContent = d;
+    document.getElementById("w").innerHTML = `${terms.slice(0, 5).join("、")}、<b style="color:var(--red)">?</b>　→ 每次 +${d}，下一個是 ${terms[4]} + ${d} = <b>${terms[5]}</b>`;
+  }
+  S.addEventListener("input", draw); D.addEventListener("input", draw); draw();
+</script>
+</body>
+</html>

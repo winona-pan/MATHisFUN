@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>植樹問題（一條直線）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u3" data-page="6a-u3/04">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-formula">公式怎麼來</span>
+  <h1>植樹問題（一條直線）</h1>
+  <p class="lead">一條路種樹：棵數和間隔數差 1。為什麼？伸出手指就知道！</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>手指和指縫</h2>
+    <div class="stage"><svg id="g" viewBox="0 0 400 200"></svg></div>
+    <div class="controls">
+      <label>路長 <input type="range" id="len" min="10" max="60" step="10" value="30"> <b id="lv"></b> 公尺</label>
+      <label>每隔 <input type="range" id="gap" min="5" max="10" step="5" value="5"> <b id="gv"></b> 公尺</label>
+    </div>
+    <div class="controls">
+      <button class="btn" data-m="both" aria-pressed="true">兩端都種</button>
+      <button class="btn" data-m="one">只種一端</button>
+      <button class="btn" data-m="none">兩端都不種</button>
+    </div>
+    <div class="work" id="w"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>公式怎麼來</h2>
+    <div class="steps">
+      <div class="step"><p>① 先算<b>間隔數</b> = 路長 ÷ 間隔。30 ÷ 5 = 6 個間隔。</p></div>
+      <div class="step"><p>② 像手指：5 根手指之間有 4 個指縫。<b>兩端都種</b> → 樹比間隔多 1 → 6 + 1 = <b>7 棵</b>。</p></div>
+      <div class="step"><p>③ <b>只種一端</b> → 樹 = 間隔數 = 6 棵。<b>兩端都不種</b> → 樹 = 間隔數 − 1 = 5 棵。</p></div>
+      <div class="step"><p>④ 反過來：兩端都種 7 棵、間隔 5 公尺，路長 = (7 − 1) × 5 = 30 公尺。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula">
+    <div class="label">公式</div>
+    <div class="big" style="font-size:1.3rem">間隔數 = 全長 ÷ 間隔</div>
+    <div class="big" style="font-size:1.2rem">兩端都種：+1　只種一端：不變　兩端都不種：−1</div>
+    <div class="sub">翻過來：全長 = 間隔數 × 間隔</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中數線上，從 2 到 10 有幾個整數？10 − 2 + 1 = 9 個。這個「+1」就是植樹問題！</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script src="../assets/gens.js"></script>
+<script>
+  const lenIn = document.getElementById("len"), gapIn = document.getElementById("gap");
+  let mode = "both";
+  function draw() {
+    const len = +lenIn.value, gap = +gapIn.value, g = len / gap, x0 = 20, Wd = 360, y = 120;
+    let s = `<line x1="${x0}" y1="${y}" x2="${x0 + Wd}" y2="${y}" stroke="var(--ink)" stroke-width="4"/>`;
+    let trees = 0;
+    for (let i = 0; i <= g; i++) {
+      const x = x0 + Wd * i / g, end = i === 0 || i === g;
+      const plant = mode === "both" || !end || (mode === "one" && i === 0);
+      if (i < g) s += `<text x="${x + Wd / g / 2 - 10}" y="${y + 26}" font-size="11" style="fill:var(--blue)">${gap}m</text><path d="M${x + 4} ${y + 34} q${Wd / g / 2 - 4} 12 ${Wd / g - 8} 0" fill="none" stroke="var(--blue)" stroke-width="1.5"/>`;
+      if (plant) { trees++; s += `<path d="M${x} ${y - 34} l-12 22 l24 0 Z" fill="var(--green)" stroke="var(--ink)" stroke-width="1"/><rect x="${x - 2}" y="${y - 12}" width="4" height="12" fill="#8a5a2b"/><text x="${x - 4}" y="${y - 40}" font-size="11">${trees}</text>`; }
+      else s += `<line x1="${x}" y1="${y - 12}" x2="${x}" y2="${y + 12}" stroke="var(--red)" stroke-width="3"/>`;
+    }
+    s += `<text x="${x0}" y="185" font-size="13">${len} 公尺，每 ${gap} 公尺一段 → ${g} 個間隔（藍色）</text>`;
+    document.getElementById("g").innerHTML = s;
+    document.getElementById("lv").textContent = len; document.getElementById("gv").textContent = gap;
+    const rule = { both: `${g} + 1`, one: `${g}`, none: `${g} − 1` }[mode];
+    document.getElementById("w").innerHTML = `間隔數 ${len} ÷ ${gap} = ${g}　→　棵數 = ${rule} = <b>${trees} 棵</b>`;
+    document.querySelectorAll("[data-m]").forEach(b => b.setAttribute("aria-pressed", b.dataset.m === mode));
+  }
+  document.querySelectorAll("[data-m]").forEach(b => b.addEventListener("click", () => { mode = b.dataset.m; draw(); }));
+  lenIn.addEventListener("input", draw); gapIn.addEventListener("input", draw); draw();
+
+  const P = `<line x1="10" y1="90" x2="210" y2="90" stroke="var(--ink)" stroke-width="3"/>${[10, 60, 110, 160, 210].map(x => `<path d="M${x} ${70} l-8 16 l16 0 Z" fill="var(--green)"/>`).join("")}<text x="10" y="125" font-size="13">5 棵樹、4 個間隔</text>`;
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { const gap = W.pick([2, 4, 5, 10]), g = W.rand(3, 20), m = W.rand(0, 2); const t = [g + 1, g, g - 1][m];
+      return { q: `一條路長 ${g * gap} 公尺，每隔 ${gap} 公尺種一棵樹，<b>${["兩端都種", "只種一端", "兩端都不種"][m]}</b>，共幾棵？`, ans: t, unit: "棵", hint: `間隔數 ${g}，${["+1", "不變", "−1"][m]}`, pic: P }; },
+    () => { const gap = W.pick([2, 3, 5, 10]), t = W.rand(4, 20); return { q: `一條路兩端都種樹，共 ${t} 棵，每隔 ${gap} 公尺一棵。這條路長幾公尺？`, ans: (t - 1) * gap, unit: "公尺", hint: `間隔數 = ${t} − 1 = ${t - 1}，× ${gap}`, pic: P }; },
+    () => { const f = W.rand(3, 12); return { q: `從 1 樓走到 ${f} 樓，要走幾層樓梯？`, ans: f - 1, unit: "層", hint: "樓層像樹、樓梯像間隔：差 1", pic: `<text x="20" y="80" font-size="40">🏢</text><text x="80" y="76" font-size="13">樓層 − 1 = 樓梯</text>` }; },
+  ] });
+</script>
+</body>
+</html>

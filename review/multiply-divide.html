@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>乘法與除法</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u3" data-page="review/multiply-divide">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-pre">先備知識・2–4 年級學過</span>
+  <h1>乘法與除法</h1>
+  <p class="lead">乘法：幾個一數；除法：平分，或是看「裡面有幾個」。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>糖果盒</h2>
+    <div class="stage"><svg id="g" viewBox="0 0 400 200"></svg></div>
+    <div class="controls">
+      <label>盒子 <input type="range" id="a" min="1" max="6" value="4"> <b id="av"></b> 盒</label>
+      <label>每盒 <input type="range" id="b" min="1" max="6" value="3"> <b id="bv"></b> 顆</label>
+    </div>
+    <div class="work" id="w"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>一家人</h2>
+    <div class="steps">
+      <div class="step"><p>① <b>乘法</b>：4 盒、每盒 3 顆 → 3 + 3 + 3 + 3 = 4 × 3 = <b>12 顆</b>。</p></div>
+      <div class="step"><p>② <b>平分</b>（除法）：12 顆平分到 4 盒 → 每盒 12 ÷ 4 = <b>3 顆</b>。</p></div>
+      <div class="step"><p>③ <b>包含</b>（除法）：12 顆、每 3 顆裝一盒 → 12 ÷ 3 = <b>4 盒</b>。</p></div>
+      <div class="step"><p>④ 同一張圖：4 × 3 = 12、12 ÷ 4 = 3、12 ÷ 3 = 4，乘法和除法可以互相翻過來！</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula pre">
+    <div class="label">記起來</div>
+    <div class="big" style="font-size:1.35rem">幾盒 × 每盒 = 全部</div>
+    <div class="sub">全部 ÷ 幾盒 = 每盒；全部 ÷ 每盒 = 幾盒</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>這個「三角形關係」國中一直會用：<code>a × b = c</code> ⇄ <code>c ÷ a = b</code>。解方程式就靠它！</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>練習一下</h2>
+    <div class="quiz">
+      <div class="q" data-answer="7" data-hint="56 ÷ 8">
+        <p class="qt">56 顆糖，每 8 顆裝一袋，可以裝幾袋？</p>
+        <div class="row"><input type="text" inputmode="decimal"> 袋 <button class="btn">對答案</button></div>
+      </div>
+      <div class="q" data-answer="9" data-hint="9 × □ = 81 → 81 ÷ 9">
+        <p class="qt">9 × □ = 81，□ = ?</p>
+        <div class="row"><input type="text" inputmode="decimal"> <button class="btn">對答案</button></div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script>
+  const A = document.getElementById("a"), B = document.getElementById("b");
+  function draw() {
+    const a = +A.value, b = +B.value;
+    let s = "";
+    for (let i = 0; i < a; i++) {
+      const x = 14 + i * 64;
+      s += `<rect x="${x}" y="40" width="56" height="110" rx="10" fill="var(--yellow)" fill-opacity=".35" stroke="var(--ink)" stroke-width="2"/>`;
+      for (let j = 0; j < b; j++) s += `<circle cx="${x + 28}" cy="${58 + j * 16}" r="7" fill="var(--red)" stroke="var(--ink)" stroke-width="1"/>`;
+      s += `<text x="${x + 18}" y="170" font-size="12">第${i + 1}盒</text>`;
+    }
+    document.getElementById("g").innerHTML = s;
+    document.getElementById("av").textContent = a; document.getElementById("bv").textContent = b;
+    document.getElementById("w").innerHTML = `${a} × ${b} = <b>${a * b}</b>　｜　${a * b} ÷ ${a} = ${b}　｜　${a * b} ÷ ${b} = ${a}`;
+  }
+  A.addEventListener("input", draw); B.addEventListener("input", draw); draw();
+</script>
+</body>
+</html>

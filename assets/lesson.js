@@ -156,6 +156,18 @@
         { path: "6a-u2/06", t: "答案變大還是變小" },
       ],
     },
+    "6a-u3": {
+      name: "六上 第 3 單元・規律問題",
+      pages: [
+        { path: "review/multiply-divide", t: "乘法與除法", pre: true },
+        { path: "review/simple-pattern", t: "簡單的數量規律", pre: true },
+        { path: "6a-u3/01", t: "圖形的規律" },
+        { path: "6a-u3/02", t: "用表格找規律" },
+        { path: "6a-u3/03", t: "第 □ 個有幾個" },
+        { path: "6a-u3/04", t: "植樹問題（一條直線）" },
+        { path: "6a-u3/05", t: "圍成一圈" },
+      ],
+    },
   };
 
   const body = document.body;

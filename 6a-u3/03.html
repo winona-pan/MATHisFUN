@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>第 □ 個有幾個</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u3" data-page="6a-u3/03">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-formula">公式怎麼來</span>
+  <h1>第 □ 個有幾個？</h1>
+  <p class="lead">第 100 個不用一個一個加！從第 1 個開始，加了幾次就好。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>火柴正方形：第 n 個有幾根？</h2>
+    <div class="stage"><svg id="g" viewBox="0 0 400 170"></svg></div>
+    <div class="controls"><label>第 <input type="range" id="n" min="1" max="7" value="5"> <b id="nv"></b> 個</label></div>
+    <div class="work" id="w"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>公式怎麼來</h2>
+    <div class="steps">
+      <div class="step"><p>① 第 1 個有 <b>4</b> 根（藍色）。之後每多一個正方形，多 <b>3</b> 根（紅色）。</p></div>
+      <div class="step"><p>② 第 5 個：從第 1 個到第 5 個，多了 <b>5 − 1 = 4 次</b>（不是 5 次！）。</p></div>
+      <div class="step"><p>③ 所以第 5 個 = 4 + 3 × 4 = <b>16 根</b>。第 100 個 = 4 + 3 × 99 = <b>301 根</b>。</p></div>
+      <div class="step"><p>④ 反過來：有 31 根是第幾個？(31 − 4) ÷ 3 = 9 次，再 + 1 → <b>第 10 個</b>。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula">
+    <div class="label">公式</div>
+    <div class="big" style="font-size:1.3rem">第 n 個 = 第 1 個 + 每次加的 × (n − 1)</div>
+    <div class="sub">翻過來：n = (數量 − 第 1 個) ÷ 每次加的 + 1</div>
+  </div>
+
+  <div class="warn"><span class="ic">⚠️</span><p>第 n 個只加了 <b>(n − 1) 次</b>！因為第 1 個本來就有了。</p></div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中的等差數列公式：<code>aₙ = a₁ + (n − 1)d</code>，跟今天的一模一樣！</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  const nIn = document.getElementById("n");
+  function draw() {
+    const n = +nIn.value, u = 46, x0 = 20, y0 = 40;
+    const L = (x1, y1, x2, y2, c) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${c}" stroke-width="5" stroke-linecap="round"/>`;
+    let s = "";
+    for (let i = 0; i < n; i++) {
+      const c = i === 0 ? "var(--blue)" : "var(--red)";
+      if (i === 0) s += L(x0, y0, x0, y0 + u, c);
+      s += L(x0 + i * u, y0, x0 + (i + 1) * u, y0, c) + L(x0 + i * u, y0 + u, x0 + (i + 1) * u, y0 + u, c) + L(x0 + (i + 1) * u, y0, x0 + (i + 1) * u, y0 + u, c);
+      if (i) s += `<text x="${x0 + i * u + u / 2 - 6}" y="${y0 + u + 26}" font-size="12" style="fill:var(--red)">+3</text>`;
+    }
+    s += `<text x="${x0}" y="${y0 + u + 26}" font-size="12" style="fill:var(--blue)">4</text>`;
+    s += `<text x="${x0}" y="160" font-size="14">藍色 4 根 + 紅色 ${n - 1} 次 × 3 根 = ${4 + 3 * (n - 1)} 根</text>`;
+    document.getElementById("g").innerHTML = s;
+    document.getElementById("nv").textContent = n;
+    document.getElementById("w").innerHTML = `第 ${n} 個 = 4 + 3 × (${n} − 1) = <b>${4 + 3 * (n - 1)} 根</b>`;
+  }
+  nIn.addEventListener("input", draw); draw();
+
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { const a = W.rand(1, 10), d = W.rand(2, 6), n = W.pick([10, 20, 25, 50, 100]); return { q: `第 1 個有 ${a}，之後每個都多 ${d}。第 <b>${n}</b> 個有多少？`, ans: a + d * (n - 1), hint: `${a} + ${d} × (${n} − 1)`, pic: `<text x="10" y="70" font-size="14">第 1 個 + 每次 × (n − 1)</text>` }; },
+    () => { const a = W.rand(1, 10), d = W.rand(2, 6), n = W.rand(5, 30), v = a + d * (n - 1); return { q: `第 1 個有 ${a}，之後每個都多 ${d}。第幾個會有 <b>${v}</b>？`, ans: n, unit: "個（第幾個）", hint: `(${v} − ${a}) ÷ ${d} + 1`, pic: `<text x="10" y="56" font-size="14">翻過來：</text><text x="10" y="86" font-size="14">(數量 − 第1個) ÷ 每次</text><text x="10" y="116" font-size="14">+ 1</text>` }; },
+  ] });
+</script>
+</body>
+</html>

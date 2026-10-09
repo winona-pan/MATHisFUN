@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>用表格找規律</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+<style>
+  table.t { border-collapse: collapse; width: 100%; font-weight: 900; text-align: center; margin-top: 10px; }
+  table.t td, table.t th { border: 2px solid var(--line); padding: 6px 4px; }
+  table.t th { background: var(--bg); color: var(--muted); font-size: .9rem; }
+  table.t input { width: 52px; text-align: center; font-weight: 900; font-size: 1rem; padding: 3px; border-radius: 8px; border: 2px solid var(--line); background: var(--bg); }
+  table.t input.ok { border-color: var(--green); background: #e2f5ea; }
+  table.t input.no { border-color: var(--red); }
+  .diff td { color: var(--green); font-size: .9rem; border: none; }
+</style>
+</head>
+<body data-seq="6a-u3" data-page="6a-u3/02">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-learn">學會方法</span>
+  <h1>用表格找規律</h1>
+  <p class="lead">把「第幾個」和「有幾個」排成表格，規律就跑出來了！</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>填填看</h2>
+    <p style="margin:0" id="story"></p>
+    <table class="t" id="tb"></table>
+    <div class="controls"><button class="btn" id="newp">換一題</button></div>
+    <div class="work" id="w"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>方法</h2>
+    <div class="steps">
+      <div class="step"><p>① 第一列寫「<b>第幾個</b>」（1、2、3…），第二列寫「<b>有幾個</b>」。</p></div>
+      <div class="step"><p>② 在下面寫出<b>相鄰兩格的差</b>（綠色），看看是不是每次都一樣。</p></div>
+      <div class="step"><p>③ 一樣的話，後面的格子就一直 + 這個差。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula word">
+    <div class="label">方法</div>
+    <div class="big" style="font-size:1.35rem">表格：第幾個 ↔ 有幾個，看「差」</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中的「<b>函數</b>」就是這種表格：x 是第幾個、y 是有幾個。每次 x 加 1，y 都加一樣多 → <b>一次函數</b>。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  const STORIES = [["排桌子：1 張桌子坐 4 人，2 張併起來坐 6 人……", 4, 2, "人"], ["火柴排正方形：1 個 4 根，2 個 7 根……", 4, 3, "根"], ["疊杯子：1 個高 10 公分，每多疊 1 個高 2 公分……", 10, 2, "公分"]];
+  let st = STORIES[0];
+  function build() {
+    const [txt, a, d, u] = st;
+    document.getElementById("story").textContent = txt;
+    const vals = Array.from({ length: 7 }, (_, i) => a + i * d);
+    document.getElementById("tb").innerHTML = `<tr><th>第幾個</th>${vals.map((_, i) => `<td>${i + 1}</td>`).join("")}</tr>
+      <tr><th>${u}</th>${vals.map((v, i) => `<td>${i < 3 ? v : `<input type="text" inputmode="numeric" data-v="${v}">`}</td>`).join("")}</tr>
+      <tr class="diff"><th></th>${vals.map((v, i) => `<td>${i ? (i < 3 ? `+${d}` : "") : ""}</td>`).join("")}</tr>`;
+    document.querySelectorAll("#tb input").forEach(inp => inp.addEventListener("input", () => {
+      const ok = +inp.value === +inp.dataset.v;
+      inp.className = inp.value === "" ? "" : ok ? "ok" : "no";
+      const all = [...document.querySelectorAll("#tb input")].every(x => x.className === "ok");
+      document.getElementById("w").innerHTML = all ? "🎉 全部填對了！每次都 + " + d : "看綠色的差，填出後面的數";
+    }));
+    document.getElementById("w").innerHTML = "看綠色的差，填出後面的數";
+  }
+  document.getElementById("newp").addEventListener("click", () => { st = STORIES[(STORIES.indexOf(st) + 1) % STORIES.length]; build(); });
+  build();
+
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { const a = W.rand(1, 10), d = W.rand(2, 6), k = W.rand(5, 8); return { q: `表格：第 1 個 ${a}、第 2 個 ${a + d}、第 3 個 ${a + 2 * d}……，第 <b>${k}</b> 個是多少？`, ans: a + (k - 1) * d, hint: `每次 +${d}，一直加到第 ${k} 個`, pic: `<text x="10" y="60" font-size="14">${a} → ${a + d} → ${a + 2 * d} → …</text><text x="10" y="100" font-size="14" style="fill:var(--green)">每次 +${d}</text>` }; },
+  ] });
+</script>
+</body>
+</html>
