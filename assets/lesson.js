@@ -19,6 +19,21 @@
         { path: "6a-u7/09", t: "名詞公式總整理" },
       ],
     },
+    "6a-u8": {
+      name: "六上 第 8 單元・放大、縮小與比例尺",
+      pages: [
+        { path: "review/length-units", t: "長度單位換算", pre: true },
+        { path: "review/rect-area", t: "長方形面積", pre: true },
+        { path: "review/ratio", t: "比與比值", pre: true },
+        { path: "6a-u8/01", t: "放大圖與縮小圖" },
+        { path: "6a-u8/02", t: "對應點、對應邊、對應角" },
+        { path: "6a-u8/03", t: "畫放大圖、縮小圖" },
+        { path: "6a-u8/04", t: "面積變幾倍" },
+        { path: "6a-u8/05", t: "比例尺" },
+        { path: "6a-u8/06", t: "圖上距離 ↔ 實際距離" },
+        { path: "6a-u8/07", t: "名詞公式總整理" },
+      ],
+    },
   };
 
   const body = document.body;

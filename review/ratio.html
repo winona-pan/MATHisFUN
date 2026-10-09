@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>比與比值</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u8" data-page="review/ratio">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-pre">先備知識・六上第 4 單元</span>
+  <h1>比與比值</h1>
+  <p class="lead">比例尺就是一種「比」。先複習比、比值、相等的比。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>紅球和藍球</h2>
+    <div class="stage"><svg id="g" viewBox="0 0 400 210"></svg></div>
+    <div class="controls">
+      <label>紅 <input type="range" id="a" min="1" max="6" value="2"> <b id="av"></b></label>
+      <label>藍 <input type="range" id="b" min="1" max="6" value="3"> <b id="bv"></b></label>
+      <button class="btn" id="x2">每一組都 ×2</button>
+      <button class="btn" id="reset">回到 1 組</button>
+    </div>
+    <div class="readout">
+      <div class="r"><small>比（紅 : 藍）</small><span id="ratio"></span></div>
+      <div class="r" style="color:var(--purple)"><small>比值 = 前項 ÷ 後項</small><span id="val"></span></div>
+      <div class="r" style="color:var(--green)"><small>最簡整數比</small><span id="simp"></span></div>
+    </div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>想一想</h2>
+    <div class="steps">
+      <div class="step"><p><b>比</b>：2 個紅、3 個藍 → 紅 : 藍 = <b>2 : 3</b>。前面的 2 叫<b>前項</b>，後面的 3 叫<b>後項</b>。</p></div>
+      <div class="step"><p><b>比值</b>：前項 ÷ 後項 = 2 ÷ 3 = <b style="color:var(--purple)">⅔</b>。</p></div>
+      <div class="step"><p>按「每一組都 ×2」：變成 4 : 6，可是紅藍的<b>樣子沒變</b>（還是每 2 紅配 3 藍），比值也還是 ⅔。</p></div>
+      <div class="step"><p>所以：<b>前項、後項同乘（或同除）一個數，比值不變</b>，叫做<b>相等的比</b>。4 : 6 = 2 : 3。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula pre">
+    <div class="label">記起來</div>
+    <div class="big">a : b 的比值 = a ÷ b</div>
+    <div class="big" style="font-size:1.3rem">前後項同乘、同除 → 相等的比</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中會學「<b>比例式</b>」：<code>a : b = c : d</code> 時，<code>a × d = b × c</code>（內項乘積 = 外項乘積），可以用來求 □。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>練習一下</h2>
+    <div class="quiz">
+      <div class="q" data-hint="6 和 9 同除以 3">
+        <p class="qt">6 : 9 的最簡整數比是？</p>
+        <div class="choices"><button class="choice">3 : 2</button><button class="choice" data-right>2 : 3</button><button class="choice">1 : 3</button></div>
+      </div>
+      <div class="q" data-answer="0.75" data-hint="比值 = 前項 ÷ 後項 = 3 ÷ 4">
+        <p class="qt">3 : 4 的比值是多少？（寫小數）</p>
+        <div class="row"><input type="text" inputmode="decimal"> <button class="btn">對答案</button></div>
+      </div>
+      <div class="q" data-answer="8" data-hint="5 變成 20 是 ×4，所以 2 也要 ×4">
+        <p class="qt">2 : 5 = □ : 20，□ 是多少？</p>
+        <div class="row"><input type="text" inputmode="decimal"> <button class="btn">對答案</button></div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script>
+  const a = document.getElementById("a"), b = document.getElementById("b");
+  let k = 1;
+  const gcd = (x, y) => y ? gcd(y, x % y) : x;
+  function draw() {
+    const A = +a.value, B = +b.value;
+    let s = "";
+    for (let g = 0; g < k; g++) {
+      const y = 20 + g * 95;
+      s += `<rect x="8" y="${y - 10}" width="384" height="84" rx="12" fill="var(--card)" stroke="var(--line)" stroke-width="2"/>`;
+      s += `<text x="16" y="${y + 8}" font-size="12" style="fill:var(--muted)">第 ${g + 1} 組</text>`;
+      for (let i = 0; i < A; i++) s += `<circle cx="${40 + i * 26}" cy="${y + 40}" r="12" fill="var(--red)" stroke="var(--ink)" stroke-width="1.5"/>`;
+      s += `<text x="${36 + A * 26}" y="${y + 47}" font-size="20">:</text>`;
+      for (let i = 0; i < B; i++) s += `<circle cx="${66 + A * 26 + i * 26}" cy="${y + 40}" r="12" fill="var(--blue)" stroke="var(--ink)" stroke-width="1.5"/>`;
+    }
+    document.getElementById("g").setAttribute("viewBox", `0 0 400 ${k * 95 + 15}`);
+    document.getElementById("g").innerHTML = s;
+    const g = gcd(A, B);
+    document.getElementById("av").textContent = A; document.getElementById("bv").textContent = B;
+    document.getElementById("ratio").textContent = `${A * k} : ${B * k}`;
+    const gv = gcd(A * k, B * k);
+    document.getElementById("val").textContent = `${A * k} ÷ ${B * k} = ${(B * k) / gv === 1 ? (A * k) / gv : `${(A * k) / gv}/${(B * k) / gv}`}`;
+    document.getElementById("simp").textContent = `${A / g} : ${B / g}`;
+  }
+  a.addEventListener("input", draw); b.addEventListener("input", draw);
+  document.getElementById("x2").addEventListener("click", () => { k = k === 1 ? 2 : 1; draw(); });
+  document.getElementById("reset").addEventListener("click", () => { k = 1; draw(); });
+  draw();
+</script>
+</body>
+</html>

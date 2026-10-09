@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>圖上距離 ↔ 實際距離</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+<style>
+  .flow { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin-top: 12px; font-weight: 900; font-size: 1.1rem; }
+  .flow .b { border: 3px solid var(--line); border-radius: 12px; padding: 4px 10px; background: var(--card); }
+  .flow .op { color: var(--muted); font-size: .95rem; }
+  .flow .b.hl { border-color: var(--red); }
+  .tri-wrap { display: grid; grid-template-columns: minmax(0, 280px) minmax(0, 1fr); gap: 16px; align-items: center; }
+  .tri-wrap svg { width: 100%; height: auto; display: block; }
+  .tri-cell { cursor: pointer; }
+  .tri-out { font-size: 1.3rem; font-weight: 900; line-height: 1.6; }
+  .tri-out small { display: block; font-size: .95rem; color: var(--muted); font-weight: 700; }
+  .gen { display: grid; grid-template-columns: minmax(0, 220px) minmax(0, 1fr); gap: 14px; align-items: center; }
+  .gen .qpic { background: var(--soft); border-radius: 12px; }
+  .gen .qpic svg { width: 100%; height: auto; display: block; }
+  .gen .qt { font-size: 1.15rem; font-weight: 700; margin: 0 0 8px; }
+  .gen input { width: 130px; padding: 6px 10px; border-radius: 10px; border: 2px solid var(--line); background: var(--bg); font-weight: 900; font-size: 1.15rem; }
+  .gen .fb { font-weight: 700; margin-top: 8px; min-height: 1.5em; }
+  .gen .fb.ok { color: var(--green); } .gen .fb.no { color: var(--red); }
+  @media (max-width: 560px) { .tri-wrap, .gen { grid-template-columns: minmax(0, 1fr); } }
+</style>
+</head>
+<body data-seq="6a-u8" data-page="6a-u8/06">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-formula">公式怎麼來</span>
+  <h1>圖上距離 ↔ 實際距離</h1>
+  <p class="lead">從地圖量出長度，算出真的有多遠；也要會反過來算。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>量量看：從家到學校多遠？</h2>
+    <div class="controls" style="margin-top:0">
+      <span style="font-weight:700">比例尺</span>
+      <button class="btn" data-s="1000">1 : 1000</button>
+      <button class="btn" data-s="5000">1 : 5000</button>
+      <button class="btn" data-s="20000" aria-pressed="true">1 : 20000</button>
+      <button class="btn" data-s="100000">1 : 100000</button>
+    </div>
+    <div class="stage" style="margin-top:12px"><svg id="g" viewBox="0 0 400 250"></svg></div>
+    <p class="hint">👉 拖拉 🏠 和 🏫，地圖上每一小格是 1 公分。</p>
+    <div class="flow" id="flow"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>公式怎麼來</h2>
+    <div class="steps">
+      <div class="step"><p>① 比例尺 1 : 20000 → 圖上 <b>1</b> 公分，實際是 <b>20000</b> 公分。</p></div>
+      <div class="step"><p>② 圖上 <b>3</b> 公分，就是 3 個 20000 公分 → 3 × 20000 = <b style="color:var(--red)">60000 公分</b>。</p></div>
+      <div class="step"><p>③ 所以 <b>實際距離 = 圖上距離 × 比例尺的分母</b>（算出來是公分，再換單位：60000 公分 = 600 公尺）。</p></div>
+      <div class="step"><p>④ 反過來：實際 600 公尺要畫在地圖上 → 先換成 60000 公分，再 ÷ 20000 = <b style="color:var(--red)">3 公分</b>。<br><b>圖上距離 = 實際距離 ÷ 分母</b>。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <section class="box">
+    <h2><span class="n">3</span>公式三角形</h2>
+    <div class="tri-wrap">
+      <svg viewBox="0 0 300 240" id="tri"></svg>
+      <div class="tri-out" id="triOut"></div>
+    </div>
+    <p class="hint">👉 點你要求的那一格。上下 → 用除的；左右並排 → 用乘的。<b>算之前，單位都先換成公分！</b></p>
+  </section>
+
+  <div class="formula">
+    <div class="label">公式</div>
+    <div class="big">實際距離 = 圖上距離 × 分母</div>
+    <div class="big">圖上距離 = 實際距離 ÷ 分母</div>
+    <div class="sub">分母 = 實際距離 ÷ 圖上距離（單位要一樣）</div>
+  </div>
+
+  <div class="warn"><span class="ic">⚠️</span><p><b>最常錯：單位！</b>× 分母算出來是<b>公分</b>。題目問公尺要 ÷ 100，問公里要 ÷ 100000。反過來算圖上距離時，要先把公尺、公里換成公分。</p></div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中會用比例式來算：<code>圖上 : 實際 = 1 : 20000</code>，<code>3 : x = 1 : 20000</code> → <code>x = 3 × 20000</code>。和今天的公式一模一樣！</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">4</span>一直練：隨機出題</h2>
+    <div class="gen">
+      <div class="qpic"><svg viewBox="0 0 220 150" id="gpic"></svg></div>
+      <div>
+        <p class="qt" id="gq"></p>
+        <div id="gin" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"></div>
+        <div class="fb" id="gfb"></div>
+      </div>
+    </div>
+    <div class="score" id="gscore"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script>
+  /* ---------- 1. 地圖量距離 ---------- */
+  const svg = document.getElementById("g"), CM = 30, OX = 20, OY = 10, COLS = 12, ROWS = 7;
+  let sc = 20000, home = [1, 6], school = [5, 3];
+  const fmtN = n => Number(n.toFixed(4)).toLocaleString("en-US");
+  function unitStr(cm) {
+    const m = cm / 100, km = cm / 100000;
+    return { m: Number(m.toFixed(3)), km: Number(km.toFixed(4)) };
+  }
+  let built = false;
+  function build() {
+    let s = `<rect x="${OX}" y="${OY}" width="${COLS * CM}" height="${ROWS * CM}" fill="var(--card)" stroke="var(--ink)" stroke-width="2"/>`;
+    for (let i = 1; i < COLS; i++) s += `<line x1="${OX + i * CM}" y1="${OY}" x2="${OX + i * CM}" y2="${OY + ROWS * CM}" class="gridline"/>`;
+    for (let j = 1; j < ROWS; j++) s += `<line x1="${OX}" y1="${OY + j * CM}" x2="${OX + COLS * CM}" y2="${OY + j * CM}" class="gridline"/>`;
+    s += `<path d="M${OX} ${OY + 4.5 * CM} C ${OX + 4 * CM} ${OY + 3 * CM}, ${OX + 8 * CM} ${OY + 6 * CM}, ${OX + COLS * CM} ${OY + 4 * CM}" fill="none" stroke="var(--blue)" stroke-opacity=".35" stroke-width="10"/>`;
+    s += `<line id="dl" stroke="var(--red)" stroke-width="4" stroke-dasharray="7 5"/>`;
+    s += `<g class="handle" id="hHome"><circle r="16" fill="var(--yellow)" stroke="var(--ink)" stroke-width="2"/><text y="6" text-anchor="middle" font-size="16">🏠</text></g>`;
+    s += `<g class="handle" id="hSchool"><circle r="16" fill="var(--green)" stroke="var(--ink)" stroke-width="2"/><text y="6" text-anchor="middle" font-size="16">🏫</text></g>`;
+    s += `<text id="scl" x="${OX}" y="${OY + ROWS * CM + 24}" font-size="13"></text>`;
+    svg.innerHTML = s;
+    L.drag(svg, document.getElementById("hHome"), p => move("home", p));
+    L.drag(svg, document.getElementById("hSchool"), p => move("school", p));
+    built = true;
+  }
+  function draw() {
+    if (!built) build();
+    const P = p => [OX + p[0] * CM, OY + p[1] * CM];
+    const a = P(home), b = P(school), dl = document.getElementById("dl");
+    dl.setAttribute("x1", a[0]); dl.setAttribute("y1", a[1]); dl.setAttribute("x2", b[0]); dl.setAttribute("y2", b[1]);
+    document.getElementById("hHome").setAttribute("transform", `translate(${a[0]} ${a[1]})`);
+    document.getElementById("hSchool").setAttribute("transform", `translate(${b[0]} ${b[1]})`);
+    document.getElementById("scl").textContent = `比例尺 1 : ${sc}　（每一小格 = 圖上 1 公分）`;
+    const d = Math.hypot(home[0] - school[0], home[1] - school[1]);
+    const exact = Math.abs(d - Math.round(d * 10) / 10) < 1e-9;
+    const dm = Math.round(d * 10) / 10, real = dm * sc, u = unitStr(real);
+    document.getElementById("flow").innerHTML = `
+      <span class="b hl">圖上 ${exact ? "" : "約 "}${dm} 公分</span><span class="op">× ${fmtN(sc)} →</span>
+      <span class="b">實際 ${fmtN(real)} 公分</span><span class="op">÷ 100 →</span>
+      <span class="b">${fmtN(u.m)} 公尺</span><span class="op">÷ 1000 →</span>
+      <span class="b">${fmtN(u.km)} 公里</span>`;
+  }
+  function move(who, p) {
+    const gx = Math.max(0, Math.min(COLS, Math.round((p.x - OX) / CM))), gy = Math.max(0, Math.min(ROWS, Math.round((p.y - OY) / CM)));
+    const cur = who === "home" ? home : school;
+    if (cur[0] === gx && cur[1] === gy) return;
+    if (who === "home") home = [gx, gy]; else school = [gx, gy];
+    draw();
+  }
+  document.querySelectorAll("[data-s]").forEach(b => b.addEventListener("click", () => {
+    sc = +b.dataset.s;
+    document.querySelectorAll("[data-s]").forEach(x => x.setAttribute("aria-pressed", x === b));
+    draw();
+  }));
+  draw();
+
+  /* ---------- 3. 公式三角形 ---------- */
+  let hide = "top";
+  function drawTri() {
+    const T = { top: "實際距離", l: "圖上距離", r: "分母" }, col = { top: "var(--ink)", l: "var(--red)", r: "var(--blue)" };
+    const cell = (key, d, tx, ty) => {
+      const h = hide === key;
+      return `<g class="tri-cell" data-cell="${key}"><path d="${d}" fill="${h ? "var(--muted)" : "var(--card)"}" fill-opacity="${h ? .35 : 1}" stroke="var(--ink)" stroke-width="3"/>
+        <text x="${tx}" y="${ty}" text-anchor="middle" font-size="${h ? 40 : 19}" style="fill:${h ? "var(--ink)" : col[key]}">${h ? "?" : T[key]}</text></g>`;
+    };
+    let s = cell("top", "M150 10 L230 130 L70 130 Z", 150, 105) + cell("l", "M70 130 L150 130 L150 230 L10 230 Z", 92, 192) + cell("r", "M150 130 L230 130 L290 230 L150 230 Z", 212, 192);
+    s += `<circle cx="150" cy="182" r="14" fill="var(--yellow)" stroke="var(--ink)" stroke-width="2"/><text x="150" y="189" text-anchor="middle" font-size="18" style="fill:#2b2a33">×</text>`;
+    s += `<line x1="50" y1="130" x2="250" y2="130" stroke="var(--ink)" stroke-width="5"/>`;
+    const t = document.getElementById("tri");
+    t.innerHTML = s;
+    t.querySelectorAll("[data-cell]").forEach(g => g.addEventListener("click", () => { hide = g.dataset.cell; drawTri(); }));
+    document.getElementById("triOut").innerHTML = {
+      top: `要求 <b>實際距離</b>：<br>圖上距離 × 分母<small>左右並排 → 乘起來（答案是公分）</small>`,
+      l: `要求 <b style="color:var(--red)">圖上距離</b>：<br>實際距離 ÷ 分母<small>上下 → 上面 ÷ 下面（實際距離先換成公分）</small>`,
+      r: `要求 <b style="color:var(--blue)">分母</b>（比例尺 1 : ?）：<br>實際距離 ÷ 圖上距離<small>上下 → 上面 ÷ 下面（兩個單位要一樣）</small>`,
+    }[hide];
+  }
+  drawTri();
+
+  /* ---------- 4. 隨機出題 ---------- */
+  const rand = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+  const pick = arr => arr[rand(0, arr.length - 1)];
+  const SCALES = [500, 1000, 2000, 5000, 10000, 20000, 50000, 100000];
+  function mapPic(cm, sc, ask) {
+    return `<rect x="10" y="10" width="200" height="110" rx="8" fill="var(--card)" stroke="var(--ink)" stroke-width="2"/>
+      <circle cx="40" cy="90" r="9" fill="var(--yellow)" stroke="var(--ink)"/><circle cx="180" cy="40" r="9" fill="var(--green)" stroke="var(--ink)"/>
+      <line x1="40" y1="90" x2="180" y2="40" stroke="var(--red)" stroke-width="3" stroke-dasharray="6 4"/>
+      <text x="92" y="58" font-size="14" style="fill:var(--red)">${ask === "map" ? "? 公分" : cm + " 公分"}</text>
+      <text x="14" y="142" font-size="13">比例尺 1 : ${ask === "scale" ? "?" : fmtN(sc)}</text>`;
+  }
+  const GEN = [
+    () => { const sc = pick(SCALES.slice(0, 6)), cm = rand(1, 12), m = cm * sc / 100; return { q: `比例尺 1 : ${fmtN(sc)}，圖上 <b>${cm}</b> 公分，實際是幾<b>公尺</b>？`, ans: m, unit: "公尺", hint: `${cm} × ${fmtN(sc)} = ${fmtN(cm * sc)} 公分，再 ÷ 100 換成公尺`, pic: mapPic(cm, sc, "real") }; },
+    () => { const sc = pick([10000, 20000, 50000, 100000]), cm = rand(1, 12), km = cm * sc / 100000; return { q: `比例尺 1 : ${fmtN(sc)}，圖上 <b>${cm}</b> 公分，實際是幾<b>公里</b>？`, ans: km, unit: "公里", hint: `${cm} × ${fmtN(sc)} = ${fmtN(cm * sc)} 公分，1 公里 = 100000 公分`, pic: mapPic(cm, sc, "real") }; },
+    () => { const sc = pick(SCALES.slice(0, 6)), cm = rand(1, 12), m = cm * sc / 100; return { q: `比例尺 1 : ${fmtN(sc)}，實際距離 <b>${fmtN(m)} 公尺</b>，地圖上要畫幾<b>公分</b>？`, ans: cm, unit: "公分", hint: `先換成公分：${fmtN(m)} 公尺 = ${fmtN(m * 100)} 公分，再 ÷ ${fmtN(sc)}`, pic: mapPic(cm, sc, "map") }; },
+    () => { const sc = pick([10000, 20000, 50000, 100000]), cm = rand(1, 10), km = cm * sc / 100000; return { q: `比例尺 1 : ${fmtN(sc)}，實際距離 <b>${fmtN(km)} 公里</b>，地圖上要畫幾<b>公分</b>？`, ans: cm, unit: "公分", hint: `先換成公分：${fmtN(km)} 公里 = ${fmtN(km * 100000)} 公分，再 ÷ ${fmtN(sc)}`, pic: mapPic(cm, sc, "map") }; },
+    () => { const sc = pick(SCALES), cm = rand(1, 8), m = cm * sc / 100; return { q: `地圖上 <b>${cm}</b> 公分代表實際 <b>${fmtN(m)} 公尺</b>，比例尺是 1 : 多少？`, ans: sc, unit: "", pre: "1 :", hint: `單位先一樣：${fmtN(m)} 公尺 = ${fmtN(m * 100)} 公分，再 ÷ ${cm}`, pic: mapPic(cm, sc, "scale") }; },
+  ];
+  let cur, right = 0, tried = 0, wrongOnce = false;
+  function newQ() {
+    cur = pick(GEN)(); wrongOnce = false;
+    document.getElementById("gq").innerHTML = cur.q;
+    document.getElementById("gpic").innerHTML = cur.pic;
+    document.getElementById("gin").innerHTML = `${cur.pre || ""}<input type="text" inputmode="decimal" id="ga"> ${cur.unit}
+      <button class="btn primary" id="gcheck">對答案</button><button class="btn" id="gnext">下一題 →</button>`;
+    document.getElementById("gfb").className = "fb"; document.getElementById("gfb").textContent = "";
+    document.getElementById("gcheck").onclick = check;
+    document.getElementById("gnext").onclick = newQ;
+    document.getElementById("ga").onkeydown = e => { if (e.key === "Enter") check(); };
+  }
+  function check() {
+    const v = parseFloat(String(document.getElementById("ga").value).replace(/,/g, "")), fb = document.getElementById("gfb");
+    if (!isNaN(v) && Math.abs(v - cur.ans) < 0.0005) {
+      if (!wrongOnce) { right++; tried++; }
+      fb.className = "fb ok"; fb.textContent = `答對了！👏 ${fmtN(cur.ans)} ${cur.unit}`;
+      setTimeout(newQ, 1300);
+    } else {
+      if (!wrongOnce) tried++;
+      wrongOnce = true;
+      fb.className = "fb no"; fb.textContent = "再想想 🤔 " + cur.hint;
+    }
+    document.getElementById("gscore").textContent = `一次就答對：${right} / ${tried} 題`;
+  }
+  newQ();
+</script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>畫放大圖、縮小圖</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+<style>
+  .moves { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .mv { border: 2px solid var(--line); border-radius: 10px; padding: 2px 10px; font-weight: 900; background: var(--card); }
+  .mv.done { border-color: var(--green); background: #e2f5ea; color: #1f5e3d; }
+  .mv.now { border-color: var(--ink); background: var(--yellow); color: #2b2a33; }
+  .msg { margin-top: 10px; font-weight: 700; font-size: 1.1rem; min-height: 1.6em; }
+  .msg.no { color: var(--red); } .msg.ok { color: var(--green); }
+  #g { cursor: crosshair; }
+</style>
+</head>
+<body data-seq="6a-u8" data-page="6a-u8/03">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-learn">學會方法</span>
+  <h1>畫放大圖、縮小圖</h1>
+  <p class="lead">在方格紙上數格子：原圖走幾格，放大圖就走「幾格 × 倍數」。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>動手畫</h2>
+    <div class="controls" style="margin-top:0">
+      <button class="btn" data-shape="0" aria-pressed="true">L 形 ×2</button>
+      <button class="btn" data-shape="1">箭頭 ×2</button>
+      <button class="btn" data-shape="2">三角形 ×3</button>
+      <button class="btn" data-shape="3">大 L 形 ½ 縮小</button>
+    </div>
+    <div class="stage" style="margin-top:12px"><svg id="g" viewBox="0 0 400 260"></svg></div>
+    <p class="hint">👉 左邊是原圖。在<b>右邊的方格</b>上，從紅點開始，一個一個點出下一個角。</p>
+    <div class="moves" id="moves"></div>
+    <div class="msg" id="msg"></div>
+    <div class="controls"><button class="btn" id="undo">↶ 上一步</button><button class="btn" id="again">重畫</button><button class="btn" id="show">偷看答案</button></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>畫圖步驟</h2>
+    <div class="steps">
+      <div class="step"><p>① 先在原圖上<b>選一個起點</b>（一個角）。</p></div>
+      <div class="step"><p>② 數原圖從這個角走到下一個角：<b>往右（左）幾格、往上（下）幾格</b>。</p></div>
+      <div class="step"><p>③ 放大圖要走：<b>格數 × 倍數</b>。原圖「右 2 格」，2 倍放大圖就「右 4 格」；½ 縮小圖就「右 1 格」。</p></div>
+      <div class="step"><p>④ 一個角一個角走，最後回到起點，連起來就完成了！</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula">
+    <div class="label">口訣</div>
+    <div class="big">放大圖要走的格數 = 原圖格數 × 倍數</div>
+    <div class="sub">斜斜的邊也一樣：橫的格數、直的格數都 × 倍數</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中的<b>座標</b>就是用「右幾格、上幾格」來表示一個點，例如 <code>(2, 3)</code>。放大 2 倍就變成 <code>(4, 6)</code>。</p>
+  </div>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script>
+  // 形狀：格子座標（x 往右、y 往下），k 是倍數
+  const SHAPES = [
+    { k: 2, pts: [[0, 0], [2, 0], [2, 4], [4, 4], [4, 6], [0, 6]] },
+    { k: 2, pts: [[0, 2], [3, 2], [3, 0], [6, 3], [3, 6], [3, 4], [0, 4]] },
+    { k: 3, pts: [[2, 0], [4, 4], [0, 4]] },
+    { k: 0.5, pts: [[0, 0], [8, 0], [8, 4], [2, 4], [2, 10], [0, 10]] },
+  ];
+  const C = 10, LX = 10, LY = 20, RX = 170, RY = 20, RCOLS = 22, RROWS = 22;
+  const svg = document.getElementById("g");
+  let si = 0, placed = [], peek = false;
+  const shape = () => SHAPES[si];
+  const kTxt = k => k === 0.5 ? "½" : k;
+  function moveText(a, b, k) {
+    const dx = (b[0] - a[0]) * k, dy = (b[1] - a[1]) * k, t = [];
+    if (dx) t.push(`${dx > 0 ? "右" : "左"} ${Math.abs(dx)}`);
+    if (dy) t.push(`${dy > 0 ? "下" : "上"} ${Math.abs(dy)}`);
+    return t.join("、");
+  }
+  // 右邊的起點（格子）
+  const start = () => {
+    const S = shape(), p0 = S.pts[0];
+    const minX = Math.min(...S.pts.map(p => p[0])), minY = Math.min(...S.pts.map(p => p[1]));
+    return [2 - (minX - p0[0]) * S.k, 2 - (minY - p0[1]) * S.k];
+  };
+  const target = i => { const S = shape(), p = S.pts[i], p0 = S.pts[0]; return [start()[0] + (p[0] - p0[0]) * S.k, start()[1] + (p[1] - p0[1]) * S.k]; };
+  function draw() {
+    const S = shape();
+    let s = "";
+    for (let i = 0; i <= 15; i++) s += `<line x1="${LX + i * C}" y1="${LY}" x2="${LX + i * C}" y2="${LY + 22 * C}" class="gridline"/>`;
+    for (let j = 0; j <= 22; j++) s += `<line x1="${LX}" y1="${LY + j * C}" x2="${LX + 15 * C}" y2="${LY + j * C}" class="gridline"/>`;
+    for (let i = 0; i <= RCOLS; i++) s += `<line x1="${RX + i * C}" y1="${RY}" x2="${RX + i * C}" y2="${RY + RROWS * C}" stroke="var(--grid)" stroke-width="1.5"/>`;
+    for (let j = 0; j <= RROWS; j++) s += `<line x1="${RX}" y1="${RY + j * C}" x2="${RX + RCOLS * C}" y2="${RY + j * C}" stroke="var(--grid)" stroke-width="1.5"/>`;
+    s += `<text x="${LX}" y="14" font-size="12">原圖</text><text x="${RX}" y="14" font-size="12">畫 ${kTxt(S.k)}${S.k < 1 ? " 縮小圖" : " 倍放大圖"}</text>`;
+    const o = [2, 2];
+    s += `<polygon points="${S.pts.map(p => `${LX + (o[0] + p[0]) * C},${LY + (o[1] + p[1]) * C}`).join(" ")}" fill="var(--yellow)" stroke="var(--ink)" stroke-width="2"/>`;
+    // 原圖上，現在要走的那一段標出來
+    const n = placed.length;
+    if (n < S.pts.length) {
+      const a = S.pts[n - 1] || S.pts[0], b = S.pts[n % S.pts.length];
+      if (n > 0) s += `<line x1="${LX + (o[0] + a[0]) * C}" y1="${LY + (o[1] + a[1]) * C}" x2="${LX + (o[0] + b[0]) * C}" y2="${LY + (o[1] + b[1]) * C}" stroke="var(--red)" stroke-width="5" stroke-linecap="round"/>`;
+    }
+    s += `<circle cx="${LX + (o[0] + S.pts[0][0]) * C}" cy="${LY + (o[1] + S.pts[0][1]) * C}" r="5" fill="var(--red)"/>`;
+    if (peek) s += `<polygon points="${S.pts.map((_, i) => target(i)).map(p => `${RX + p[0] * C},${RY + p[1] * C}`).join(" ")}" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="5 4"/>`;
+    const done = placed.length === S.pts.length + 1;
+    const pp = placed.map(p => `${RX + p[0] * C},${RY + p[1] * C}`).join(" ");
+    if (done) s += `<polygon points="${pp}" fill="var(--green)" fill-opacity=".5" stroke="var(--ink)" stroke-width="2.5"/>`;
+    else if (placed.length > 1) s += `<polyline points="${pp}" fill="none" stroke="var(--blue)" stroke-width="3.5" stroke-linejoin="round"/>`;
+    placed.forEach(p => s += `<circle cx="${RX + p[0] * C}" cy="${RY + p[1] * C}" r="4" fill="var(--blue)"/>`);
+    const st = start();
+    s += `<circle cx="${RX + st[0] * C}" cy="${RY + st[1] * C}" r="6" fill="var(--red)" stroke="var(--ink)" stroke-width="1.5"/>`;
+    svg.innerHTML = s;
+    // 步驟列
+    const mv = S.pts.map((p, i) => {
+      const q = S.pts[(i + 1) % S.pts.length];
+      const cls = i < placed.length - 1 ? "done" : i === placed.length - 1 ? "now" : "";
+      return `<span class="mv ${cls}">原圖 ${moveText(p, q, 1)} → 要走 ${moveText(p, q, S.k)}</span>`;
+    });
+    document.getElementById("moves").innerHTML = mv.join("");
+  }
+  function reset() { placed = [start()]; peek = false; document.getElementById("msg").textContent = ""; draw(); }
+  svg.addEventListener("pointerdown", e => {
+    const S = shape();
+    if (placed.length === S.pts.length + 1) return;
+    const pt = L.svgPoint(svg, e);
+    const gx = Math.round((pt.x - RX) / C), gy = Math.round((pt.y - RY) / C);
+    if (gx < 0 || gy < 0 || gx > RCOLS || gy > RROWS || pt.x < RX - 5) return;
+    const i = placed.length; // 下一個要點的角（最後一個回到起點）
+    const want = i === S.pts.length ? start() : target(i);
+    const msg = document.getElementById("msg");
+    if (gx === want[0] && gy === want[1]) {
+      placed.push([gx, gy]);
+      if (placed.length === S.pts.length + 1) { msg.className = "msg ok"; msg.textContent = "🎉 完成了！每一條邊都 × " + kTxt(S.k) + "，形狀一模一樣。"; }
+      else { msg.className = "msg ok"; msg.textContent = "✓ 對！"; }
+    } else {
+      const a = S.pts[i - 1], b = S.pts[i % S.pts.length];
+      msg.className = "msg no";
+      msg.textContent = `再數數看 🤔 原圖這一段是「${moveText(a, b, 1)}」，× ${kTxt(S.k)} 要走「${moveText(a, b, S.k)}」`;
+    }
+    draw();
+  });
+  document.querySelectorAll("[data-shape]").forEach(b => b.addEventListener("click", () => {
+    si = +b.dataset.shape;
+    document.querySelectorAll("[data-shape]").forEach(x => x.setAttribute("aria-pressed", x === b));
+    reset();
+  }));
+  document.getElementById("undo").addEventListener("click", () => { if (placed.length > 1) placed.pop(); draw(); });
+  document.getElementById("again").addEventListener("click", reset);
+  document.getElementById("show").addEventListener("click", () => { peek = !peek; draw(); });
+  reset();
+</script>
+</body>
+</html>

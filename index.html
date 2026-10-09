@@ -301,15 +301,16 @@ const SEMESTERS = {
         { k: "learn", t: "名詞公式總整理", h: "名詞卡 + 隨機出題一直練", pic: "glossary", ready: true },
       ]},
       { no: 8, title: "放大、縮小與比例尺", status: "next", pic: "enlarge", items: [
-        { k: "pre", t: "長度單位換算", h: "1 公里 = 1000 公尺，1 公尺 = 100 公分", g: "2–4年級", id: "length-units", pic: "units" },
-        { k: "pre", t: "長方形面積", h: "長 × 寬", g: "4年級", id: "rect-area", pic: "rectArea" },
-        { k: "pre", t: "比與比值", h: "放大縮小會用到", g: "六上 4", id: "ratio", pic: "ratio" },
-        { k: "word", t: "放大圖與縮小圖", h: "形狀一樣，大小不同", pic: "enlarge" },
-        { k: "word", t: "對應點、對應邊、對應角", h: "角一樣大，邊同倍數", pic: "corresponding" },
-        { k: "learn", t: "畫放大圖、縮小圖", h: "在方格上數格子畫", pic: "draw" },
-        { k: "formula", t: "面積變幾倍", h: "邊 2 倍，面積 2 × 2 = 4 倍", pic: "areaRatio" },
-        { k: "word", t: "比例尺", h: "1 : 1000 是什麼意思", pic: "scaleBar" },
-        { k: "formula", t: "圖上距離 ↔ 實際距離", h: "記得換單位", pic: "distance" },
+        { k: "pre", t: "長度單位換算", h: "1 公里 = 1000 公尺，1 公尺 = 100 公分", g: "2–4年級", id: "length-units", pic: "units", ready: true },
+        { k: "pre", t: "長方形面積", h: "長 × 寬", g: "4年級", id: "rect-area", pic: "rectArea", ready: true },
+        { k: "pre", t: "比與比值", h: "放大縮小會用到", g: "六上 4", id: "ratio", pic: "ratio", ready: true },
+        { k: "word", t: "放大圖與縮小圖", h: "形狀一樣，大小不同", pic: "enlarge", ready: true },
+        { k: "word", t: "對應點、對應邊、對應角", h: "角一樣大，邊同倍數", pic: "corresponding", ready: true },
+        { k: "learn", t: "畫放大圖、縮小圖", h: "在方格上數格子畫", pic: "draw", ready: true },
+        { k: "formula", t: "面積變幾倍", h: "邊 2 倍，面積 2 × 2 = 4 倍", pic: "areaRatio", ready: true },
+        { k: "word", t: "比例尺", h: "1 : 1000 是什麼意思", pic: "scaleBar", ready: true },
+        { k: "formula", t: "圖上距離 ↔ 實際距離", h: "× 分母、÷ 分母，記得換單位", pic: "distance", ready: true },
+        { k: "learn", t: "名詞公式總整理", h: "名詞卡 + 隨機出題一直練", pic: "glossary8", ready: true },
       ]},
       { no: 9, title: "怎樣解題", status: "later", pic: "solve", items: [
         { k: "pre", t: "四則運算的順序", h: "括號先算，先乘除後加減", g: "4年級", id: "order-of-operations" },
@@ -542,6 +543,12 @@ const PICS = {
     <rect x="50" y="14" width="60" height="80" rx="8" fill="var(--card)" class="stroke"/>
     <rect x="86" y="20" width="60" height="80" rx="8" fill="var(--yellow)" class="stroke"/>
     <circle cx="80" cy="42" r="14" fill="none" stroke="var(--red)" stroke-width="3"/><text x="62" y="80" font-size="11">圓周長</text>
+    <text x="102" y="64" font-size="22">?</text>`,
+  glossary8: `
+    <rect x="14" y="20" width="60" height="80" rx="8" fill="var(--card)" class="stroke"/>
+    <rect x="50" y="14" width="60" height="80" rx="8" fill="var(--card)" class="stroke"/>
+    <rect x="86" y="20" width="60" height="80" rx="8" fill="var(--yellow)" class="stroke"/>
+    <path d="M62 60 l0 -10 l10 -10 l10 10 l0 10 Z" fill="var(--green)" stroke="var(--ink)" stroke-width="1.5"/><text x="58" y="82" font-size="10">1 : 1000</text>
     <text x="102" y="64" font-size="22">?</text>`,
   shaded: `
     <rect x="44" y="16" width="88" height="88" fill="var(--shade)" class="stroke"/>

@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>對應點、對應邊、對應角</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+<style>
+  table.t { border-collapse: collapse; margin-top: 12px; width: 100%; font-weight: 700; text-align: center; }
+  table.t th, table.t td { border: 2px solid var(--line); padding: 5px; }
+  table.t th { background: var(--bg); color: var(--muted); font-size: .9rem; }
+  table.t tr.on td { background: var(--k-word-soft); }
+</style>
+</head>
+<body data-seq="6a-u8" data-page="6a-u8/02">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-word">名詞</span>
+  <h1>對應點、對應邊、對應角</h1>
+  <p class="lead">原圖和放大圖「同一個位置」的點、邊、角，就是對應的。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>點點看，找對應</h2>
+    <div class="stage"><svg id="g" viewBox="0 0 400 250"></svg></div>
+    <div class="controls">
+      <span style="font-weight:700">點：</span>
+      <button class="btn" data-sel="pA">A</button><button class="btn" data-sel="pB">B</button><button class="btn" data-sel="pC">C</button>
+    </div>
+    <div class="controls">
+      <span style="font-weight:700">邊：</span>
+      <button class="btn" data-sel="eAB" aria-pressed="true">AB</button><button class="btn" data-sel="eBC">BC</button><button class="btn" data-sel="eCA">CA</button>
+      <span style="font-weight:700">角：</span>
+      <button class="btn" data-sel="aA">∠A</button><button class="btn" data-sel="aB">∠B</button><button class="btn" data-sel="aC">∠C</button>
+    </div>
+    <div class="controls">
+      <label>放大倍數 <input type="range" id="k" min="1" max="3" step="0.5" value="2"> <b id="kv"></b> 倍</label>
+    </div>
+    <table class="t">
+      <thead><tr><th></th><th>原圖</th><th>放大圖</th><th>變化</th></tr></thead>
+      <tbody id="tb"></tbody>
+    </table>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>發現了什麼？</h2>
+    <div class="steps">
+      <div class="step"><p>① <b>對應點</b>：原圖的 A，在放大圖裡叫 A'（唸 A 撇），它們在<b>同一個位置</b>。</p></div>
+      <div class="step"><p>② <b>對應邊</b>：AB 和 A'B'。每一組對應邊都是 <b style="color:var(--red)">× 同一個倍數</b>（看表格最右邊）。</p></div>
+      <div class="step"><p>③ <b>對應角</b>：∠A 和 ∠A'。角的大小<b style="color:var(--green)">完全一樣</b>，不會變大！</p></div>
+      <div class="step"><p>④ 為什麼角不變？因為形狀一樣，「開口」一樣大。圖變大，只是邊變長，開口的角度不會變。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula word">
+    <div class="label">記起來</div>
+    <div class="big">對應邊：都 × 同一個倍數</div>
+    <div class="big">對應角：一樣大</div>
+  </div>
+
+  <div class="warn"><span class="ic">⚠️</span><p>常見陷阱：「2 倍放大圖的角是幾度？」角<b>不會</b>變 2 倍，還是一樣大！</p></div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中判斷兩個三角形「相似」，就是看<b>對應角相等</b>、<b>對應邊成比例</b>，例如 <code>AB : A'B' = BC : B'C'</code>。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>練習一下</h2>
+    <div class="quiz">
+      <div class="q" data-answer="50" data-hint="對應角一樣大，不會變">
+        <p class="qt">原圖有一個角 50°，畫成 3 倍放大圖，對應角是幾度？</p>
+        <div class="row"><input type="text" inputmode="decimal"> 度 <button class="btn">對答案</button></div>
+      </div>
+      <div class="q" data-answer="10" data-hint="對應邊 × 倍數">
+        <p class="qt">2 倍放大圖中，原圖邊長 5 公分的那條邊，對應邊是幾公分？</p>
+        <div class="row"><input type="text" inputmode="decimal"> 公分 <button class="btn">對答案</button></div>
+      </div>
+      <div class="q" data-answer="3" data-hint="倍數 = 放大圖的邊 ÷ 原圖的對應邊 = 18 ÷ 6">
+        <p class="qt">原圖邊長 6 公分，放大圖的對應邊 18 公分。另一條原圖的邊 2 公分，它的對應邊要乘幾倍？</p>
+        <div class="row"><input type="text" inputmode="decimal"> 倍 <button class="btn">對答案</button></div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script>
+  const TRI = { A: [0, 3], B: [4, 3], C: [0, 0] }; // 直角三角形：AB=4、CA=3、BC=5
+  const C = 18, svg = document.getElementById("g"), kIn = document.getElementById("k");
+  let sel = "eAB";
+  const dist = (p, q) => Math.hypot(p[0] - q[0], p[1] - q[1]);
+  function angleAt(v, p, q) {
+    const a1 = Math.atan2(p[1] - v[1], p[0] - v[0]), a2 = Math.atan2(q[1] - v[1], q[0] - v[0]);
+    let d = Math.abs(a1 - a2) * 180 / Math.PI; if (d > 180) d = 360 - d; return Math.round(d);
+  }
+  function draw() {
+    const k = +kIn.value;
+    document.getElementById("kv").textContent = k;
+    const P = (name, ox, oy, s) => [ox + TRI[name][0] * s * C, oy + TRI[name][1] * s * C];
+    let out = "";
+    for (let x = 0; x <= 400; x += C / 2) out += `<line x1="${x}" y1="0" x2="${x}" y2="250" class="gridline"/>`;
+    for (let y = 0; y <= 250; y += C / 2) out += `<line x1="0" y1="${y}" x2="400" y2="${y}" class="gridline"/>`;
+    const shapes = [{ ox: 20, oy: 230 - 3 * C, s: 1, tag: "" }, { ox: 140, oy: 230 - 3 * k * C, s: k, tag: "'" }];
+    shapes.forEach(sh => {
+      const a = P("A", sh.ox, sh.oy, sh.s), b = P("B", sh.ox, sh.oy, sh.s), c = P("C", sh.ox, sh.oy, sh.s);
+      out += `<polygon points="${a} ${b} ${c}" fill="var(--card)" stroke="var(--ink)" stroke-width="2"/>`;
+      const hi = "var(--purple)";
+      if (sel[0] === "e") {
+        const [m, n] = [sel[1], sel[2]];
+        const p1 = P(m, sh.ox, sh.oy, sh.s), p2 = P(n, sh.ox, sh.oy, sh.s);
+        out += `<line x1="${p1[0]}" y1="${p1[1]}" x2="${p2[0]}" y2="${p2[1]}" stroke="${hi}" stroke-width="7" stroke-linecap="round"/>`;
+      }
+      if (sel[0] === "a") {
+        const v = sel[1], others = ["A", "B", "C"].filter(x => x !== v);
+        const pv = P(v, sh.ox, sh.oy, sh.s), p1 = P(others[0], sh.ox, sh.oy, sh.s), p2 = P(others[1], sh.ox, sh.oy, sh.s);
+        const r = 16;
+        let a1 = Math.atan2(p1[1] - pv[1], p1[0] - pv[0]), a2 = Math.atan2(p2[1] - pv[1], p2[0] - pv[0]);
+        if (a2 - a1 > Math.PI) a2 -= 2 * Math.PI; if (a1 - a2 > Math.PI) a2 += 2 * Math.PI;
+        const pts = Array.from({ length: 13 }, (_, i) => { const t = a1 + (a2 - a1) * i / 12; return `${pv[0] + r * Math.cos(t)},${pv[1] + r * Math.sin(t)}`; });
+        out += `<polygon points="${pv[0]},${pv[1]} ${pts.join(" ")}" fill="${hi}" fill-opacity=".6" stroke="${hi}" stroke-width="2"/>`;
+      }
+      ["A", "B", "C"].forEach(n => {
+        const p = P(n, sh.ox, sh.oy, sh.s), on = sel === "p" + n;
+        const off = { A: [-16, 16], B: [6, 16], C: [-16, -4] }[n];
+        out += `<circle cx="${p[0]}" cy="${p[1]}" r="${on ? 8 : 4}" fill="${on ? hi : "var(--ink)"}"/>`;
+        out += `<text x="${p[0] + off[0]}" y="${p[1] + off[1]}" font-size="15" style="fill:${on ? hi : "var(--ink)"}">${n}${sh.tag}</text>`;
+      });
+    });
+    out += `<text x="20" y="20" font-size="13">原圖</text><text x="140" y="20" font-size="13">${k} 倍放大圖</text>`;
+    svg.innerHTML = out;
+    const rows = [
+      ["eAB", "邊 AB", dist(TRI.A, TRI.B)], ["eBC", "邊 BC", dist(TRI.B, TRI.C)], ["eCA", "邊 CA", dist(TRI.C, TRI.A)],
+    ].map(([id, n, d]) => `<tr class="${sel === id ? "on" : ""}"><td>${n}</td><td>${d}</td><td>${L.fmt(d * k)}</td><td style="color:var(--red)">×${k}</td></tr>`);
+    const ang = { A: angleAt(TRI.A, TRI.B, TRI.C), B: angleAt(TRI.B, TRI.A, TRI.C), C: angleAt(TRI.C, TRI.A, TRI.B) };
+    ["A", "B", "C"].forEach(n => rows.push(`<tr class="${sel === "a" + n ? "on" : ""}"><td>∠${n}</td><td>約 ${ang[n]}°</td><td>約 ${ang[n]}°</td><td style="color:var(--green)">一樣</td></tr>`));
+    document.getElementById("tb").innerHTML = rows.join("");
+  }
+  document.querySelectorAll("[data-sel]").forEach(b => b.addEventListener("click", () => {
+    sel = b.dataset.sel;
+    document.querySelectorAll("[data-sel]").forEach(x => x.setAttribute("aria-pressed", x === b));
+    draw();
+  }));
+  kIn.addEventListener("input", draw);
+  draw();
+</script>
+</body>
+</html>

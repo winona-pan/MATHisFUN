@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>長度單位換算</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+<style>
+  .chain { display: flex; align-items: stretch; overflow-x: auto; padding-bottom: 4px; }
+  .node { flex: 1 1 0; min-width: 96px; border: 3px solid var(--line); border-radius: 16px; padding: 8px; text-align: center; background: var(--card); }
+  .node b { display: block; }
+  .node input { width: 100%; max-width: 130px; text-align: center; padding: 6px; border-radius: 10px; border: 2px solid var(--line); background: var(--bg); font-weight: 900; font-size: 1.1rem; }
+  .node.src { border-color: var(--ink); } .node.got { border-color: var(--green); }
+  .link { flex: 0 0 74px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 6px; font-weight: 900; font-size: .9rem; }
+  .link span { padding: 1px 6px; border-radius: 8px; color: var(--muted); white-space: nowrap; }
+  .link span.on { background: var(--yellow); color: #2b2a33; }
+  @media (max-width: 560px) { .link { flex-basis: 56px; font-size: .78rem; } .node { min-width: 80px; padding: 6px 3px; } }
+</style>
+</head>
+<body data-seq="6a-u8" data-page="review/length-units">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-pre">先備知識・2–4 年級學過</span>
+  <h1>長度單位換算</h1>
+  <p class="lead">比例尺一定會用到：公分、公尺、公里要換得很快。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>放大看看：1 公尺裡有幾公分？</h2>
+    <div class="stage"><svg id="zoom" viewBox="0 0 400 200"></svg></div>
+    <div class="controls">
+      <button class="btn" data-z="m" aria-pressed="true">1 公尺 = ? 公分</button>
+      <button class="btn" data-z="km" aria-pressed="false">1 公里 = ? 公尺</button>
+    </div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>想一想：什麼時候乘？什麼時候除？</h2>
+    <div class="steps">
+      <div class="step has-pic">
+        <div class="pic"><svg viewBox="0 0 160 120"><rect x="10" y="30" width="140" height="22" fill="var(--blue)" class="stroke"/><text x="56" y="22" font-size="13">1 公尺</text><rect x="10" y="74" width="140" height="22" fill="var(--card)" class="stroke"/><g id="cmTicks"></g><text x="40" y="114" font-size="12">切成 100 小段</text></svg></div>
+        <p>1 公尺切成 <b>100</b> 個 1 公分。<br>單位變<b>小</b>，要切成更多段，<b>數字變大</b> → 用<b style="color:var(--red)">乘的</b>。</p>
+      </div>
+      <div class="step"><p>3 公尺 → 公分：每 1 公尺有 100 公分，所以 3 × 100 = <b style="color:var(--red)">300 公分</b>。</p></div>
+      <div class="step"><p>反過來：500 公分 → 公尺：每 100 公分湊成 1 公尺，500 ÷ 100 = <b style="color:var(--red)">5 公尺</b>。<br>單位變<b>大</b>，數字變<b>小</b> → 用<b style="color:var(--blue)">除的</b>。</p></div>
+      <div class="step"><p>小技巧：× 100 就是後面多 2 個 0；÷ 100 就是小數點往左移 2 位（例如 250 公分 = 2.5 公尺）。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <section class="box">
+    <h2><span class="n">3</span>換算機</h2>
+    <div class="chain">
+      <div class="node" id="nKm"><b>公里</b><input type="text" inputmode="decimal" data-k="km" placeholder="?"></div>
+      <div class="link"><span id="f1">×1000 →</span><span id="b1">← ÷1000</span></div>
+      <div class="node" id="nM"><b>公尺</b><input type="text" inputmode="decimal" data-k="m" placeholder="?"></div>
+      <div class="link"><span id="f2">×100 →</span><span id="b2">← ÷100</span></div>
+      <div class="node" id="nCm"><b>公分</b><input type="text" inputmode="decimal" data-k="cm" placeholder="?"></div>
+    </div>
+    <p class="hint">👉 打任何一格，其他格會算出來。往右（變小單位）用乘的，往左（變大單位）用除的。</p>
+  </section>
+
+  <div class="formula pre">
+    <div class="label">記起來</div>
+    <div class="big">1 公里 = 1000 公尺</div>
+    <div class="big">1 公尺 = 100 公分</div>
+    <div class="sub">所以 1 公里 = 100000 公分（1 後面 5 個 0）</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中理化常常要換單位，也會學「科學記號」，例如 100000 = <code>10⁵</code>（10 自己乘 5 次）。數 0 的個數現在就要練熟！</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">4</span>練習一下</h2>
+    <div class="quiz">
+      <div class="q" data-answer="300" data-hint="1 公尺 = 100 公分，變小單位用乘的">
+        <p class="qt">3 公尺 = 幾公分？</p>
+        <div class="row"><input type="text" inputmode="decimal"> 公分 <button class="btn">對答案</button></div>
+      </div>
+      <div class="q" data-answer="2.5" data-hint="1000 公尺 = 1 公里，變大單位用除的">
+        <p class="qt">2500 公尺 = 幾公里？</p>
+        <div class="row"><input type="text" inputmode="decimal"> 公里 <button class="btn">對答案</button></div>
+      </div>
+      <div class="q" data-answer="40" data-hint="4000 ÷ 100">
+        <p class="qt">4000 公分 = 幾公尺？</p>
+        <div class="row"><input type="text" inputmode="decimal"> 公尺 <button class="btn">對答案</button></div>
+      </div>
+      <div class="q" data-answer="100000" data-hint="1 公里 = 1000 公尺，1 公尺 = 100 公分 → 1000 × 100">
+        <p class="qt">挑戰：1 公里 = 幾公分？</p>
+        <div class="row"><input type="text" inputmode="decimal"> 公分 <button class="btn">對答案</button></div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script>
+  document.getElementById("cmTicks").innerHTML = Array.from({ length: 99 }, (_, i) =>
+    `<line x1="${10 + 1.4 * (i + 1)}" y1="74" x2="${10 + 1.4 * (i + 1)}" y2="${(i + 1) % 10 ? 82 : 90}" stroke="var(--ink)" stroke-width=".7"/>`).join("");
+  let z = "m";
+  function drawZoom() {
+    const big = z === "m" ? "1 公尺" : "1 公里", small = z === "m" ? "公分" : "公尺", n = z === "m" ? 100 : 1000;
+    let s = `<rect x="20" y="30" width="360" height="30" fill="var(--blue)" stroke="var(--ink)" stroke-width="2"/>
+      <text x="170" y="22" font-size="16">${big}</text>
+      <path d="M20 66 L20 100 M380 66 L380 100" stroke="var(--muted)" stroke-dasharray="4 3"/>
+      <rect x="20" y="100" width="360" height="30" fill="var(--card)" stroke="var(--ink)" stroke-width="2"/>`;
+    const step = 360 / (z === "m" ? 100 : 100);
+    for (let i = 1; i < 100; i++) s += `<line x1="${20 + step * i}" y1="100" x2="${20 + step * i}" y2="${i % 10 ? 110 : 122}" stroke="var(--ink)" stroke-width="${i % 10 ? .8 : 1.6}"/>`;
+    s += `<text x="20" y="160" font-size="16">切成 <tspan style="fill:var(--red)">${n}</tspan> 個 1 ${small}${z === "km" ? "（每一小格是 10 公尺）" : ""}</text>
+      <text x="20" y="188" font-size="18">${big} = <tspan style="fill:var(--red)">${n}</tspan> ${small}</text>`;
+    document.getElementById("zoom").innerHTML = s;
+  }
+  document.querySelectorAll("[data-z]").forEach(b => b.addEventListener("click", () => {
+    z = b.dataset.z; document.querySelectorAll("[data-z]").forEach(x => x.setAttribute("aria-pressed", x === b)); drawZoom();
+  }));
+  drawZoom();
+
+  const inputs = [...document.querySelectorAll(".chain input")];
+  const fmt = n => String(Math.round(n * 100000) / 100000);
+  function convert(k, v) {
+    const m = k === "km" ? v * 1000 : k === "m" ? v : v / 100;
+    const val = { km: m / 1000, m, cm: m * 100 };
+    inputs.forEach(i => { if (i.dataset.k !== k) i.value = fmt(val[i.dataset.k]); });
+    [["nKm", "km"], ["nM", "m"], ["nCm", "cm"]].forEach(([id, kk]) => document.getElementById(id).className = "node " + (kk === k ? "src" : "got"));
+    const on = { f1: k === "km", f2: k === "km" || k === "m", b1: k === "m" || k === "cm", b2: k === "cm" };
+    Object.entries(on).forEach(([id, v2]) => document.getElementById(id).classList.toggle("on", v2));
+  }
+  inputs.forEach(i => i.addEventListener("input", () => { const v = parseFloat(i.value); if (!isNaN(v) && v >= 0) convert(i.dataset.k, v); }));
+  inputs[1].value = "3"; convert("m", 3);
+</script>
+</body>
+</html>

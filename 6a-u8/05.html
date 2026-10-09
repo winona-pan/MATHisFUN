@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>比例尺</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u8" data-page="6a-u8/05">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-word">名詞</span>
+  <h1>比例尺</h1>
+  <p class="lead">地圖是真實世界的「縮小圖」。比例尺告訴你縮小了多少。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>地圖上的 1 公分，真的有多遠？</h2>
+    <div class="controls" style="margin-top:0">
+      <button class="btn" data-s="100">1 : 100</button>
+      <button class="btn" data-s="1000" aria-pressed="true">1 : 1000</button>
+      <button class="btn" data-s="10000">1 : 10000</button>
+      <button class="btn" data-s="100000">1 : 100000</button>
+    </div>
+    <div class="stage" style="margin-top:12px"><svg id="g" viewBox="0 0 400 300"></svg></div>
+    <div class="readout">
+      <div class="r"><small>圖上</small>1 公分</div>
+      <div class="r" style="color:var(--red)"><small>代表實際</small><span id="r1"></span></div>
+      <div class="r" style="color:var(--blue)"><small>換成大單位</small><span id="r2"></span></div>
+    </div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>想一想</h2>
+    <div class="steps">
+      <div class="step"><p>① <b>比例尺 = 圖上距離 : 實際距離</b>。<br>1 : 1000 的意思：圖上 <b>1</b> 公分，代表實際 <b>1000</b> 公分。（兩邊<b>單位一樣</b>）</p></div>
+      <div class="step"><p>② 1000 公分 = 10 公尺。所以 1 : 1000 的地圖上，<b>1 公分代表 10 公尺</b>，差不多一間教室的長度。</p></div>
+      <div class="step has-pic">
+        <div class="pic"><svg viewBox="0 0 160 120"><g transform="translate(14 50)"><rect width="30" height="10" fill="var(--ink)"/><rect x="30" width="30" height="10" fill="var(--card)" stroke="var(--ink)"/><rect x="60" width="30" height="10" fill="var(--ink)"/><text x="-4" y="28" font-size="11">0</text><text x="24" y="28" font-size="11">10</text><text x="54" y="28" font-size="11">20</text><text x="84" y="28" font-size="11">30 公尺</text></g><text x="14" y="34" font-size="11" style="fill:var(--muted)">每一格 1 公分</text></svg></div>
+        <p>③ 比例尺也可以畫成一條尺，叫<b>線段比例尺</b>：每一格 1 公分，下面寫實際的距離。</p>
+      </div>
+      <div class="step"><p>④ 分母越大（1 : 100000），縮得越小，同一張紙可以畫下<b>越大的範圍</b>（整個城市）；分母越小（1 : 100），畫得越<b>仔細</b>（一個房間）。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula word">
+    <div class="label">名詞</div>
+    <div class="big">比例尺 = 圖上距離 : 實際距離</div>
+    <div class="big" style="font-size:1.25rem">1 : 1000 → 圖上 1 公分 = 實際 1000 公分 = 10 公尺</div>
+    <div class="sub">兩種寫法：數字比例尺（1 : 1000）、線段比例尺（一條尺）</div>
+  </div>
+
+  <div class="warn"><span class="ic">⚠️</span><p>1 : 1000 的 1000 是<b>公分</b>（和圖上一樣的單位），不是公尺！要換成公尺還要 ÷ 100。</p></div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中地理課每天都會用到比例尺！數學課則會把它寫成比例式：<code>圖上 : 實際 = 1 : 1000</code>。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>練習一下</h2>
+    <div class="quiz">
+      <div class="q" data-answer="5" data-hint="1 : 500 → 圖上 1 公分 = 實際 500 公分，再 ÷ 100 換成公尺">
+        <p class="qt">比例尺 1 : 500，圖上 1 公分代表實際幾公尺？</p>
+        <div class="row"><input type="text" inputmode="decimal"> 公尺 <button class="btn">對答案</button></div>
+      </div>
+      <div class="q" data-answer="20" data-hint="2000 公分 ÷ 100">
+        <p class="qt">比例尺 1 : 2000，圖上 1 公分代表實際幾公尺？</p>
+        <div class="row"><input type="text" inputmode="decimal"> 公尺 <button class="btn">對答案</button></div>
+      </div>
+      <div class="q" data-hint="分母越大，縮得越小，同一張紙畫得下越大的地方">
+        <p class="qt">要在一張紙上畫出<b>整個台灣</b>，比較適合哪一個比例尺？</p>
+        <div class="choices"><button class="choice">1 : 100</button><button class="choice">1 : 1000</button><button class="choice" data-right>1 : 1000000</button></div>
+      </div>
+      <div class="q" data-answer="1000" data-hint="10 公尺 = 1000 公分，比例尺兩邊單位要一樣">
+        <p class="qt">地圖上 1 公分代表實際 10 公尺，比例尺是 1 : □，□ 是多少？</p>
+        <div class="row">1 : <input type="text" inputmode="decimal"> <button class="btn">對答案</button></div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script>
+  const svg = document.getElementById("g");
+  const INFO = {
+    100: { real: "100 公分", big: "1 公尺", what: "大約一個大步", map: "room" },
+    1000: { real: "1000 公分", big: "10 公尺", what: "大約一間教室的長度", map: "school" },
+    10000: { real: "10000 公分", big: "100 公尺", what: "大約操場直線跑道", map: "town" },
+    100000: { real: "100000 公分", big: "1 公里", what: "大約走路 15 分鐘", map: "city" },
+  };
+  const CM = 40; // 圖上 1 公分畫成 40 單位
+  function mapArt(kind) {
+    if (kind === "room") return `<rect x="40" y="40" width="160" height="120" fill="var(--card)" stroke="var(--ink)" stroke-width="3"/><rect x="60" y="60" width="50" height="30" fill="var(--yellow)" class="stroke"/><text x="64" y="80" font-size="11">書桌</text><rect x="130" y="110" width="50" height="35" fill="var(--blue)" fill-opacity=".5" class="stroke"/><text x="140" y="132" font-size="11">床</text><text x="44" y="30" font-size="12">我的房間</text>`;
+    if (kind === "school") return `<rect x="30" y="30" width="200" height="140" fill="var(--card)" stroke="var(--ink)" stroke-width="2"/>${[0, 1, 2, 3].map(i => `<rect x="${40 + i * 46}" y="40" width="40" height="40" fill="var(--yellow)" class="stroke" style="stroke-width:1.5"/><text x="${46 + i * 46}" y="64" font-size="10">教室</text>`).join("")}<ellipse cx="130" cy="130" rx="80" ry="28" fill="var(--green)" fill-opacity=".4" stroke="var(--ink)"/><text x="112" y="134" font-size="11">操場</text><text x="34" y="22" font-size="12">學校</text>`;
+    if (kind === "town") return `<rect x="30" y="30" width="200" height="140" fill="var(--card)" stroke="var(--ink)" stroke-width="2"/><path d="M30 100 L230 100 M120 30 L120 170" stroke="var(--muted)" stroke-width="8"/>${[[45, 45], [140, 45], [45, 115], [150, 120]].map(([x, y], i) => `<rect x="${x}" y="${y}" width="55" height="40" fill="${["var(--yellow)", "var(--blue)", "var(--green)", "var(--orange)"][i]}" fill-opacity=".6" class="stroke" style="stroke-width:1.5"/>`).join("")}<text x="50" y="68" font-size="10">學校</text><text x="146" y="68" font-size="10">公園</text><text x="50" y="138" font-size="10">市場</text><text x="156" y="143" font-size="10">我家</text><text x="34" y="22" font-size="12">社區</text>`;
+    return `<rect x="30" y="30" width="200" height="140" fill="var(--card)" stroke="var(--ink)" stroke-width="2"/><path d="M40 160 C80 120, 120 150, 160 90 S220 50, 225 40" fill="none" stroke="var(--blue)" stroke-width="6"/>${[[70, 70], [170, 140], [120, 60]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="7" fill="var(--red)"/>`).join("")}<path d="M30 110 L230 70" stroke="var(--muted)" stroke-width="4"/><text x="34" y="22" font-size="12">整個城市</text><text x="200" y="166" font-size="10">河</text>`;
+  }
+  let sc = 1000;
+  function draw() {
+    const I = INFO[sc];
+    let s = mapArt(I.map);
+    // 圖上 1 公分
+    s += `<line x1="40" y1="200" x2="${40 + CM}" y2="200" stroke="var(--red)" stroke-width="6" stroke-linecap="round"/>
+      <text x="${44 + CM}" y="205" font-size="13">← 圖上 1 公分</text>`;
+    // 線段比例尺
+    const unit = { 100: 1, 1000: 10, 10000: 100, 100000: 1 }[sc], u = sc === 100000 ? "公里" : "公尺";
+    s += `<g transform="translate(40 232)">
+      ${[0, 1, 2, 3].map(i => `<rect x="${i * CM}" y="0" width="${CM}" height="10" fill="${i % 2 ? "var(--card)" : "var(--ink)"}" stroke="var(--ink)" stroke-width="1.5"/><text x="${i * CM - 4}" y="28" font-size="12">${i * unit}</text>`).join("")}
+      <text x="${4 * CM - 4}" y="28" font-size="12">${4 * unit} ${u}</text>
+      <text x="0" y="52" font-size="12" style="fill:var(--muted)">線段比例尺（每一格 1 公分）</text></g>`;
+    s += `<text x="250" y="60" font-size="15">1 : ${sc}</text><text x="250" y="88" font-size="12" style="fill:var(--muted)">圖上 1 公分 ＝</text><text x="250" y="112" font-size="15" style="fill:var(--red)">${I.big}</text><text x="250" y="136" font-size="11" style="fill:var(--muted)">${I.what}</text>`;
+    svg.innerHTML = s;
+    document.getElementById("r1").textContent = I.real;
+    document.getElementById("r2").textContent = I.big;
+  }
+  document.querySelectorAll("[data-s]").forEach(b => b.addEventListener("click", () => {
+    sc = +b.dataset.s;
+    document.querySelectorAll("[data-s]").forEach(x => x.setAttribute("aria-pressed", x === b));
+    draw();
+  }));
+  draw();
+</script>
+</body>
+</html>

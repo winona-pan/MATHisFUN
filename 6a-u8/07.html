@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>放大縮小總整理</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+<style>
+  .cards { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); margin-top: 12px; }
+  .card { border: 2px solid var(--line); border-radius: 16px; padding: 10px; background: var(--card); display: flex; flex-direction: column; gap: 4px; }
+  .card .pic { background: var(--soft); border-radius: 12px; }
+  .card .pic svg { width: 100%; height: auto; display: block; }
+  .card h3 { margin: 4px 2px 0; font-size: 1.3rem; font-weight: 900; }
+  .card .def { margin: 0 2px; }
+  .card .how { margin: 2px 2px 0; padding: 6px 10px; border-radius: 10px; background: var(--k-formula-soft); font-weight: 900; line-height: 1.6; }
+  .card .how small { display: block; color: var(--k-formula); font-size: .8rem; }
+  .card a { font-size: .85rem; font-weight: 700; color: var(--blue); text-decoration: none; margin: 2px; }
+  .quizmode .card .ans { filter: blur(7px); cursor: pointer; user-select: none; transition: filter .2s; }
+  .quizmode .card .ans.peek { filter: none; }
+  .gen { display: grid; grid-template-columns: minmax(0, 220px) minmax(0, 1fr); gap: 14px; align-items: center; }
+  .gen .qpic { background: var(--soft); border-radius: 12px; }
+  .gen .qpic svg { width: 100%; height: auto; display: block; }
+  .gen .qt { font-size: 1.15rem; font-weight: 700; margin: 0 0 8px; }
+  .gen input { width: 130px; padding: 6px 10px; border-radius: 10px; border: 2px solid var(--line); background: var(--bg); font-weight: 900; font-size: 1.15rem; }
+  .gen .fb { font-weight: 700; margin-top: 8px; min-height: 1.5em; }
+  .gen .fb.ok { color: var(--green); } .gen .fb.no { color: var(--red); }
+  @media (max-width: 560px) { .gen { grid-template-columns: minmax(0, 1fr); } .gen .qpic { max-width: 260px; } }
+</style>
+</head>
+<body data-seq="6a-u8" data-page="6a-u8/07">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-learn">總整理</span>
+  <h1>名詞公式總整理</h1>
+  <p class="lead">放大、縮小與比例尺：看圖記名字、記怎麼求，最下面一直練。</p>
+
+  <section class="box" id="gloss">
+    <h2><span class="n">1</span>名詞卡</h2>
+    <div class="controls" style="margin-top:0">
+      <button class="btn" id="mode" aria-pressed="false">🙈 遮住答案考自己</button>
+      <span class="hint" style="margin:0">打開後，點模糊的地方就會出現答案。</span>
+    </div>
+    <div class="cards" id="cards"></div>
+  </section>
+
+  <div class="formula">
+    <div class="label">一張圖記全部</div>
+    <div class="big" style="font-size:1.15rem;line-height:2">
+      原圖的邊 <span style="color:var(--muted)">⇄ × 倍數 / ÷ 倍數 ⇄</span> 放大圖的邊　｜　面積 × 倍數 × 倍數　｜　角不變<br>
+      圖上距離 <span style="color:var(--muted)">⇄ × 分母 / ÷ 分母 ⇄</span> 實際（公分） <span style="color:var(--muted)">⇄ ÷100 / ×100 ⇄</span> 公尺 <span style="color:var(--muted)">⇄ ÷1000 / ×1000 ⇄</span> 公里
+    </div>
+    <div class="sub">往右走用乘的；往回走用除的</div>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">2</span>綜合練習：隨機出題</h2>
+    <div class="controls" style="margin-top:0">
+      <label><input type="checkbox" id="tScale" checked> 放大縮小</label>
+      <label><input type="checkbox" id="tMap" checked> 比例尺</label>
+    </div>
+    <div class="gen" style="margin-top:12px">
+      <div class="qpic"><svg viewBox="0 0 220 150" id="gpic"></svg></div>
+      <div>
+        <p class="qt" id="gq"></p>
+        <div id="gin" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"></div>
+        <div class="fb" id="gfb"></div>
+      </div>
+    </div>
+    <div class="score" id="gscore"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script>
+  const P = inner => `<svg viewBox="0 0 160 100">${inner}</svg>`;
+  const house = (x, y, k, fill) => `<path d="M${x} ${y} l0 ${-10 * k} l${10 * k} ${-10 * k} l${10 * k} ${10 * k} l0 ${10 * k} Z" fill="${fill}" stroke="var(--ink)" stroke-width="2"/>`;
+  const CARDS = [
+    { t: "放大圖", pic: P(house(20, 85, 1.5, "var(--yellow)") + house(70, 90, 3, "var(--green)")), def: "形狀一樣，每一條邊都 × 同一個倍數（比 1 大）。", how: "新的邊 = 原來的邊 × 倍數<br>倍數 = 新的邊 ÷ 原來的邊", link: "01.html" },
+    { t: "縮小圖", pic: P(house(20, 90, 3, "var(--yellow)") + house(100, 90, 1.5, "var(--blue)")), def: "形狀一樣，每一條邊都 × 同一個倍數（比 1 小，例如 ½）。", how: "½ 縮小圖：每一邊變一半", link: "01.html" },
+    { t: "對應點・對應邊", pic: P(`<path d="M15 85 L55 85 L15 55 Z" fill="var(--card)" stroke="var(--ink)" stroke-width="2"/><path d="M15 85 L55 85" stroke="var(--purple)" stroke-width="5"/><path d="M75 92 L145 92 L75 40 Z" fill="var(--card)" stroke="var(--ink)" stroke-width="2"/><path d="M75 92 L145 92" stroke="var(--purple)" stroke-width="5"/><text x="8" y="98" font-size="11">A</text><text x="66" y="99" font-size="11">A'</text>`), def: "原圖和放大圖「同一個位置」的點、邊。", how: "對應邊都 × 同一個倍數", link: "02.html" },
+    { t: "對應角", pic: P(`<path d="M15 85 L55 85 L15 55 Z" fill="var(--card)" stroke="var(--ink)" stroke-width="2"/><path d="M45 85 A10 10 0 0 0 47 79 L55 85 Z" fill="var(--green)"/><path d="M75 92 L145 92 L75 40 Z" fill="var(--card)" stroke="var(--ink)" stroke-width="2"/><path d="M133 92 A12 12 0 0 0 136 85 L145 92 Z" fill="var(--green)"/>`), def: "原圖和放大圖同一個位置的角。", how: "對應角一樣大（不會變）", link: "02.html" },
+    { t: "面積變幾倍", pic: P(`<rect x="15" y="55" width="24" height="24" fill="var(--yellow)" class="stroke"/><rect x="70" y="30" width="24" height="24" fill="var(--yellow)" class="stroke"/><rect x="94" y="30" width="24" height="24" fill="var(--blue)" class="stroke"/><rect x="70" y="54" width="24" height="24" fill="var(--blue)" class="stroke"/><rect x="94" y="54" width="24" height="24" fill="var(--yellow)" class="stroke"/><text x="124" y="60" font-size="13">×4</text>`), def: "長和寬都變，所以面積要乘兩次倍數。", how: "面積 × 倍數 × 倍數<br>周長只 × 倍數", link: "04.html" },
+    { t: "比例尺", pic: P(`<text x="30" y="58" font-size="26">1 : 1000</text>`), def: "圖上距離 : 實際距離（單位一樣）。", how: "1 : 1000 → 圖上 1 公分 = 實際 1000 公分 = 10 公尺", link: "05.html" },
+    { t: "線段比例尺", pic: P(`<g transform="translate(20 40)"><rect width="30" height="10" fill="var(--ink)"/><rect x="30" width="30" height="10" fill="var(--card)" stroke="var(--ink)"/><rect x="60" width="30" height="10" fill="var(--ink)"/><text x="-3" y="28" font-size="11">0</text><text x="25" y="28" font-size="11">10</text><text x="55" y="28" font-size="11">20</text><text x="85" y="28" font-size="11">30 公尺</text></g>`), def: "畫成一條尺的比例尺：每一格 1 公分，下面寫實際距離。", link: "05.html" },
+    { t: "實際距離", pic: P(`<circle cx="30" cy="70" r="7" fill="var(--yellow)" stroke="var(--ink)"/><circle cx="130" cy="30" r="7" fill="var(--green)" stroke="var(--ink)"/><line x1="30" y1="70" x2="130" y2="30" stroke="var(--red)" stroke-width="3" stroke-dasharray="6 4"/><text x="60" y="80" font-size="13" style="fill:var(--red)">真的多遠？</text>`), def: "真實世界的距離。", how: "實際 = 圖上 × 分母（得到公分，再換單位）", link: "06.html" },
+    { t: "圖上距離", pic: P(`<rect x="20" y="15" width="120" height="70" rx="6" fill="var(--card)" stroke="var(--ink)" stroke-width="2"/><line x1="40" y1="65" x2="110" y2="35" stroke="var(--red)" stroke-width="3"/><text x="58" y="78" font-size="12">量出幾公分</text>`), def: "地圖上量出來的長度。", how: "圖上 = 實際 ÷ 分母（實際先換成公分）", link: "06.html" },
+  ];
+  document.getElementById("cards").innerHTML = CARDS.map(c => `
+    <div class="card">
+      <div class="pic">${c.pic}</div>
+      <h3>${c.t}</h3>
+      <p class="def ans">${c.def}</p>
+      ${c.how ? `<div class="how ans"><small>怎麼求</small>${c.how}</div>` : ""}
+      <a href="${c.link}">看這一課 →</a>
+    </div>`).join("");
+  const gloss = document.getElementById("gloss");
+  document.getElementById("mode").addEventListener("click", e => {
+    const on = gloss.classList.toggle("quizmode");
+    e.currentTarget.setAttribute("aria-pressed", on);
+    gloss.querySelectorAll(".ans").forEach(a => a.classList.remove("peek"));
+  });
+  gloss.addEventListener("click", e => { const a = e.target.closest(".ans"); if (a && gloss.classList.contains("quizmode")) a.classList.toggle("peek"); });
+
+  /* ---------- 隨機出題 ---------- */
+  const rand = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+  const pick = arr => arr[rand(0, arr.length - 1)];
+  const fmtN = n => Number(n.toFixed(4)).toLocaleString("en-US");
+  const kTxt = k => k === 0.5 ? "½" : String(k);
+  function shapePic(k, labelA, labelB) {
+    const s = Math.min(k, 3);
+    return `<path d="M20 120 L60 120 L20 90 Z" fill="var(--yellow)" stroke="var(--ink)" stroke-width="2"/>
+      <path d="M90 130 L${90 + 40 * s} 130 L90 ${130 - 30 * s} Z" fill="var(--green)" fill-opacity=".6" stroke="var(--ink)" stroke-width="2"/>
+      <text x="26" y="140" font-size="12">${labelA}</text><text x="${90 + 10 * s}" y="146" font-size="12">${labelB}</text>
+      <text x="14" y="22" font-size="13">原圖 → ${kTxt(k)} ${k < 1 ? "縮小圖" : "倍放大圖"}</text>`;
+  }
+  function mapPic(cm, sc, ask) {
+    return `<rect x="10" y="10" width="200" height="110" rx="8" fill="var(--card)" stroke="var(--ink)" stroke-width="2"/>
+      <circle cx="40" cy="90" r="9" fill="var(--yellow)" stroke="var(--ink)"/><circle cx="180" cy="40" r="9" fill="var(--green)" stroke="var(--ink)"/>
+      <line x1="40" y1="90" x2="180" y2="40" stroke="var(--red)" stroke-width="3" stroke-dasharray="6 4"/>
+      <text x="92" y="58" font-size="14" style="fill:var(--red)">${ask === "map" ? "? 公分" : cm + " 公分"}</text>
+      <text x="14" y="142" font-size="13">比例尺 1 : ${ask === "scale" ? "?" : fmtN(sc)}</text>`;
+  }
+  const GEN = {
+    scale: [
+      () => { const k = pick([2, 3, 4]), a = rand(2, 9); return { q: `原圖邊長 <b>${a}</b> 公分，${k} 倍放大圖的對應邊是幾公分？`, ans: a * k, unit: "公分", hint: "新的邊 = 原來的邊 × 倍數", pic: shapePic(k, a, "?") }; },
+      () => { const a = rand(1, 9) * 2; return { q: `原圖邊長 <b>${a}</b> 公分，½ 縮小圖的對應邊是幾公分？`, ans: a / 2, unit: "公分", hint: "½ 縮小圖：每一邊變一半", pic: shapePic(0.5, a, "?") }; },
+      () => { const k = pick([2, 3, 4, 5]), a = rand(2, 9); return { q: `原圖邊長 <b>${a}</b> 公分，放大圖的對應邊 <b>${a * k}</b> 公分，這是幾倍放大圖？`, ans: k, unit: "倍", hint: "倍數 = 新的邊 ÷ 原來的邊", pic: shapePic(Math.min(k, 3), a, a * k) }; },
+      () => { const k = pick([2, 3, 4]); return { q: `${k} 倍放大圖的<b>面積</b>是原圖的幾倍？`, ans: k * k, unit: "倍", hint: `長和寬都 ×${k}，面積要 ×${k}×${k}`, pic: shapePic(k, "", "") }; },
+      () => { const k = pick([2, 3]); return { q: `${k} 倍放大圖的<b>周長</b>是原圖的幾倍？`, ans: k, unit: "倍", hint: "周長是邊加起來，每條邊只 ×倍數", pic: shapePic(k, "", "") }; },
+      () => { const k = pick([2, 3, 4]), ang = pick([30, 40, 45, 60, 70, 90]); return { q: `原圖有一個角 <b>${ang}°</b>，${k} 倍放大圖的對應角是幾度？`, ans: ang, unit: "度", hint: "對應角一樣大，不會變", pic: shapePic(k, ang + "°", "?") }; },
+      () => { const k = pick([2, 3]), A = rand(2, 8); return { q: `原圖面積 <b>${A}</b> 平方公分，${k} 倍放大圖的面積是幾平方公分？`, ans: A * k * k, unit: "平方公分", hint: `面積 × ${k} × ${k}`, pic: shapePic(k, "", "") }; },
+    ],
+    map: [
+      () => { const sc = pick([500, 1000, 2000, 5000]), cm = rand(1, 12); return { q: `比例尺 1 : ${fmtN(sc)}，圖上 <b>${cm}</b> 公分，實際是幾<b>公尺</b>？`, ans: cm * sc / 100, unit: "公尺", hint: `${cm} × ${fmtN(sc)} = ${fmtN(cm * sc)} 公分，再 ÷ 100`, pic: mapPic(cm, sc, "real") }; },
+      () => { const sc = pick([10000, 20000, 50000, 100000]), cm = rand(1, 12); return { q: `比例尺 1 : ${fmtN(sc)}，圖上 <b>${cm}</b> 公分，實際是幾<b>公里</b>？`, ans: cm * sc / 100000, unit: "公里", hint: `${cm} × ${fmtN(sc)} = ${fmtN(cm * sc)} 公分，再 ÷ 100000`, pic: mapPic(cm, sc, "real") }; },
+      () => { const sc = pick([500, 1000, 2000, 5000]), cm = rand(1, 12), m = cm * sc / 100; return { q: `比例尺 1 : ${fmtN(sc)}，實際 <b>${fmtN(m)} 公尺</b>，地圖上要畫幾公分？`, ans: cm, unit: "公分", hint: `先換公分：${fmtN(m * 100)} 公分，再 ÷ ${fmtN(sc)}`, pic: mapPic(cm, sc, "map") }; },
+      () => { const sc = pick([1000, 2000, 5000, 10000, 50000]), cm = rand(1, 8), m = cm * sc / 100; return { q: `地圖上 <b>${cm}</b> 公分代表實際 <b>${fmtN(m)} 公尺</b>，比例尺是 1 : 多少？`, ans: sc, unit: "", pre: "1 :", hint: `單位先一樣：${fmtN(m * 100)} 公分 ÷ ${cm}`, pic: mapPic(cm, sc, "scale") }; },
+    ],
+  };
+  let cur, right = 0, tried = 0, wrongOnce = false;
+  function newQ() {
+    const pool = [];
+    if (document.getElementById("tScale").checked) pool.push(...GEN.scale);
+    if (document.getElementById("tMap").checked) pool.push(...GEN.map, ...GEN.map);
+    if (!pool.length) pool.push(...GEN.scale);
+    cur = pick(pool)(); wrongOnce = false;
+    document.getElementById("gq").innerHTML = cur.q;
+    document.getElementById("gpic").innerHTML = cur.pic;
+    document.getElementById("gin").innerHTML = `${cur.pre || ""}<input type="text" inputmode="decimal" id="ga"> ${cur.unit}
+      <button class="btn primary" id="gcheck">對答案</button><button class="btn" id="gnext">下一題 →</button>`;
+    document.getElementById("gfb").className = "fb"; document.getElementById("gfb").textContent = "";
+    document.getElementById("gcheck").onclick = check;
+    document.getElementById("gnext").onclick = newQ;
+    document.getElementById("ga").onkeydown = e => { if (e.key === "Enter") check(); };
+  }
+  function check() {
+    const v = parseFloat(String(document.getElementById("ga").value).replace(/,/g, "")), fb = document.getElementById("gfb");
+    if (!isNaN(v) && Math.abs(v - cur.ans) < 0.0005) {
+      if (!wrongOnce) { right++; tried++; }
+      fb.className = "fb ok"; fb.textContent = `答對了！👏 ${fmtN(cur.ans)} ${cur.unit}`;
+      setTimeout(newQ, 1300);
+    } else {
+      if (!wrongOnce) tried++;
+      wrongOnce = true;
+      fb.className = "fb no"; fb.textContent = "再想想 🤔 " + cur.hint;
+    }
+    document.getElementById("gscore").textContent = `一次就答對：${right} / ${tried} 題`;
+  }
+  ["tScale", "tMap"].forEach(id => document.getElementById(id).addEventListener("change", newQ));
+  newQ();
+</script>
+</body>
+</html>

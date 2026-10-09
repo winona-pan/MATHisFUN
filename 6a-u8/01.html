@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>放大圖與縮小圖</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u8" data-page="6a-u8/01">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-word">名詞</span>
+  <h1>放大圖與縮小圖</h1>
+  <p class="lead">形狀一樣，只是變大或變小，像手機照片用兩隻手指放大。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>變變看</h2>
+    <div class="stage"><svg id="g" viewBox="0 0 400 270"></svg></div>
+    <div class="controls">
+      <button class="btn" data-k="0.5">½ 縮小圖</button>
+      <button class="btn" data-k="2" aria-pressed="true">2 倍放大圖</button>
+      <button class="btn" data-k="3">3 倍放大圖</button>
+      <button class="btn" data-k="wide">只拉寬 ↔</button>
+      <button class="btn" data-k="tall">只拉高 ↕</button>
+    </div>
+    <div class="readout">
+      <div class="r"><small>底邊</small><span id="r1"></span></div>
+      <div class="r"><small>牆的高</small><span id="r2"></span></div>
+      <div class="r"><small>形狀一樣嗎？</small><span id="r3"></span></div>
+    </div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>想一想</h2>
+    <div class="steps">
+      <div class="step"><p>① 按「2 倍放大圖」：<b>每一條邊都 ×2</b>，房子的樣子沒變，只是變大了。</p></div>
+      <div class="step"><p>② 按「只拉寬」：底邊 ×2，可是高沒變 → 房子<b>變胖、變形了</b>，這<b style="color:var(--red)">不是</b>放大圖！</p></div>
+      <div class="step"><p>③ 所以<b>放大圖</b>：形狀一樣（角不變），<b>每一條邊都乘上同一個倍數</b>。</p></div>
+      <div class="step"><p>④ <b>縮小圖</b>也一樣，只是倍數比 1 小，例如 ½ 縮小圖：每一條邊都 × ½（變成一半）。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula word">
+    <div class="label">名詞與公式</div>
+    <div class="big" style="font-size:1.3rem">放大圖、縮小圖：形狀一樣，每一邊 × 同一個倍數</div>
+    <div class="big">新的邊長 = 原來的邊長 × 倍數</div>
+    <div class="sub">翻過來：倍數 = 新的邊長 ÷ 原來的邊長</div>
+  </div>
+
+  <div class="warn"><span class="ic">⚠️</span><p>只有<b>一條邊</b>變長、別的邊沒變 → 形狀歪了，<b>不是</b>放大圖！</p></div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中把「放大圖、縮小圖」這種關係叫做<b>相似形</b>，寫成 <code>△ABC ∼ △DEF</code>（∼ 唸「相似」）。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>練習一下</h2>
+    <div class="quiz">
+      <div class="q" data-hint="每一條邊都要變 2 倍，形狀不能歪">
+        <p class="qt">左邊的小三角形，哪一個是它的 <b>2 倍放大圖</b>？</p>
+        <div class="qpic"><svg viewBox="0 0 280 90"><path d="M20 70 L60 70 L20 40 Z" fill="var(--yellow)" class="stroke"/><text x="22" y="86" font-size="11">原圖</text></svg></div>
+        <div class="choices">
+          <button class="choice"><svg viewBox="0 0 100 80"><path d="M10 70 L90 70 L10 40 Z" fill="var(--yellow)" class="stroke"/></svg></button>
+          <button class="choice" data-right><svg viewBox="0 0 100 80"><path d="M10 70 L90 70 L10 10 Z" fill="var(--yellow)" class="stroke"/></svg></button>
+          <button class="choice"><svg viewBox="0 0 100 80"><path d="M10 70 L50 70 L10 10 Z" fill="var(--yellow)" class="stroke"/></svg></button>
+        </div>
+      </div>
+      <div class="q" data-answer="15" data-hint="新的邊長 = 原來的邊長 × 倍數">
+        <p class="qt">原圖的一條邊長 5 公分，畫 3 倍放大圖，這條邊變成幾公分？</p>
+        <div class="row"><input type="text" inputmode="decimal"> 公分 <button class="btn">對答案</button></div>
+      </div>
+      <div class="q" data-answer="4" data-hint="½ 縮小圖：每一邊變一半">
+        <p class="qt">原圖的一條邊長 8 公分，畫 ½ 縮小圖，這條邊變成幾公分？</p>
+        <div class="row"><input type="text" inputmode="decimal"> 公分 <button class="btn">對答案</button></div>
+      </div>
+      <div class="q" data-answer="3" data-hint="翻過來：倍數 = 新的邊長 ÷ 原來的邊長">
+        <p class="qt">原圖的邊長 4 公分，放大圖對應的邊長 12 公分，這是幾倍放大圖？</p>
+        <div class="row"><input type="text" inputmode="decimal"> 倍 <button class="btn">對答案</button></div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script>
+  // 房子：格子座標（往下是正的）
+  const HOUSE = [[0, 4], [0, 2], [2, 0], [4, 2], [4, 4]];
+  const C = 12, svg = document.getElementById("g");
+  let mode = "2";
+  function poly(pts, ox, oy, sx, sy) {
+    return pts.map(([x, y]) => `${ox + x * sx * C},${oy + y * sy * C}`).join(" ");
+  }
+  function draw() {
+    let s = "";
+    for (let x = 0; x <= 400; x += C) s += `<line x1="${x}" y1="0" x2="${x}" y2="270" class="gridline"/>`;
+    for (let y = 0; y <= 270; y += C) s += `<line x1="0" y1="${y}" x2="400" y2="${y}" class="gridline"/>`;
+    const base = 21 * C; // 地面
+    s += `<polygon points="${poly(HOUSE, C, base - 4 * C, 1, 1)}" fill="var(--yellow)" stroke="var(--ink)" stroke-width="2.5"/>`;
+    s += `<text x="${C}" y="${base + 18}" font-size="13">原圖</text>`;
+    let sx, sy;
+    if (mode === "wide") { sx = 2; sy = 1; } else if (mode === "tall") { sx = 1; sy = 2; } else { sx = sy = +mode; }
+    const ox = 8 * C, oy = base - 4 * sy * C;
+    const good = sx === sy;
+    s += `<polygon points="${poly(HOUSE, ox, oy, sx, sy)}" fill="${good ? "var(--green)" : "var(--red)"}" fill-opacity=".55" stroke="var(--ink)" stroke-width="2.5"/>`;
+    s += `<text x="${ox}" y="${base + 18}" font-size="13">${good ? (sx < 1 ? "½ 縮小圖" : sx + " 倍放大圖") : "變形了！不是放大圖"}</text>`;
+    // 標邊長
+    s += `<text x="${ox + 2 * sx * C - 6}" y="${base - 6}" font-size="13" style="fill:var(--blue)">${4 * sx}</text>`;
+    s += `<text x="${ox - 18}" y="${base - sy * C}" font-size="13" style="fill:var(--red)">${2 * sy}</text>`;
+    s += `<text x="${C + 2 * C - 6}" y="${base - 6}" font-size="13" style="fill:var(--blue)">4</text>`;
+    s += `<text x="2" y="${base - C}" font-size="13" style="fill:var(--red)">2</text>`;
+    svg.innerHTML = s;
+    document.getElementById("r1").textContent = `4 → ${4 * sx}（×${sx === 0.5 ? "½" : sx}）`;
+    document.getElementById("r2").textContent = `2 → ${2 * sy}（×${sy === 0.5 ? "½" : sy}）`;
+    const r3 = document.getElementById("r3");
+    r3.textContent = good ? "✓ 一樣" : "✗ 變形了";
+    r3.style.color = good ? "var(--green)" : "var(--red)";
+  }
+  document.querySelectorAll("[data-k]").forEach(b => b.addEventListener("click", () => {
+    mode = b.dataset.k;
+    document.querySelectorAll("[data-k]").forEach(x => x.setAttribute("aria-pressed", x === b));
+    draw();
+  }));
+  draw();
+</script>
+</body>
+</html>

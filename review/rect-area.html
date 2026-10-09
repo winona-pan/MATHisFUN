@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>長方形面積</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u8" data-page="review/rect-area">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-pre">先備知識・4 年級學過</span>
+  <h1>長方形面積</h1>
+  <p class="lead">面積 = 裡面有幾個 1 平方公分的小方格。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>數方格</h2>
+    <div class="stage"><svg id="g" viewBox="0 0 400 260"></svg></div>
+    <div class="controls">
+      <label>長 <input type="range" id="w" min="1" max="10" value="5"> <b id="wv"></b> 公分</label>
+      <label>寬 <input type="range" id="h" min="1" max="6" value="3"> <b id="hv"></b> 公分</label>
+    </div>
+    <div class="readout">
+      <div class="r"><small>一排有</small><span id="r1"></span></div>
+      <div class="r"><small>有幾排</small><span id="r2"></span></div>
+      <div class="r" style="color:var(--red)"><small>面積</small><span id="r3"></span></div>
+    </div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>公式怎麼來</h2>
+    <div class="steps">
+      <div class="step"><p>① 一個 1 公分 × 1 公分的小方格，面積是 <b>1 平方公分</b>。</p></div>
+      <div class="step"><p>② 長 5 公分 → <b>一排可以放 5 格</b>；寬 3 公分 → <b>可以放 3 排</b>。</p></div>
+      <div class="step"><p>③ 3 排、每排 5 格 → 5 × 3 = <b style="color:var(--red)">15 格</b> = 15 平方公分。所以 <b>長方形面積 = 長 × 寬</b>。</p></div>
+      <div class="step"><p>④ 正方形的長和寬一樣，所以 <b>正方形面積 = 邊長 × 邊長</b>。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula pre">
+    <div class="label">記起來</div>
+    <div class="big">長方形面積 = 長 × 寬</div>
+    <div class="big" style="font-size:1.3rem">正方形面積 = 邊長 × 邊長</div>
+    <div class="sub">反過來：長 = 面積 ÷ 寬</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中會把「邊長 × 邊長」寫成 <code>a²</code>（唸 a 的平方）。下一單元會發現：邊長變 2 倍，面積變 <code>2² = 4</code> 倍！</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>練習一下</h2>
+    <div class="quiz">
+      <div class="q" data-answer="24" data-hint="長 × 寬">
+        <p class="qt">長 6 公分、寬 4 公分的長方形，面積是幾平方公分？</p>
+        <div class="row"><input type="text" inputmode="decimal"> 平方公分 <button class="btn">對答案</button></div>
+      </div>
+      <div class="q" data-answer="49" data-hint="邊長 × 邊長">
+        <p class="qt">邊長 7 公分的正方形，面積是幾平方公分？</p>
+        <div class="row"><input type="text" inputmode="decimal"> 平方公分 <button class="btn">對答案</button></div>
+      </div>
+      <div class="q" data-answer="5" data-hint="往回走：長 = 面積 ÷ 寬">
+        <p class="qt">長方形面積 40 平方公分，寬 8 公分，長是幾公分？</p>
+        <div class="row"><input type="text" inputmode="decimal"> 公分 <button class="btn">對答案</button></div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script>
+  const w = document.getElementById("w"), h = document.getElementById("h");
+  function draw() {
+    const W = +w.value, H = +h.value, S = 34, x0 = 30, y0 = 30;
+    let s = "";
+    for (let r = 0; r < H; r++) for (let c = 0; c < W; c++)
+      s += `<rect x="${x0 + c * S}" y="${y0 + r * S}" width="${S}" height="${S}" fill="${r % 2 ? "var(--yellow)" : "#f6cd6a"}" stroke="var(--ink)" stroke-width="1.2"/>`;
+    s += `<rect x="${x0}" y="${y0}" width="${W * S}" height="${H * S}" fill="none" stroke="var(--ink)" stroke-width="3"/>`;
+    s += `<text x="${x0 + W * S / 2 - 24}" y="${y0 - 8}" font-size="15" style="fill:var(--blue)">長 ${W} 公分</text>`;
+    s += `<text x="${x0 + W * S + 8}" y="${y0 + H * S / 2 + 5}" font-size="15" style="fill:var(--green)">寬 ${H}</text>`;
+    for (let r = 0; r < H; r++) s += `<text x="6" y="${y0 + r * S + 22}" font-size="12" style="fill:var(--muted)">${r + 1}</text>`;
+    document.getElementById("g").innerHTML = s;
+    document.getElementById("wv").textContent = W; document.getElementById("hv").textContent = H;
+    document.getElementById("r1").textContent = W + " 格"; document.getElementById("r2").textContent = H + " 排";
+    document.getElementById("r3").textContent = `${W} × ${H} = ${W * H} 平方公分`;
+  }
+  w.addEventListener("input", draw); h.addEventListener("input", draw); draw();
+</script>
+</body>
+</html>
