@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>倒數</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+<style>
+  .flip { perspective: 600px; display: flex; justify-content: center; gap: 40px; align-items: center; padding: 20px 0; }
+  .card3 { width: 120px; height: 150px; position: relative; transform-style: preserve-3d; transition: transform .8s ease; }
+  .card3.on { transform: rotateY(180deg); }
+  .card3 .face { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 16px; border: 3px solid var(--ink); display: grid; place-items: center; background: var(--yellow); }
+  .card3 .back { transform: rotateY(180deg); background: var(--green); }
+  .card3 .num3 { font-size: 2.6rem; color: #2b2a33; }
+</style>
+</head>
+<body data-seq="6a-u2" data-page="6a-u2/04">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-word">名詞</span>
+  <h1>倒數</h1>
+  <p class="lead">把分數「翻過來」：分子分母交換位置。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>翻翻看</h2>
+    <div class="controls" style="margin-top:0" id="nums"></div>
+    <div class="stage flip"><div class="card3" id="c"><div class="face" id="front"></div><div class="face back" id="back"></div></div></div>
+    <div class="controls"><button class="btn primary" id="flipb">🔄 翻過來</button></div>
+    <div class="work" id="w"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>認識倒數</h2>
+    <div class="steps">
+      <div class="step"><p>① ⅔ 的倒數是 3/2。兩個數<b>相乘 = 1</b>：⅔ × 3/2 = 6/6 = 1。</p></div>
+      <div class="step"><p>② <b>整數</b>也有倒數：5 = 5/1，倒數是 <b>1/5</b>。</p></div>
+      <div class="step"><p>③ <b>帶分數</b>要先變成假分數：1½ = 3/2，倒數是 <b>2/3</b>。</p></div>
+      <div class="step"><p>④ <b>0 沒有倒數</b>（0 乘任何數都不會等於 1）。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula word">
+    <div class="label">名詞</div>
+    <div class="big">a/b 的倒數是 b/a</div>
+    <div class="sub">一個數 × 它的倒數 = 1</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中也叫「<b>乘法反元素</b>」，寫成 <code>a × 1/a = 1</code>。負數的倒數還是負數：−2 的倒數是 −½。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：隨機出題</h2>
+    <p class="hint" style="margin-top:0">答案寫成分數，例如 3/2。</p>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  const N = [["2/3", 2, 3], ["3/4", 3, 4], ["5", 5, 1], ["1½", 3, 2], ["7/9", 7, 9]];
+  let cur = N[0], on = false;
+  function draw() {
+    const [name, a, b] = cur;
+    document.getElementById("front").innerHTML = `<span class="num3">${name}</span>`;
+    document.getElementById("back").innerHTML = `<span class="num3">${b === 1 ? `1/${a}` : `${b}/${a}`}</span>`;
+    document.getElementById("c").classList.toggle("on", on);
+    document.getElementById("w").innerHTML = on ? `${name}${name.includes("½") ? `（= ${a}/${b}）` : ""} 的倒數是 <b>${b}/${a}</b>　驗算：${a}/${b} × ${b}/${a} = ${a * b}/${a * b} = 1 ✓` : "按「翻過來」看看倒數";
+    document.querySelectorAll("[data-i]").forEach(x => x.setAttribute("aria-pressed", N[+x.dataset.i] === cur));
+  }
+  document.getElementById("nums").innerHTML = N.map((n, i) => `<button class="btn" data-i="${i}">${n[0]}</button>`).join("");
+  document.querySelectorAll("[data-i]").forEach(x => x.addEventListener("click", () => { cur = N[+x.dataset.i]; on = false; draw(); }));
+  document.getElementById("flipb").addEventListener("click", () => { on = !on; draw(); });
+  draw();
+
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { const b = W.rand(2, 9), a = W.rand(1, 9); const f = W.F(a, b); if (f.d === 1) return { q: `${f.n} 的倒數是？`, ans: 1 / f.n, show: `1/${f.n}`, hint: `${f.n} = ${f.n}/1，翻過來`, pic: "" }; return { q: `${W.Fstr(f)} 的倒數是？`, ans: f.d / f.n, show: W.Fstr(W.F(f.d, f.n)), hint: "分子分母交換", pic: `<text x="60" y="90" font-size="40">${W.Fstr(f)}</text>` }; },
+    () => { const w = W.rand(1, 3), d = W.rand(2, 5), n = W.rand(1, d - 1), imp = w * d + n; return { q: `${w} 又 ${n}/${d} 的倒數是？`, ans: d / imp, show: W.Fstr(W.F(d, imp)), hint: `先變假分數：${imp}/${d}，再翻過來`, pic: `<text x="30" y="90" font-size="32">${w} 又 ${n}/${d}</text>` }; },
+  ] });
+</script>
+</body>
+</html>

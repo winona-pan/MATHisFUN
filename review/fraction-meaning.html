@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>分數的意義</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u2" data-page="review/fraction-meaning">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-pre">先備知識・3 年級學過</span>
+  <h1>分數的意義</h1>
+  <p class="lead">把一個東西<b>平分</b>成幾份（分母），拿了幾份（分子）。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>切蛋糕</h2>
+    <div class="stage"><svg id="g" viewBox="0 0 400 210"></svg></div>
+    <div class="controls">
+      <label>平分成（分母）<input type="range" id="d" min="2" max="12" value="4"> <b id="dv"></b> 份</label>
+      <label>拿了（分子）<input type="range" id="n" min="1" max="24" value="3"> <b id="nv"></b> 份</label>
+    </div>
+    <div class="work" id="w"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>認識名字</h2>
+    <div class="steps">
+      <div class="step"><p>① ¾：<b>分母 4</b> = 平分成 4 份，<b>分子 3</b> = 拿了 3 份。一定要「<b>平分</b>」（一樣大）。</p></div>
+      <div class="step"><p>② <b>真分數</b>：分子比分母小（比 1 小），例如 ¾。</p></div>
+      <div class="step"><p>③ <b>假分數</b>：分子 ≥ 分母（大於或等於 1），例如 7/4。</p></div>
+      <div class="step"><p>④ <b>帶分數</b>：整數 + 真分數，例如 7/4 = 1¾（1 個完整的 + ¾）。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula pre">
+    <div class="label">記起來</div>
+    <div class="big" style="font-size:1.3rem">分母：平分成幾份　分子：拿幾份</div>
+    <div class="sub">假分數 ⇄ 帶分數：7/4 = 1¾（7 ÷ 4 = 1 餘 3）</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中計算時多半用<b>假分數</b>（比較好乘除），最後答案才看情況寫成帶分數。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>練習一下</h2>
+    <div class="quiz">
+      <div class="q" data-hint="11 ÷ 4 = 2 餘 3">
+        <p class="qt">11/4 寫成帶分數是？</p>
+        <div class="choices"><button class="choice">2¼</button><button class="choice" data-right>2¾</button><button class="choice">3¾</button></div>
+      </div>
+      <div class="q" data-answer="13" data-hint="2 × 5 + 3">
+        <p class="qt">2⅗ 寫成假分數，分子是多少？（分母是 5）</p>
+        <div class="row"><input type="text" inputmode="decimal"> <button class="btn">對答案</button></div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  const dIn = document.getElementById("d"), nIn = document.getElementById("n");
+  function draw() {
+    const d = +dIn.value; let n = +nIn.value; nIn.max = d * 2; if (n > 2 * d) n = 2 * d;
+    const wholes = Math.ceil(n / d) || 1;
+    let s = "";
+    for (let k = 0; k < Math.max(1, wholes); k++) {
+      const cx = 90 + k * 200, cy = 100;
+      for (let i = 0; i < d; i++) {
+        const filled = k * d + i < n;
+        s += `<path d="${W.slice(cx, cy, 75, i * 360 / d, (i + 1) * 360 / d)}" fill="${filled ? "var(--orange)" : "var(--card)"}" fill-opacity="${filled ? .8 : 1}" stroke="var(--ink)" stroke-width="1.5"/>`;
+      }
+    }
+    document.getElementById("g").innerHTML = s;
+    document.getElementById("dv").textContent = d; document.getElementById("nv").textContent = n;
+    const q = Math.floor(n / d), r = n % d;
+    const kind = n < d ? "真分數" : "假分數";
+    document.getElementById("w").innerHTML = `<b style="font-size:1.3rem">${n}/${d}</b>（${kind}）${n >= d ? `= ${r ? `帶分數 <b>${q} 又 ${r}/${d}</b>` : `<b>${q}</b>（整數）`}` : ""}`;
+  }
+  dIn.addEventListener("input", draw); nIn.addEventListener("input", draw); draw();
+</script>
+</body>
+</html>

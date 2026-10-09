@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>除以分數 = 乘以倒數</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u2" data-page="6a-u2/05">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-formula">公式怎麼來</span>
+  <h1>除以分數 = 乘以倒數</h1>
+  <p class="lead">為什麼「÷ ⅔」可以變成「× 3/2」？兩個方法都看懂它！</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>÷ ½ 是什麼意思？</h2>
+    <div class="stage"><svg id="g" viewBox="0 0 400 180"></svg></div>
+    <div class="controls">
+      <label>有 <input type="range" id="a" min="1" max="4" value="3"> <b id="av"></b> 個披薩</label>
+      <label>每人吃 1/<input type="range" id="k" min="2" max="4" value="2"> <b id="kv"></b> 個</label>
+    </div>
+    <div class="work" id="w"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>公式怎麼來（用通分證明）</h2>
+    <div class="steps">
+      <div class="step"><p>① 例：4/5 ÷ 2/3，先<b>通分</b>（分母 15）：12/15 ÷ 10/15。</p></div>
+      <div class="step"><p>② 同分母 → 分子相除：12 ÷ 10 = 12/10。</p></div>
+      <div class="step"><p>③ 仔細看：12 = 4 × 3、10 = 5 × 2，所以答案 = (4 × 3)/(5 × 2) = <b>4/5 × 3/2</b>！</p></div>
+      <div class="step"><p>④ 3/2 正好是 2/3 的<b>倒數</b> → <b>除以一個分數 = 乘以它的倒數</b>。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula">
+    <div class="label">公式</div>
+    <div class="big">a/b ÷ c/d = a/b × d/c</div>
+    <div class="sub">口訣：除號變乘號，後面的數翻過來</div>
+  </div>
+
+  <div class="warn"><span class="ic">⚠️</span><p>只有<b>後面（除數）</b>要翻過來，前面的不要動！</p></div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中所有的除法幾乎都這樣算：<code>x ÷ ⅔ = x × 3/2</code>。解方程式 <code>⅔x = 6</code> → <code>x = 6 × 3/2 = 9</code>。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script src="../assets/gens.js"></script>
+<script>
+  const A = document.getElementById("a"), K = document.getElementById("k");
+  function draw() {
+    const a = +A.value, k = +K.value;
+    let s = "";
+    for (let p = 0; p < a; p++) {
+      const cx = 52 + p * 95, cy = 70;
+      for (let i = 0; i < k; i++) s += `<path d="${W.slice(cx, cy, 42, i * 360 / k, (i + 1) * 360 / k)}" fill="${(p * k + i) % 2 ? "var(--yellow)" : "var(--orange)"}" stroke="var(--ink)" stroke-width="1.5"/><text x="${L.pol(cx, cy, 24, (i + .5) * 360 / k)[0] - 6}" y="${L.pol(cx, cy, 24, (i + .5) * 360 / k)[1] + 5}" font-size="12">${p * k + i + 1}</text>`;
+    }
+    s += `<text x="10" y="150" font-size="15">每個披薩切成 ${k} 片，${a} 個披薩有 ${a} × ${k} = ${a * k} 片 → 可以給 ${a * k} 人</text>`;
+    document.getElementById("g").innerHTML = s;
+    document.getElementById("av").textContent = a; document.getElementById("kv").textContent = k;
+    document.getElementById("w").innerHTML = `${a} ÷ 1/${k} = ${a} × ${k} = <b>${a * k}</b>　「÷ 1/${k}」變成「× ${k}」：除以分數 = 乘以倒數！`;
+  }
+  A.addEventListener("input", draw); K.addEventListener("input", draw); draw();
+
+  W.practice(document.getElementById("prac"), { gens: [G.number.fracDiv, () => { const n = W.rand(2, 9), d = W.rand(2, 5), c = W.rand(1, d - 1); const r = W.Fdiv(W.F(n), W.F(c, d)); return { q: `${n} ÷ ${c}/${d} = ?`, ans: W.Fval(r), show: W.Fstr(r), hint: `${n} × ${d}/${c}`, pic: `<text x="20" y="80" font-size="30">${n} ÷ ${c}/${d}</text>` }; }] });
+</script>
+</body>
+</html>

@@ -141,6 +141,21 @@
         { path: "6a-u1/06", t: "生活應用" },
       ],
     },
+    "6a-u2": {
+      name: "六上 第 2 單元・分數除法",
+      pages: [
+        { path: "review/fraction-meaning", t: "分數的意義", pre: true },
+        { path: "review/equivalent-fractions", t: "約分與擴分", pre: true },
+        { path: "review/common-denominator", t: "通分", pre: true },
+        { path: "review/fraction-multiply", t: "分數乘法", pre: true },
+        { path: "6a-u2/01", t: "分數 ÷ 整數" },
+        { path: "6a-u2/02", t: "同分母分數相除" },
+        { path: "6a-u2/03", t: "異分母分數相除" },
+        { path: "6a-u2/04", t: "倒數" },
+        { path: "6a-u2/05", t: "除以分數 = 乘以倒數" },
+        { path: "6a-u2/06", t: "答案變大還是變小" },
+      ],
+    },
   };
 
   const body = document.body;

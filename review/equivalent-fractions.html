@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>約分與擴分</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u2" data-page="review/equivalent-fractions">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-pre">先備知識・4–5 年級學過</span>
+  <h1>約分與擴分</h1>
+  <p class="lead">切得更細（擴分）或合起來（約分），塗色的大小都沒變。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>切細一點</h2>
+    <div class="stage"><svg id="g" viewBox="0 0 400 190"></svg></div>
+    <div class="controls">
+      <label>原來 <select id="f"><option value="1,2">1/2</option><option value="2,3" selected>2/3</option><option value="3,4">3/4</option><option value="2,5">2/5</option></select></label>
+      <label>每一格再切成 <input type="range" id="k" min="1" max="5" value="2"> <b id="kv"></b> 份</label>
+    </div>
+    <div class="work" id="w"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>為什麼大小不變？</h2>
+    <div class="steps">
+      <div class="step"><p>① 2/3 每一格再切成 2 份：全部變成 3 × 2 = 6 格，塗色的變成 2 × 2 = 4 格 → <b>4/6</b>。</p></div>
+      <div class="step"><p>② 塗色的地方<b>完全沒變</b>，只是格子變多了。所以 2/3 = 4/6。</p></div>
+      <div class="step"><p>③ <b>擴分</b>：分子、分母<b>同乘</b>一個數。<b>約分</b>：分子、分母<b>同除</b>一個數（反過來）。</p></div>
+      <div class="step"><p>④ 約到不能再約（分子分母互質）叫<b>最簡分數</b>。用最大公因數一次約完最快！</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula pre">
+    <div class="label">記起來</div>
+    <div class="big" style="font-size:1.3rem">分子分母同乘、同除一個數，分數大小不變</div>
+    <div class="sub">12/18 → 同除以 6 → 2/3（最簡分數）</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中的「<b>約分</b>」還會用在算式上，例如 <code>6x / 9 = 2x / 3</code>，道理完全一樣。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>練習一下</h2>
+    <div class="quiz">
+      <div class="q" data-hint="12 和 16 同除以 4">
+        <p class="qt">12/16 約成最簡分數是？</p>
+        <div class="choices"><button class="choice">6/8</button><button class="choice" data-right>3/4</button><button class="choice">2/3</button></div>
+      </div>
+      <div class="q" data-answer="15" data-hint="分母 4 → 20 是 ×5，分子 3 也 ×5">
+        <p class="qt">3/4 = □/20，□ 是多少？</p>
+        <div class="row"><input type="text" inputmode="decimal"> <button class="btn">對答案</button></div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script>
+  const fSel = document.getElementById("f"), kIn = document.getElementById("k");
+  function bar(y, n, d, col) {
+    let s = "";
+    for (let i = 0; i < d; i++) s += `<rect x="${20 + 360 * i / d}" y="${y}" width="${360 / d}" height="40" fill="${i < n ? col : "var(--card)"}" fill-opacity="${i < n ? .75 : 1}" stroke="var(--ink)" stroke-width="1.5"/>`;
+    return s;
+  }
+  function draw() {
+    const [n, d] = fSel.value.split(",").map(Number), k = +kIn.value;
+    let s = `<text x="20" y="22" font-size="15">${n}/${d}</text>` + bar(30, n, d, "var(--blue)");
+    s += `<text x="20" y="112" font-size="15">${n * k}/${d * k}</text>` + bar(120, n * k, d * k, "var(--orange)");
+    s += `<line x1="${20 + 360 * n / d}" y1="24" x2="${20 + 360 * n / d}" y2="170" stroke="var(--red)" stroke-width="2.5" stroke-dasharray="5 4"/>`;
+    document.getElementById("g").innerHTML = s;
+    document.getElementById("kv").textContent = k;
+    document.getElementById("w").innerHTML = `${n}/${d} = (${n} × ${k})/(${d} × ${k}) = <b>${n * k}/${d * k}</b>　塗色一樣長（紅線對齊）！`;
+  }
+  fSel.addEventListener("change", draw); kIn.addEventListener("input", draw); draw();
+</script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>分數 ÷ 整數</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u2" data-page="6a-u2/01">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-learn">學會方法</span>
+  <h1>分數 ÷ 整數</h1>
+  <p class="lead">把一個分數「再平分」成幾份。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>再平分</h2>
+    <div class="stage"><svg id="g" viewBox="0 0 400 220"></svg></div>
+    <div class="controls">
+      <label>分數 <select id="f"><option value="3,4" selected>3/4</option><option value="2,3">2/3</option><option value="4,5">4/5</option><option value="1,2">1/2</option></select></label>
+      <label>平分給 <input type="range" id="n" min="2" max="4" value="2"> <b id="nv"></b> 人</label>
+    </div>
+    <div class="work" id="w"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>兩種情況</h2>
+    <div class="steps">
+      <div class="step"><p>① <b>分子剛好能除</b>：6/7 ÷ 3 → 6 份平分成 3 堆，每堆 2 份 → <b>2/7</b>（分子 ÷ 整數）。</p></div>
+      <div class="step"><p>② <b>分子除不盡</b>：3/4 ÷ 2 → 把每一格再切成 2 小格（看上圖），格子變小了 → 3/8。</p></div>
+      <div class="step"><p>③ 也就是：<b>分母 × 整數</b>：3/4 ÷ 2 = 3/(4 × 2) = 3/8。</p></div>
+      <div class="step"><p>④ 你會發現：÷ 2 和 × ½ 一樣！3/4 × ½ = 3/8。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula">
+    <div class="label">方法</div>
+    <div class="big" style="font-size:1.35rem">分數 ÷ 整數 = 分數 × 1/整數</div>
+    <div class="sub">a/b ÷ n = a/(b × n)</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中說：除以一個數 = 乘以它的倒數。÷ 2 = × ½，這是第 5 課的大重點！</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：隨機出題</h2>
+    <p class="hint" style="margin-top:0">答案寫成分數，例如 3/8。</p>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  const fS = document.getElementById("f"), nIn = document.getElementById("n");
+  function draw() {
+    const [a, b] = fS.value.split(",").map(Number), n = +nIn.value, X = 20, Wd = 360;
+    let s = `<text x="20" y="22" font-size="15">${a}/${b}</text>`;
+    for (let i = 0; i < b; i++) s += `<rect x="${X + Wd * i / b}" y="30" width="${Wd / b}" height="60" fill="${i < a ? "var(--blue)" : "var(--card)"}" fill-opacity="${i < a ? .6 : 1}" stroke="var(--ink)" stroke-width="2"/>`;
+    s += `<text x="20" y="122" font-size="15">每一格再橫切成 ${n} 份，給 1 個人的（橘色）：</text>`;
+    for (let i = 0; i < b; i++) for (let j = 0; j < n; j++) {
+      const mine = i < a && j === 0;
+      s += `<rect x="${X + Wd * i / b}" y="${130 + j * 60 / n}" width="${Wd / b}" height="${60 / n}" fill="${mine ? "var(--orange)" : i < a ? "var(--blue)" : "var(--card)"}" fill-opacity="${mine ? .9 : i < a ? .35 : 1}" stroke="var(--ink)" stroke-width="${j ? .8 : 2}"/>`;
+    }
+    document.getElementById("g").innerHTML = s;
+    document.getElementById("nv").textContent = n;
+    const r = W.F(a, b * n);
+    document.getElementById("w").innerHTML = `整條變成 ${b} × ${n} = ${b * n} 小格，一人拿 ${a} 小格 → ${a}/${b} ÷ ${n} = <b>${a}/${b * n}</b>${r.d !== b * n ? ` = ${W.Fstr(r)}` : ""}`;
+  }
+  fS.addEventListener("change", draw); nIn.addEventListener("input", draw); draw();
+
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { const n = W.rand(2, 5), b = W.rand(3, 9), a = n * W.rand(1, Math.max(1, Math.floor((b - 1) / n))); if (a >= b) return { q: `4/5 ÷ 2 = ?`, ans: 0.4, show: "2/5", hint: "分子 4 ÷ 2", pic: "" }; const r = W.F(a, b * n);
+      return { q: `${a}/${b} ÷ ${n} = ?`, ans: W.Fval(r), show: W.Fstr(r), hint: `分子 ${a} 剛好可以 ÷ ${n}`, pic: `<text x="20" y="80" font-size="30">${a}/${b} ÷ ${n}</text>` }; },
+    () => { const b = W.rand(2, 7), a = W.rand(1, b - 1), n = W.rand(2, 5), r = W.F(a, b * n);
+      return { q: `${a}/${b} ÷ ${n} = ?`, ans: W.Fval(r), show: W.Fstr(r), hint: `分母 × ${n}：${a}/(${b} × ${n})`, pic: `<text x="20" y="80" font-size="30">${a}/${b} ÷ ${n}</text>` }; },
+  ] });
+</script>
+</body>
+</html>

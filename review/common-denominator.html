@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>通分</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u2" data-page="review/common-denominator">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-pre">先備知識・5 年級學過</span>
+  <h1>通分</h1>
+  <p class="lead">兩個分數切法不一樣，就把它們切成「一樣大的格子」。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>切成一樣大</h2>
+    <div class="stage"><svg id="g" viewBox="0 0 400 200"></svg></div>
+    <div class="controls">
+      <label>A <select id="a"><option value="1,3" selected>1/3</option><option value="1,2">1/2</option><option value="2,5">2/5</option><option value="3,4">3/4</option></select></label>
+      <label>B <select id="b"><option value="1,4" selected>1/4</option><option value="1,6">1/6</option><option value="2,3">2/3</option><option value="5,6">5/6</option></select></label>
+      <button class="btn primary" id="cut" aria-pressed="false">✂ 切成一樣大</button>
+    </div>
+    <div class="work" id="w"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>怎麼做</h2>
+    <div class="steps">
+      <div class="step"><p>① 找兩個分母的<b>公倍數</b>（最好是最小公倍數）當新分母。3 和 4 → 12。</p></div>
+      <div class="step"><p>② 每個分數<b>擴分</b>成新分母：1/3 = 4/12，1/4 = 3/12。</p></div>
+      <div class="step"><p>③ 分母一樣了，就可以直接比大小、加減、相除：4/12 比 3/12 大。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula pre">
+    <div class="label">記起來</div>
+    <div class="big" style="font-size:1.3rem">通分：用分母的最小公倍數當新分母</div>
+    <div class="sub">1/3 和 1/4 → 4/12 和 3/12</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中的分式 <code>1/x + 1/y</code> 也是先通分：<code>(y + x)/(xy)</code>。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>練習一下</h2>
+    <div class="quiz">
+      <div class="q" data-answer="12" data-hint="4 和 6 的最小公倍數">
+        <p class="qt">3/4 和 5/6 通分，最小的共同分母是多少？</p>
+        <div class="row"><input type="text" inputmode="decimal"> <button class="btn">對答案</button></div>
+      </div>
+      <div class="q" data-hint="通分成 10/15 和 9/15">
+        <p class="qt">2/3 和 3/5，哪一個比較大？</p>
+        <div class="choices"><button class="choice" data-right>2/3</button><button class="choice">3/5</button><button class="choice">一樣大</button></div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  const A = document.getElementById("a"), B = document.getElementById("b");
+  let cut = false;
+  function bar(y, n, d, col, D) {
+    let s = "";
+    for (let i = 0; i < D; i++) s += `<rect x="${20 + 360 * i / D}" y="${y}" width="${360 / D}" height="40" fill="${i < n * D / d ? col : "var(--card)"}" fill-opacity="${i < n * D / d ? .75 : 1}" stroke="var(--ink)" stroke-width="${D === d ? 1.8 : 0.8}"/>`;
+    for (let i = 0; i <= d; i++) s += `<line x1="${20 + 360 * i / d}" y1="${y}" x2="${20 + 360 * i / d}" y2="${y + 40}" stroke="var(--ink)" stroke-width="2.2"/>`;
+    return s;
+  }
+  function draw() {
+    const [an, ad] = A.value.split(",").map(Number), [bn, bd] = B.value.split(",").map(Number), L = ad * bd / W.gcd(ad, bd);
+    let s = `<text x="20" y="22" font-size="15">${cut ? `${an}/${ad} = ${an * L / ad}/${L}` : `${an}/${ad}`}</text>` + bar(30, an, ad, "var(--blue)", cut ? L : ad);
+    s += `<text x="20" y="112" font-size="15">${cut ? `${bn}/${bd} = ${bn * L / bd}/${L}` : `${bn}/${bd}`}</text>` + bar(120, bn, bd, "var(--orange)", cut ? L : bd);
+    document.getElementById("g").innerHTML = s;
+    document.getElementById("cut").setAttribute("aria-pressed", cut);
+    document.getElementById("w").innerHTML = cut ? `都切成 <b>${L}</b> 格（${ad} 和 ${bd} 的最小公倍數）：${an * L / ad}/${L} 和 ${bn * L / bd}/${L}` : "兩條格子大小不一樣，很難比較。按「切成一樣大」。";
+  }
+  A.addEventListener("change", draw); B.addEventListener("change", draw);
+  document.getElementById("cut").addEventListener("click", () => { cut = !cut; draw(); });
+  draw();
+</script>
+</body>
+</html>

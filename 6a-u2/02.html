@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>同分母分數相除</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u2" data-page="6a-u2/02">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-learn">學會方法</span>
+  <h1>同分母分數相除</h1>
+  <p class="lead">6/8 ÷ 2/8：6/8 裡面有幾個 2/8？格子一樣大，數格子就好！</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>裡面有幾個？</h2>
+    <div class="stage"><svg id="g" viewBox="0 0 400 170"></svg></div>
+    <div class="controls">
+      <label>被除數 <input type="range" id="a" min="1" max="8" value="6"> <b id="av"></b>/8</label>
+      <label>除數 <input type="range" id="b" min="1" max="4" value="2"> <b id="bv"></b>/8</label>
+    </div>
+    <div class="work" id="w"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>想一想</h2>
+    <div class="steps">
+      <div class="step"><p>① 6/8 是 6 個 1/8，2/8 是 2 個 1/8。</p></div>
+      <div class="step"><p>② 「6 個裡面有幾個 2 個」→ <b>6 ÷ 2 = 3</b>。分母一樣，<b>只要看分子</b>！</p></div>
+      <div class="step"><p>③ 除不完也沒關係：5/8 ÷ 2/8 = 5 ÷ 2 = <b>5/2</b>（= 2½，有 2 個半）。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula">
+    <div class="label">方法</div>
+    <div class="big">a/d ÷ b/d = a ÷ b</div>
+    <div class="sub">分母一樣 → 分子相除</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>這種「包含除」（裡面有幾個）的想法，國中算比例和速率時也常用。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：隨機出題</h2>
+    <p class="hint" style="margin-top:0">答案可以寫整數或分數（例如 5/2）。</p>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  const A = document.getElementById("a"), B = document.getElementById("b");
+  function draw() {
+    const a = +A.value, b = +B.value, X = 20, c = 360 / 8, cols = ["var(--blue)", "var(--orange)", "var(--green)", "var(--purple)", "var(--red)", "var(--yellow)", "var(--blue)", "var(--orange)"];
+    let s = "";
+    for (let i = 0; i < 8; i++) {
+      const g = Math.floor(i / b), inA = i < a, full = (g + 1) * b <= a;
+      s += `<rect x="${X + i * c}" y="40" width="${c}" height="50" fill="${inA ? cols[g] : "var(--card)"}" fill-opacity="${inA ? (full ? .7 : .3) : 1}" stroke="var(--ink)" stroke-width="1.5"/>`;
+    }
+    for (let g = 0; g * b < a; g++) { const x1 = X + g * b * c, x2 = X + Math.min(a, (g + 1) * b) * c, full = (g + 1) * b <= a;
+      s += `<path d="M${x1 + 3} 100 q0 10 8 10 L${x2 - 11} 110 q8 0 8 -10" fill="none" stroke="var(--ink)" stroke-width="2" ${full ? "" : 'stroke-dasharray="4 3"'}/><text x="${(x1 + x2) / 2 - 6}" y="134" font-size="14">${full ? g + 1 : "半個?"}</text>`; }
+    s += `<text x="20" y="28" font-size="14">${a}/8 裡面，每 ${b}/8 一組</text>`;
+    document.getElementById("g").innerHTML = s;
+    document.getElementById("av").textContent = a; document.getElementById("bv").textContent = b;
+    const r = W.F(a, b);
+    document.getElementById("w").innerHTML = `${a}/8 ÷ ${b}/8 = ${a} ÷ ${b} = <b>${W.Fstr(r)}</b>${r.d > 1 ? `（${Math.floor(a / b)} 組又 ${a % b}/${b} 組）` : ""}`;
+  }
+  A.addEventListener("input", draw); B.addEventListener("input", draw); draw();
+
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { const d = W.rand(5, 12), b = W.rand(1, 4), a = W.rand(b, d), r = W.F(a, b); return { q: `${a}/${d} ÷ ${b}/${d} = ?`, ans: W.Fval(r), show: W.Fstr(r), hint: `分母一樣，${a} ÷ ${b}`, pic: `<text x="10" y="80" font-size="28">${a}/${d} ÷ ${b}/${d}</text>` }; },
+  ] });
+</script>
+</body>
+</html>
