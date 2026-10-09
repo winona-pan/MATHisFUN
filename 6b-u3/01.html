@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>速率是什麼</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6b-u3" data-page="6b-u3/01">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-word">名詞</span>
+  <h1>速率是什麼？</h1>
+  <p class="lead">誰跑得比較快？比「每 1 秒（或每 1 分、每 1 小時）跑多遠」。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>賽跑</h2>
+    <div class="controls" style="margin-top:0" id="tabs"></div>
+    <div class="stage" style="margin-top:12px"><svg id="g" viewBox="0 0 400 200"></svg></div>
+    <div class="controls"><button class="btn primary" id="go">▶ 開始跑</button></div>
+    <div class="work" id="w"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>想一想</h2>
+    <div class="steps">
+      <div class="step"><p>① <b>時間一樣</b>：跑比較<b>遠</b>的比較快。</p></div>
+      <div class="step"><p>② <b>距離一樣</b>：用比較<b>少時間</b>的比較快。</p></div>
+      <div class="step"><p>③ 時間、距離都不一樣？算出「<b>每 1 秒跑幾公尺</b>」來比，就公平了！</p></div>
+      <div class="step"><p>④ 「每 1 單位時間走的距離」，就叫做 <b style="color:var(--red)">速率</b>。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula word">
+    <div class="label">名詞</div>
+    <div class="big"><span style="color:var(--red)">速率</span>：每 1 單位時間走多遠</div>
+    <div class="sub">速率越大，跑得越快</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中理化會分「<b>速率</b>」（只看多快）和「<b>速度</b>」（還要看方向）。現在先把速率學好！</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：誰比較快？</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  const RACES = [
+    { name: "時間一樣", a: [60, 10], b: [40, 10], note: "都跑 10 秒：🐰 跑 60 公尺、🐢 跑 40 公尺 → 🐰 比較快" },
+    { name: "距離一樣", a: [100, 20], b: [100, 25], note: "都跑 100 公尺：🐰 用 20 秒、🐢 用 25 秒 → 🐰 比較快" },
+    { name: "都不一樣", a: [120, 20], b: [70, 10], note: "🐰 120 ÷ 20 = 每秒 6 公尺；🐢 70 ÷ 10 = 每秒 7 公尺 → 🐢 比較快！" },
+  ];
+  let ri = 0, t = 0, anim;
+  const X0 = 40, XL = 360;
+  function draw() {
+    const R = RACES[ri], maxD = Math.max(R.a[0], R.b[0]), sc = (XL - X0) / maxD;
+    let s = "";
+    [R.a, R.b].forEach(([d, T], i) => {
+      const y = 50 + i * 80, now = Math.min(t, T), x = X0 + d * (now / T) * sc;
+      s += `<line x1="${X0}" y1="${y + 20}" x2="${X0 + d * sc}" y2="${y + 20}" stroke="var(--line)" stroke-width="6"/>`;
+      s += `<line x1="${X0 + d * sc}" y1="${y - 10}" x2="${X0 + d * sc}" y2="${y + 28}" stroke="var(--ink)" stroke-width="2" stroke-dasharray="4 3"/><text x="${X0 + d * sc - 30}" y="${y - 14}" font-size="12">${d} 公尺</text>`;
+      for (let k = 1; k <= Math.floor(now); k++) s += `<circle cx="${X0 + d / T * k * sc}" cy="${y + 20}" r="3" fill="${i ? "var(--green)" : "var(--blue)"}"/>`;
+      s += `<text x="${x - 12}" y="${y + 10}" font-size="24">${i ? "🐢" : "🐰"}</text>`;
+      s += `<text x="4" y="${y + 26}" font-size="11">${T} 秒</text>`;
+    });
+    s += `<text x="${X0}" y="190" font-size="13">⏱ ${t.toFixed(1)} 秒　（小點點 = 每 1 秒跑到哪）</text>`;
+    document.getElementById("g").innerHTML = s;
+    document.querySelectorAll("[data-r]").forEach(b => b.setAttribute("aria-pressed", +b.dataset.r === ri));
+  }
+  document.getElementById("tabs").innerHTML = RACES.map((r, i) => `<button class="btn" data-r="${i}">${r.name}</button>`).join("");
+  document.querySelectorAll("[data-r]").forEach(b => b.addEventListener("click", () => { ri = +b.dataset.r; t = 0; cancelAnimationFrame(anim); document.getElementById("w").textContent = ""; draw(); }));
+  document.getElementById("go").addEventListener("click", () => {
+    const R = RACES[ri], T = Math.max(R.a[1], R.b[1]), st = performance.now();
+    cancelAnimationFrame(anim);
+    const step = now => { t = Math.min(T, (now - st) / 1000 * T / 4); draw(); if (t < T) anim = requestAnimationFrame(step); else document.getElementById("w").textContent = R.note; };
+    anim = requestAnimationFrame(step);
+  });
+  draw();
+
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { const ta = W.rand(2, 10), tb = W.rand(2, 10); let va = W.rand(3, 9), vb = W.rand(3, 9); if (va === vb) vb++;
+      const a = ["小明", "小華"], d1 = va * ta, d2 = vb * tb;
+      return { q: `${a[0]} ${ta} 秒跑 ${d1} 公尺，${a[1]} ${tb} 秒跑 ${d2} 公尺。誰比較快？`, choices: [a[0], a[1]], ans: va > vb ? 0 : 1,
+        hint: `算每 1 秒：${d1} ÷ ${ta} = ${va}，${d2} ÷ ${tb} = ${vb}`, pic: `<text x="10" y="50" font-size="15">${a[0]}：${d1} ÷ ${ta}</text><text x="10" y="90" font-size="15">${a[1]}：${d2} ÷ ${tb}</text><text x="10" y="130" font-size="13" style="fill:var(--red)">比「每 1 秒」</text>` }; },
+  ] });
+</script>
+</body>
+</html>

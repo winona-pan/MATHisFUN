@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>速率單位換算</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6b-u3" data-page="6b-u3/05">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-learn">學會方法</span>
+  <h1>速率單位換算</h1>
+  <p class="lead">時速、分速、秒速怎麼互換？想成「把 1 小時走的路，平分給 60 分鐘」。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>換算機</h2>
+    <div id="chain"></div>
+    <p class="hint">👉 往右：公里換公尺 ×1000、時速變分速 ÷60、分速變秒速 ÷60。往左全部相反。</p>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>為什麼時速變分速要 ÷ 60？</h2>
+    <div class="steps">
+      <div class="step has-pic">
+        <div class="pic"><svg viewBox="0 0 160 120"><rect x="10" y="20" width="140" height="22" fill="var(--blue)" fill-opacity=".6" stroke="var(--ink)"/><text x="30" y="36" font-size="11">1 小時走 72 公里</text><rect x="10.00" y="64" width="11.67" height="22" fill="var(--orange)" stroke="var(--ink)" stroke-width=".8"/><rect x="21.67" y="64" width="11.67" height="22" fill="var(--yellow)" stroke="var(--ink)" stroke-width=".8"/><rect x="33.33" y="64" width="11.67" height="22" fill="var(--orange)" stroke="var(--ink)" stroke-width=".8"/><rect x="45.00" y="64" width="11.67" height="22" fill="var(--yellow)" stroke="var(--ink)" stroke-width=".8"/><rect x="56.67" y="64" width="11.67" height="22" fill="var(--orange)" stroke="var(--ink)" stroke-width=".8"/><rect x="68.33" y="64" width="11.67" height="22" fill="var(--yellow)" stroke="var(--ink)" stroke-width=".8"/><rect x="80.00" y="64" width="11.67" height="22" fill="var(--orange)" stroke="var(--ink)" stroke-width=".8"/><rect x="91.67" y="64" width="11.67" height="22" fill="var(--yellow)" stroke="var(--ink)" stroke-width=".8"/><rect x="103.33" y="64" width="11.67" height="22" fill="var(--orange)" stroke="var(--ink)" stroke-width=".8"/><rect x="115.00" y="64" width="11.67" height="22" fill="var(--yellow)" stroke="var(--ink)" stroke-width=".8"/><rect x="126.67" y="64" width="11.67" height="22" fill="var(--orange)" stroke="var(--ink)" stroke-width=".8"/><rect x="138.33" y="64" width="11.67" height="22" fill="var(--yellow)" stroke="var(--ink)" stroke-width=".8"/><text x="20" y="106" font-size="11">平分給 60 分鐘</text></svg></div>
+        <p>① 時速 72 公里 = 1 小時走 72 公里 = 72000 公尺。</p>
+      </div>
+      <div class="step"><p>② 1 小時有 60 分鐘，把 72000 公尺<b>平分成 60 份</b> → 72000 ÷ 60 = <b>1200</b> → 分速 1200 公尺。</p></div>
+      <div class="step"><p>③ 1 分鐘有 60 秒，再平分：1200 ÷ 60 = <b>20</b> → 秒速 20 公尺。</p></div>
+      <div class="step"><p>④ 反過來（秒速 → 分速 → 時速）：每秒 20，60 秒就是 20 × 60 → 用<b>乘的</b>。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula">
+    <div class="label">記起來</div>
+    <div class="big" style="font-size:1.3rem;line-height:1.9">時速 → 分速：÷ 60　分速 → 秒速：÷ 60<br>秒速 → 分速：× 60　分速 → 時速：× 60</div>
+    <div class="sub">公里 ⇄ 公尺：× 1000 / ÷ 1000</div>
+  </div>
+
+  <div class="warn"><span class="ic">⚠️</span><p>想不起來乘還是除？問自己：「時間變短了，走的路會變少」→ 時速變分速，數字要變小 → 除！</p></div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中理化：<code>72 km/h = 20 m/s</code>，常用「÷ 3.6」一步換完（因為 1000 ÷ 3600 = 1 ÷ 3.6）。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  W.chain(document.getElementById("chain"), {
+    nodes: [{ k: "hk", label: "時速（公里）" }, { k: "hm", label: "時速（公尺）" }, { k: "mm", label: "分速（公尺）", color: "var(--red)" }, { k: "sm", label: "秒速（公尺）", color: "var(--blue)" }],
+    links: [{ f: "×1000", b: "÷1000", go: v => v * 1000, back: v => v / 1000 }, { f: "÷60", b: "×60", go: v => v / 60, back: v => v * 60 }, { f: "÷60", b: "×60", go: v => v / 60, back: v => v * 60 }],
+    start: { k: "hk", v: 72 },
+  });
+
+  const P = (a, b) => `<text x="10" y="60" font-size="16">${a}</text><text x="10" y="100" font-size="16" style="fill:var(--red)">= ${b} ?</text>`;
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { const s = W.rand(2, 30), h = s * 3.6; if (h % 1) return { q: `秒速 <b>${s * 5}</b> 公尺 = 分速幾公尺？`, ans: s * 5 * 60, unit: "公尺", hint: "秒速 → 分速：× 60", pic: P(`秒速 ${s * 5} 公尺`, "分速") }; return { q: `時速 <b>${h}</b> 公里 = 秒速幾公尺？`, ans: s, unit: "公尺", hint: `${h} 公里 = ${h * 1000} 公尺，÷ 60 ÷ 60`, pic: P(`時速 ${h} 公里`, "秒速") }; },
+    () => { const m = W.rand(1, 30) * 100; return { q: `分速 <b>${m}</b> 公尺 = 時速幾公里？`, ans: m * 60 / 1000, unit: "公里", hint: `× 60 = ${m * 60} 公尺，再 ÷ 1000 換成公里`, pic: P(`分速 ${m} 公尺`, "時速（公里）") }; },
+    () => { const h = W.rand(1, 20) * 6; return { q: `時速 <b>${h}</b> 公里 = 分速幾公尺？`, ans: h * 1000 / 60, unit: "公尺", hint: `${h} 公里 = ${h * 1000} 公尺，÷ 60`, pic: P(`時速 ${h} 公里`, "分速（公尺）") }; },
+    () => { const s = W.rand(5, 25), m = W.rand(5, 25) * 60; const a = s * 60, b = m;
+      return { q: `秒速 ${s} 公尺 和 分速 ${m} 公尺，哪個比較快？`, choices: [`秒速 ${s} 公尺`, `分速 ${m} 公尺`, "一樣快"], ans: a > b ? 0 : a < b ? 1 : 2, hint: `秒速 ${s} = 分速 ${a}，換成一樣的單位再比`, pic: P("先換成一樣的單位", "再比大小") }; },
+  ] });
+</script>
+</body>
+</html>

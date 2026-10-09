@@ -69,6 +69,19 @@
         { path: "6b-u2/06", t: "名詞公式總整理" },
       ],
     },
+    "6b-u3": {
+      name: "六下 第 3 單元・速率",
+      pages: [
+        { path: "review/time-units", t: "時間單位換算", pre: true },
+        { path: "review/length-units", t: "長度單位換算", pre: true },
+        { path: "6b-u3/01", t: "速率是什麼" },
+        { path: "6b-u3/02", t: "秒速、分速、時速" },
+        { path: "6b-u3/03", t: "速率 = 距離 ÷ 時間" },
+        { path: "6b-u3/04", t: "距離、時間怎麼求" },
+        { path: "6b-u3/05", t: "速率單位換算" },
+        { path: "6b-u3/06", t: "名詞公式總整理" },
+      ],
+    },
   };
 
   const body = document.body;

@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>秒速、分速、時速</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6b-u3" data-page="6b-u3/02">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-word">名詞</span>
+  <h1>秒速、分速、時速</h1>
+  <p class="lead">「每 1 秒」叫秒速、「每 1 分」叫分速、「每 1 小時」叫時速。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>大家跑多快？</h2>
+    <div class="controls" style="margin-top:0" id="tabs"></div>
+    <div class="stage" style="margin-top:12px"><svg id="g" viewBox="0 0 400 190"></svg></div>
+    <div class="work" id="w"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>怎麼讀？</h2>
+    <div class="steps">
+      <div class="step"><p>① <b>時速 60 公里</b>：每 1 <b>小時</b>走 60 公里。</p></div>
+      <div class="step"><p>② <b>分速 80 公尺</b>：每 1 <b>分鐘</b>走 80 公尺（大約是走路的速度）。</p></div>
+      <div class="step"><p>③ <b>秒速 10 公尺</b>：每 1 <b>秒</b>跑 10 公尺（大約是很快的短跑選手）。</p></div>
+      <div class="step"><p>④ 看到速率，先問自己：「<b>每多久</b>」走「<b>多遠</b>」？</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula word">
+    <div class="label">名詞</div>
+    <div class="big" style="font-size:1.3rem;line-height:1.9">秒速 = 每 1 秒走的距離<br>分速 = 每 1 分走的距離<br>時速 = 每 1 小時走的距離</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中寫成單位：秒速 10 公尺 = <code>10 m/s</code>、時速 60 公里 = <code>60 km/h</code>。「/」就是「每」的意思。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  const THINGS = [
+    { e: "🚶", n: "走路", kind: "分速", v: 80, u: "公尺", per: "分", note: "每 1 分鐘走 80 公尺" },
+    { e: "🚲", n: "腳踏車", kind: "時速", v: 15, u: "公里", per: "小時", note: "每 1 小時騎 15 公里" },
+    { e: "🚗", n: "汽車（高速公路）", kind: "時速", v: 100, u: "公里", per: "小時", note: "每 1 小時開 100 公里" },
+    { e: "🚄", n: "高鐵", kind: "時速", v: 300, u: "公里", per: "小時", note: "每 1 小時跑 300 公里" },
+    { e: "🐆", n: "獵豹", kind: "秒速", v: 30, u: "公尺", per: "秒", note: "每 1 秒跑 30 公尺！" },
+  ];
+  let ti = 0;
+  function draw() {
+    const T = THINGS[ti];
+    let s = `<text x="20" y="40" font-size="40">${T.e}</text><text x="80" y="36" font-size="18">${T.n}：${T.kind} ${T.v} ${T.u}</text>`;
+    s += `<text x="20" y="80" font-size="13" style="fill:var(--muted)">時間軸：每一格是「1 ${T.per}」</text>`;
+    for (let i = 0; i < 4; i++) {
+      s += `<rect x="${20 + i * 90}" y="92" width="90" height="26" fill="${i % 2 ? "var(--yellow)" : "var(--blue)"}" fill-opacity=".6" stroke="var(--ink)" stroke-width="1.5"/>`;
+      s += `<text x="${30 + i * 90}" y="110" font-size="12">第 ${i + 1} ${T.per}</text>`;
+      s += `<text x="${30 + i * 90}" y="140" font-size="13" style="fill:var(--red)">+${T.v}</text>`;
+    }
+    s += `<text x="20" y="176" font-size="14">4 ${T.per}走：${T.v} × 4 = ${T.v * 4} ${T.u}</text>`;
+    document.getElementById("g").innerHTML = s;
+    document.getElementById("w").textContent = `${T.kind} ${T.v} ${T.u} → ${T.note}`;
+    document.querySelectorAll("[data-t]").forEach(b => b.setAttribute("aria-pressed", +b.dataset.t === ti));
+  }
+  document.getElementById("tabs").innerHTML = THINGS.map((t, i) => `<button class="btn" data-t="${i}">${t.e} ${t.n}</button>`).join("");
+  document.querySelectorAll("[data-t]").forEach(b => b.addEventListener("click", () => { ti = +b.dataset.t; draw(); }));
+  draw();
+
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { const T = W.pick(THINGS), n = W.rand(2, 6); return { q: `${T.n} 的${T.kind}是 ${T.v} ${T.u}。${n} ${T.per}可以走幾${T.u}？`, ans: T.v * n, unit: T.u, hint: `每 1 ${T.per} ${T.v}，${n} ${T.per}就是 ${T.v} × ${n}`, pic: `<text x="10" y="80" font-size="60">${T.e}</text>` }; },
+    () => { const opts = ["每 1 秒", "每 1 分", "每 1 小時"], k = W.rand(0, 2), names = ["秒速", "分速", "時速"];
+      return { q: `「<b>${names[k]}</b> 50 公尺」的意思是？`, choices: opts.map(o => o + "走 50 公尺"), ans: k, hint: "秒速＝每秒、分速＝每分、時速＝每小時", pic: `<text x="10" y="80" font-size="22">${names[k]} 50 公尺</text>` }; },
+  ] });
+</script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>速率總整理</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6b-u3" data-page="6b-u3/06">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-learn">總整理</span>
+  <h1>名詞公式總整理</h1>
+  <p class="lead">速率：名詞卡、三個公式、單位換算，一次練到熟。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>名詞卡</h2>
+    <div id="cards"></div>
+  </section>
+
+  <div class="formula">
+    <div class="label">一張圖記全部</div>
+    <div class="big" style="font-size:1.2rem;line-height:2">距離 = 速率 × 時間<br>速率 = 距離 ÷ 時間　時間 = 距離 ÷ 速率<br>時速 ⇄ ÷60 / ×60 ⇄ 分速 ⇄ ÷60 / ×60 ⇄ 秒速</div>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">2</span>綜合練習：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  const E = e => `<text x="55" y="68" font-size="44">${e}</text>`;
+  W.cards(document.getElementById("cards"), [
+    { t: "速率", pic: E("🏃"), def: "每 1 單位時間走的距離，用來比快慢。", how: "速率 = 距離 ÷ 時間", link: "01.html" },
+    { t: "秒速・分速・時速", pic: `<text x="10" y="40" font-size="15">每 1 秒 → 秒速</text><text x="10" y="64" font-size="15">每 1 分 → 分速</text><text x="10" y="88" font-size="15">每 1 時 → 時速</text>`, def: "看「每多久」走「多遠」。", how: "時速 60 公里 = 每小時 60 公里", link: "02.html" },
+    { t: "距離", pic: E("🛣️"), def: "走了多遠。", how: "距離 = 速率 × 時間", link: "04.html" },
+    { t: "時間", pic: E("⏱️"), def: "走了多久。", how: "時間 = 距離 ÷ 速率", link: "04.html" },
+    { t: "速率單位換算", pic: `<text x="10" y="44" font-size="15">時速 72 公里</text><text x="10" y="68" font-size="15">= 分速 1200 公尺</text><text x="10" y="92" font-size="15">= 秒速 20 公尺</text>`, def: "時間變短，數字變小。", how: "時速 → 分速 ÷ 60<br>分速 → 秒速 ÷ 60", link: "05.html" },
+    { t: "時間單位", pic: E("🕐"), def: "60 進位。", how: "1 時 = 60 分 = 3600 秒<br>30 分 = 0.5 時", link: "../review/time-units.html" },
+  ]);
+
+  const P = (a, b) => `<text x="10" y="60" font-size="15">${a}</text><text x="10" y="100" font-size="15" style="fill:var(--red)">${b}</text>`;
+  W.practice(document.getElementById("prac"), { groups: [
+    { label: "三個公式", gens: [
+      () => { const v = W.rand(4, 18) * 5, t = W.rand(2, 6), k = W.rand(0, 2);
+        if (k === 0) return { q: `時速 ${v} 公里，開 ${t} 小時，距離？`, ans: v * t, unit: "公里", hint: "速率 × 時間", pic: P(`時速 ${v}`, "距離 = ?") };
+        if (k === 1) return { q: `${t} 小時開 ${v * t} 公里，時速？`, ans: v, unit: "公里", hint: "距離 ÷ 時間", pic: P(`${v * t} 公里`, "速率 = ?") };
+        return { q: `時速 ${v} 公里，開 ${v * t} 公里要幾小時？`, ans: t, unit: "小時", hint: "距離 ÷ 速率", pic: P(`${v * t} 公里`, "時間 = ?") }; },
+      () => { const v = W.rand(3, 10) * 10, m = W.pick([30, 15, 45, 90]); return { q: `時速 ${v} 公里，開 ${m} 分鐘，走幾公里？`, ans: v * m / 60, unit: "公里", hint: `${m} 分 = ${m / 60} 小時`, pic: P(`${m} 分 = ? 小時`, "先換時間單位") }; },
+    ] },
+    { label: "單位換算", gens: [
+      () => { const s = W.rand(1, 6) * 5; return { q: `時速 ${s * 3.6} 公里 = 秒速幾公尺？`, ans: s, unit: "公尺", hint: "×1000 ÷60 ÷60", pic: P(`時速 ${s * 3.6} 公里`, "秒速 = ?") }; },
+      () => { const m = W.rand(1, 20) * 100; return { q: `分速 ${m} 公尺 = 時速幾公里？`, ans: m * 60 / 1000, unit: "公里", hint: "× 60，再 ÷ 1000", pic: P(`分速 ${m} 公尺`, "時速 = ?") }; },
+      () => { const h = W.pick([1.5, 2.5, 0.5, 0.25, 1.25]); return { q: `${h} 小時 = 幾分？`, ans: h * 60, unit: "分", hint: "× 60", pic: P(`${h} 小時`, "= ? 分") }; },
+    ] },
+  ] });
+</script>
+</body>
+</html>

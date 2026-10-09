@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>速率 = 距離 ÷ 時間</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6b-u3" data-page="6b-u3/03">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-formula">公式怎麼來</span>
+  <h1>速率 = 距離 ÷ 時間</h1>
+  <p class="lead">把走的距離，平分到每 1 單位時間。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>平分距離</h2>
+    <div class="stage"><svg id="g" viewBox="0 0 400 200"></svg></div>
+    <div class="controls">
+      <label>距離 <input type="range" id="d" min="60" max="300" step="30" value="180"> <b id="dv"></b> 公里</label>
+      <label>時間 <input type="range" id="t" min="1" max="6" value="3"> <b id="tv"></b> 小時</label>
+    </div>
+    <div class="work" id="w"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>公式怎麼來</h2>
+    <div class="steps">
+      <div class="step"><p>① 一輛車 3 小時開 180 公里，速度都一樣。</p></div>
+      <div class="step"><p>② 速率是「每 1 小時開多遠」→ 把 180 公里<b>平分成 3 段</b>，每段就是 1 小時開的。</p></div>
+      <div class="step"><p>③ 平分 → 用除法：180 ÷ 3 = <b>60</b> → 時速 60 公里。</p></div>
+      <div class="step"><p>④ 所以 <b>速率 = 距離 ÷ 時間</b>。時間用小時 → 時速；用分 → 分速；用秒 → 秒速。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula">
+    <div class="label">公式</div>
+    <div class="big">速率 = 距離 ÷ 時間</div>
+    <div class="sub">時間的單位決定是時速、分速還是秒速</div>
+  </div>
+
+  <div class="warn"><span class="ic">⚠️</span><p>時間是「1 小時 30 分」時，要先變成 <b>1.5 小時</b>（或 90 分），不能直接用 1.3！</p></div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中理化寫成 <code>v = d ÷ t</code>（v 是速率、d 是距離、t 是時間），也常寫成分數 <code>v = d/t</code>。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  const dIn = document.getElementById("d"), tIn = document.getElementById("t");
+  function draw() {
+    const d = +dIn.value, t = +tIn.value, W0 = 340, x0 = 30;
+    let s = `<text x="${x0}" y="30" font-size="14">🚗 ${t} 小時開了 ${d} 公里</text>`;
+    s += `<rect x="${x0}" y="45" width="${W0}" height="30" fill="var(--blue)" fill-opacity=".25" stroke="var(--ink)" stroke-width="2"/><text x="${x0 + W0 / 2 - 30}" y="66" font-size="14">${d} 公里</text>`;
+    for (let i = 0; i < t; i++) {
+      s += `<rect x="${x0 + i * W0 / t}" y="110" width="${W0 / t}" height="30" fill="${i % 2 ? "var(--yellow)" : "var(--orange)"}" fill-opacity=".75" stroke="var(--ink)" stroke-width="1.5"/>`;
+      s += `<text x="${x0 + i * W0 / t + 4}" y="130" font-size="12">${W.num(d / t)}</text><text x="${x0 + i * W0 / t + 4}" y="158" font-size="11" style="fill:var(--muted)">第${i + 1}時</text>`;
+    }
+    s += `<text x="${x0}" y="100" font-size="13" style="fill:var(--muted)">平分成 ${t} 段（每段 1 小時）↓</text>`;
+    s += `<text x="${x0}" y="188" font-size="15" style="fill:var(--red)">每 1 小時：${d} ÷ ${t} = ${W.num(d / t)} 公里 → 時速 ${W.num(d / t)} 公里</text>`;
+    document.getElementById("g").innerHTML = s;
+    document.getElementById("dv").textContent = d; document.getElementById("tv").textContent = t;
+    document.getElementById("w").innerHTML = `速率 = 距離 ÷ 時間 = ${d} ÷ ${t} = <b>${W.num(d / t)}</b>`;
+  }
+  dIn.addEventListener("input", draw); tIn.addEventListener("input", draw); draw();
+
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { const v = W.rand(4, 18) * 5, t = W.rand(2, 6); return { q: `汽車 <b>${t}</b> 小時開 <b>${v * t}</b> 公里，時速是多少公里？`, ans: v, unit: "公里", hint: `${v * t} ÷ ${t}`, pic: `<text x="10" y="70" font-size="40">🚗</text><text x="70" y="62" font-size="14">${v * t} 公里 ÷ ${t} 小時</text>` }; },
+    () => { const v = W.rand(50, 90), t = W.rand(5, 20); return { q: `小美走路 <b>${t}</b> 分鐘走了 <b>${v * t}</b> 公尺，分速是多少公尺？`, ans: v, unit: "公尺", hint: `${v * t} ÷ ${t}`, pic: `<text x="10" y="70" font-size="40">🚶</text><text x="70" y="62" font-size="14">${v * t} 公尺 ÷ ${t} 分</text>` }; },
+    () => { const v = W.rand(4, 9), t = W.rand(5, 20); return { q: `小強 <b>${t}</b> 秒跑了 <b>${v * t}</b> 公尺，秒速是多少公尺？`, ans: v, unit: "公尺", hint: `${v * t} ÷ ${t}`, pic: `<text x="10" y="70" font-size="40">🏃</text><text x="70" y="62" font-size="14">${v * t} 公尺 ÷ ${t} 秒</text>` }; },
+    () => { const v = W.rand(4, 12) * 10, d = v * 1.5; return { q: `火車 <b>1 小時 30 分</b>開了 <b>${d}</b> 公里，時速是多少公里？`, ans: v, unit: "公里", hint: `1 小時 30 分 = 1.5 小時，${d} ÷ 1.5`, pic: `<text x="10" y="70" font-size="40">🚆</text><text x="70" y="62" font-size="14">1 時 30 分 = 1.5 時</text>` }; },
+  ] });
+</script>
+</body>
+</html>

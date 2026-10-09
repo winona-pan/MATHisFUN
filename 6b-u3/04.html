@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>距離、時間怎麼求</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6b-u3" data-page="6b-u3/04">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-formula">公式怎麼來</span>
+  <h1>距離、時間怎麼求？</h1>
+  <p class="lead">速率、距離、時間三個是一家人：知道兩個，就能求第三個。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>一段一段疊起來</h2>
+    <div class="stage"><svg id="g" viewBox="0 0 400 170"></svg></div>
+    <div class="controls">
+      <label>時速 <input type="range" id="v" min="20" max="100" step="10" value="60"> <b id="vv"></b> 公里</label>
+      <label>時間 <input type="range" id="t" min="1" max="5" value="3"> <b id="tv"></b> 小時</label>
+    </div>
+    <div class="work" id="w"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>公式怎麼來</h2>
+    <div class="steps">
+      <div class="step"><p>① 時速 60 公里 = 每 1 小時 60 公里。開 3 小時 → 3 段 60 公里疊起來 → <b>距離 = 60 × 3 = 180</b>。</p></div>
+      <div class="step"><p>② 所以 <b>距離 = 速率 × 時間</b>。</p></div>
+      <div class="step"><p>③ 反過來：180 公里、每小時 60 公里，要幾小時？180 裡面有幾個 60 → <b>時間 = 距離 ÷ 速率</b> = 3 小時。</p></div>
+      <div class="step"><p>④ 三個公式其實是同一個！用下面的三角形來記。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <section class="box">
+    <h2><span class="n">3</span>公式三角形</h2>
+    <div id="tri"></div>
+  </section>
+
+  <div class="formula">
+    <div class="label">三個公式</div>
+    <div class="big">距離 = 速率 × 時間</div>
+    <div class="big" style="font-size:1.3rem">速率 = 距離 ÷ 時間　時間 = 距離 ÷ 速率</div>
+  </div>
+
+  <div class="warn"><span class="ic">⚠️</span><p><b>單位要配好！</b>時速（公里／小時）配「小時」和「公里」；分速（公尺／分）配「分」和「公尺」。時速 60 公里開 30 分 → 30 分要先變 0.5 小時。</p></div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中寫成 <code>d = v × t</code>，和「圓周長 = 直徑 × 3.14」「實際 = 圖上 × 分母」都是同一種三角形關係。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">4</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  const vIn = document.getElementById("v"), tIn = document.getElementById("t");
+  function draw() {
+    const v = +vIn.value, t = +tIn.value, sc = 340 / 500, x0 = 30;
+    let s = "";
+    for (let i = 0; i < t; i++) s += `<rect x="${x0 + i * v * sc}" y="50" width="${v * sc}" height="34" fill="${i % 2 ? "var(--yellow)" : "var(--blue)"}" fill-opacity=".7" stroke="var(--ink)" stroke-width="1.5"/><text x="${x0 + i * v * sc + 4}" y="72" font-size="12">${v}</text><text x="${x0 + i * v * sc + 4}" y="104" font-size="11" style="fill:var(--muted)">第${i + 1}時</text>`;
+    s += `<text x="${x0 + t * v * sc - 10}" y="40" font-size="20">🚗</text>`;
+    s += `<text x="${x0}" y="140" font-size="16" style="fill:var(--red)">距離 = ${v} × ${t} = ${v * t} 公里</text>`;
+    document.getElementById("g").innerHTML = s;
+    document.getElementById("vv").textContent = v; document.getElementById("tv").textContent = t;
+    document.getElementById("w").innerHTML = `反過來：${v * t} ÷ ${v} = <b>${t}</b> 小時（時間）；${v * t} ÷ ${t} = <b>${v}</b>（時速）`;
+  }
+  vIn.addEventListener("input", draw); tIn.addEventListener("input", draw); draw();
+
+  W.tri(document.getElementById("tri"), { top: "距離", l: "速率", r: "時間", colors: { l: "var(--red)", r: "var(--blue)" }, start: "top" });
+
+  const P = (a, b) => `<text x="10" y="60" font-size="16">${a}</text><text x="10" y="100" font-size="16" style="fill:var(--red)">${b}</text>`;
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { const v = W.rand(4, 18) * 5, t = W.rand(2, 6); return { q: `時速 <b>${v}</b> 公里，開 <b>${t}</b> 小時，走了幾公里？`, ans: v * t, unit: "公里", hint: "距離 = 速率 × 時間", pic: P(`時速 ${v}，${t} 小時`, "距離 = ?") }; },
+    () => { const v = W.rand(4, 18) * 5, t = W.rand(2, 6); return { q: `時速 <b>${v}</b> 公里，要開 <b>${v * t}</b> 公里，需要幾小時？`, ans: t, unit: "小時", hint: "時間 = 距離 ÷ 速率", pic: P(`${v * t} 公里，時速 ${v}`, "時間 = ?") }; },
+    () => { const v = W.rand(50, 90), t = W.rand(5, 25); return { q: `分速 <b>${v}</b> 公尺，走 <b>${t}</b> 分鐘，走了幾公尺？`, ans: v * t, unit: "公尺", hint: "距離 = 速率 × 時間", pic: P(`分速 ${v}，${t} 分`, "距離 = ?") }; },
+    () => { const v = W.rand(50, 90), t = W.rand(5, 25); return { q: `分速 <b>${v}</b> 公尺，走 <b>${v * t}</b> 公尺，要幾分鐘？`, ans: t, unit: "分", hint: "時間 = 距離 ÷ 速率", pic: P(`${v * t} 公尺，分速 ${v}`, "時間 = ?") }; },
+    () => { const v = W.rand(3, 10) * 10, m = W.pick([30, 15, 45]); return { q: `時速 <b>${v}</b> 公里，開 <b>${m} 分鐘</b>，走了幾公里？`, ans: v * m / 60, unit: "公里", hint: `${m} 分 = ${m / 60} 小時，再 ${v} × ${m / 60}`, pic: P(`時速 ${v}，${m} 分`, `${m} 分 = ${m / 60} 時`) }; },
+  ] });
+</script>
+</body>
+</html>
