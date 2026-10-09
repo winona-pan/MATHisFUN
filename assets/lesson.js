@@ -34,13 +34,26 @@
         { path: "6a-u8/07", t: "名詞公式總整理" },
       ],
     },
+    "6a-u9": {
+      name: "六上 第 9 單元・怎樣解題",
+      pages: [
+        { path: "review/order-of-operations", t: "四則運算的順序", pre: true },
+        { path: "6a-u9/01", t: "畫線段圖：和差問題" },
+        { path: "6a-u9/02", t: "列表找答案：雞兔同籠" },
+        { path: "6a-u9/03", t: "假設法" },
+        { path: "6a-u9/04", t: "倒推法" },
+      ],
+    },
   };
 
   const body = document.body;
-  const seqId = body.dataset.seq;
+  // 從目錄點進來時會帶 ?u=單元（先備知識頁可能屬於好幾個單元）
+  const urlSeq = new URLSearchParams(location.search).get("u");
   const page = body.dataset.page;
   const root = "../";
+  const seqId = SEQUENCES[urlSeq] ? urlSeq : body.dataset.seq;
   const seq = SEQUENCES[seqId];
+  const q = SEQUENCES[urlSeq] ? `?u=${seqId}` : "";
 
   if (seq) {
     const idx = seq.pages.findIndex(p => p.path === page);
@@ -50,14 +63,14 @@
         <a class="back" href="${root}index.html#${seqId}">← 目錄</a>
         <span class="crumb">${seq.name}</span>
         <span class="seq">${seq.pages.map((p, i) =>
-          `<a href="${root}${p.path}.html" title="${p.t}" class="${p.pre ? "pre" : ""} ${i === idx ? "on" : ""}"></a>`).join("")}</span>`;
+          `<a href="${root}${p.path}.html${q}" title="${p.t}" class="${p.pre ? "pre" : ""} ${i === idx ? "on" : ""}"></a>`).join("")}</span>`;
     }
     const pager = document.getElementById("pager");
     if (pager) {
       const prev = seq.pages[idx - 1], next = seq.pages[idx + 1];
       pager.innerHTML = `
-        ${prev ? `<a href="${root}${prev.path}.html"><small>← 上一課</small><b>${prev.t}</b></a>` : `<a href="${root}index.html#${seqId}"><small>← 回到</small><b>目錄</b></a>`}
-        ${next ? `<a class="next" href="${root}${next.path}.html"><small>下一課 →</small><b>${next.t}</b></a>` : `<a class="next" href="${root}index.html#${seqId}"><small>這個單元完成了！</small><b>回到目錄 →</b></a>`}`;
+        ${prev ? `<a href="${root}${prev.path}.html${q}"><small>← 上一課</small><b>${prev.t}</b></a>` : `<a href="${root}index.html#${seqId}"><small>← 回到</small><b>目錄</b></a>`}
+        ${next ? `<a class="next" href="${root}${next.path}.html${q}"><small>下一課 →</small><b>${next.t}</b></a>` : `<a class="next" href="${root}index.html#${seqId}"><small>這個單元完成了！</small><b>回到目錄 →</b></a>`}`;
     }
   }
 

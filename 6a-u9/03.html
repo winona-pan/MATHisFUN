@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>假設法</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u9" data-page="6a-u9/03">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-learn">學會方法</span>
+  <h1>假設法</h1>
+  <p class="lead">先假設全部都是同一種，看看差了多少，再一次算出答案。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>先假設，再補腳</h2>
+    <p style="margin:0 0 8px">籠子裡有 <b>8</b> 個頭、<b>22</b> 隻腳。兔子有幾隻？</p>
+    <div class="stage"><svg id="g" viewBox="0 0 400 170"></svg></div>
+    <div class="controls"><button class="btn primary" id="step">下一步 →</button><button class="btn" id="again">重來</button></div>
+    <div class="work" id="work"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>為什麼這樣算？</h2>
+    <div class="steps">
+      <div class="step"><p>① <b>假設 8 隻全部是雞</b>：8 × 2 = 16 隻腳。</p></div>
+      <div class="step"><p>② 可是真的有 22 隻腳，<b>少算了 22 − 16 = 6 隻腳</b>。</p></div>
+      <div class="step"><p>③ 少算是因為有些其實是兔子。<b>每隻兔子被當成雞，就少算 4 − 2 = 2 隻腳</b>。</p></div>
+      <div class="step"><p>④ 少了 6 隻腳，每隻兔子少 2 → 兔子有 6 ÷ 2 = <b style="color:var(--red)">3 隻</b>，雞有 8 − 3 = 5 隻。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula">
+    <div class="label">公式</div>
+    <div class="big" style="font-size:1.4rem">兔 = (總腳數 − 頭數 × 2) ÷ (4 − 2)</div>
+    <div class="sub">一般說法：(真的 − 假設的) ÷ 每換一個差多少</div>
+  </div>
+
+  <div class="warn"><span class="ic">💡</span><p>也可以假設<b>全部是兔子</b>：8 × 4 = 32，多了 10 隻腳，每隻雞多算 2 → 雞 = 10 ÷ 2 = 5 隻。答案一樣！</p></div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中解聯立方程式的「<b>代入消去法</b>」：把 <code>x = 8 − y</code> 代進 <code>2x + 4y = 22</code>，算出來的步驟和假設法一模一樣。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  const H = 8, R = 3, Lg = 22;
+  let st = 0;
+  function animal(x, y, legs, extra) {
+    const col = legs === 4 ? "#c9c3d6" : "var(--yellow)";
+    let s = `<ellipse cx="${x}" cy="${y}" rx="15" ry="13" fill="${col}" stroke="var(--ink)" stroke-width="1.5"/>`;
+    const L = legs === 4 ? [-10, -4, 4, 10] : [-4, 4];
+    L.forEach((dx, i) => {
+      const isNew = legs === 4 && extra && (i === 0 || i === 3);
+      s += `<line x1="${x + dx}" y1="${y + 11}" x2="${x + dx}" y2="${y + 28}" stroke="${isNew ? "var(--red)" : "var(--ink)"}" stroke-width="${isNew ? 3.5 : 2}"/>`;
+    });
+    return s;
+  }
+  function draw() {
+    let s = "";
+    for (let i = 0; i < H; i++) {
+      const rabbit = st >= 3 && i >= H - R;
+      s += animal(30 + i * 46, 50, rabbit ? 4 : 2, rabbit);
+    }
+    const msgs = [
+      "全部當成雞：8 × 2 = 16 隻腳",
+      "真的有 22 隻腳 → 少了 22 − 16 = 6 隻",
+      "每把一隻雞變成兔，多 2 隻腳（紅色）",
+      "6 ÷ 2 = 3 → 補 3 次，剛好 22 隻腳！",
+    ];
+    s += `<text x="10" y="120" font-size="16">${msgs[Math.min(st, 3)]}</text>`;
+    if (st >= 1) s += `<rect x="10" y="134" width="${16 * 15}" height="16" fill="var(--yellow)" stroke="var(--ink)"/><rect x="${10 + 16 * 15}" y="134" width="${6 * 15}" height="16" fill="var(--red)" fill-opacity="${st >= 3 ? 0.9 : 0.25}" stroke="var(--ink)" stroke-dasharray="${st >= 3 ? "" : "4 3"}"/><text x="${14 + 22 * 15}" y="147" font-size="12">22</text>`;
+    document.getElementById("g").innerHTML = s;
+    document.getElementById("work").innerHTML = [
+      "① 假設全部是雞：8 × 2 = 16",
+      "② 少了：22 − 16 = 6",
+      "③ 每換一隻多：4 − 2 = 2",
+      "④ 兔子：6 ÷ 2 = <b>3 隻</b>，雞：8 − 3 = <b>5 隻</b>　驗算：5×2 + 3×4 = 22 ✓",
+    ].slice(0, st + 1).join("<br>");
+    document.getElementById("step").disabled = st >= 3;
+  }
+  document.getElementById("step").addEventListener("click", () => { st++; draw(); });
+  document.getElementById("again").addEventListener("click", () => { st = 0; draw(); });
+  draw();
+
+  const PAIRS = [
+    { a: "雞", b: "兔", na: 2, nb: 4, head: "個頭", part: "隻腳", ua: "隻", ub: "隻" },
+    { a: "腳踏車", b: "三輪車", na: 2, nb: 3, head: "台車", part: "個輪子", ua: "台", ub: "台" },
+    { a: "5 元硬幣", b: "10 元硬幣", na: 5, nb: 10, head: "枚硬幣", part: "元", ua: "枚", ub: "枚" },
+    { a: "鉛筆（每枝 8 元）", b: "原子筆（每枝 15 元）", na: 8, nb: 15, head: "枝筆", part: "元", ua: "枝", ub: "枝" },
+    { a: "答對（得 5 分）", b: "答對（得 5 分）", na: 0, nb: 0 },
+  ].slice(0, 4);
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { const P = W.pick(PAIRS), n = W.rand(6, 20), b = W.rand(1, n - 1), tot = P.na * (n - b) + P.nb * b, askB = Math.random() < 0.6;
+      return { q: `${P.a}和${P.b}共 <b>${n}</b> ${P.head}，一共 <b>${tot}</b> ${P.part}。<b>${askB ? P.b : P.a}</b>有幾${askB ? P.ub : P.ua}？`, ans: askB ? b : n - b, unit: askB ? P.ub : P.ua,
+        hint: askB ? `假設全部是${P.a}：${n} × ${P.na} = ${n * P.na}，差 ${tot - n * P.na}，÷ ${P.nb - P.na}` : `假設全部是${P.b}：${n} × ${P.nb} = ${n * P.nb}，多了 ${n * P.nb - tot}，÷ ${P.nb - P.na}`,
+        pic: `<text x="10" y="40" font-size="14">假設全部是同一種</text><text x="10" y="74" font-size="14">差多少 ÷ 每個差多少</text><text x="10" y="112" font-size="14" style="fill:var(--red)">每換一個差 ${P.nb - P.na}</text>` }; },
+  ] });
+</script>
+</body>
+</html>

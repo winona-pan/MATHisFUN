@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>倒推法</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+<style>
+  .machine { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; font-weight: 900; font-size: 1.2rem; }
+  .machine .box2 { min-width: 64px; text-align: center; padding: 8px 10px; border-radius: 12px; border: 3px solid var(--line); background: var(--card); }
+  .machine .box2.q { border-color: var(--red); color: var(--red); }
+  .machine .box2.end { border-color: var(--ink); background: var(--yellow); color: #2b2a33; }
+  .machine .box2.got { border-color: var(--green); color: var(--green); }
+  .machine .op { color: var(--blue); }
+  .machine .op.back { color: var(--red); }
+</style>
+</head>
+<body data-seq="6a-u9" data-page="6a-u9/04">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-learn">學會方法</span>
+  <h1>倒推法</h1>
+  <p class="lead">知道最後的答案，往回推出一開始的數。跟「公式翻過來」是同一招！</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>數字機器</h2>
+    <p style="margin:0 0 10px">一個數經過機器，最後變成黃色那個數。一開始是多少？</p>
+    <div class="machine" id="fwd"></div>
+    <div class="machine" id="bwd" style="margin-top:14px"></div>
+    <div class="controls"><button class="btn primary" id="back">往回推一步 ←</button><button class="btn" id="newm">換一台機器</button></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>倒推的規則</h2>
+    <div class="steps">
+      <div class="step"><p>① 從<b>最後</b>的答案開始，<b>倒著</b>一步一步走回去。</p></div>
+      <div class="step"><p>② 每一步都變成<b>相反</b>的算法：<b>+ 變 −、− 變 +、× 變 ÷、÷ 變 ×</b>。</p></div>
+      <div class="step"><p>③ 生活例子：小明有一些錢，花了一半，又花了 20 元，剩 30 元。<br>倒推：30 <b>+ 20</b> = 50（花掉的 20 加回來），50 <b>× 2</b> = 100（一半的相反是兩倍）。</p></div>
+      <div class="step"><p>④ 最後<b>驗算</b>：100 ÷ 2 = 50，50 − 20 = 30 ✓</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula">
+    <div class="label">口訣</div>
+    <div class="big">從後面往前，算法全部相反</div>
+    <div class="sub">+ ⇄ −　　× ⇄ ÷</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中的<b>解方程式</b>就是倒推：<code>2x + 5 = 21</code> → <code>2x = 21 − 5 = 16</code> → <code>x = 16 ÷ 2 = 8</code>。先拆掉外面的 +5，再拆掉 ×2。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  const OPS = {
+    "+": { inv: "−", f: (a, b) => a + b, g: (a, b) => a - b },
+    "−": { inv: "+", f: (a, b) => a - b, g: (a, b) => a + b },
+    "×": { inv: "÷", f: (a, b) => a * b, g: (a, b) => a / b },
+    "÷": { inv: "×", f: (a, b) => a / b, g: (a, b) => a * b },
+  };
+  // 做一台機器：從起始數往後算，確保每一步都是整數
+  function makeMachine(n) {
+    for (;;) {
+      const start = W.rand(2, 20), steps = [];
+      let v = start, ok = true;
+      for (let i = 0; i < n; i++) {
+        const op = W.pick(["+", "−", "×", "÷"]);
+        let b = op === "×" ? W.rand(2, 4) : op === "÷" ? W.pick([2, 3, 4]) : W.rand(2, 15);
+        if (op === "÷" && v % b) { ok = false; break; }
+        if (op === "−" && v - b < 1) { ok = false; break; }
+        v = OPS[op].f(v, b); steps.push({ op, b, after: v });
+      }
+      if (ok && v < 200) return { start, steps, end: v };
+    }
+  }
+  let M = { start: 7, steps: [{ op: "+", b: 5, after: 12 }, { op: "×", b: 2, after: 24 }, { op: "−", b: 4, after: 20 }], end: 20 }, k = 0;
+  function draw() {
+    const n = M.steps.length;
+    let f = `<span class="box2 q">?</span>`;
+    M.steps.forEach((s, i) => f += `<span class="op">→ ${s.op} ${s.b} →</span><span class="box2 ${i === n - 1 ? "end" : ""}">${i === n - 1 ? s.after : "□"}</span>`);
+    document.getElementById("fwd").innerHTML = f;
+    // 倒推：從最後開始
+    let b = `<span style="font-size:.95rem;color:var(--muted)">倒推：</span><span class="box2 end">${M.end}</span>`;
+    for (let i = n - 1; i >= n - k; i--) {
+      const s = M.steps[i], before = i ? M.steps[i - 1].after : M.start;
+      b += `<span class="op back">→ ${OPS[s.op].inv} ${s.b} →</span><span class="box2 ${i === 0 ? "got" : ""}">${before}</span>`;
+    }
+    if (k === n) b += `<span style="color:var(--green);font-size:1rem">🎉 一開始是 ${M.start}</span>`;
+    document.getElementById("bwd").innerHTML = b;
+    document.getElementById("back").disabled = k >= n;
+  }
+  document.getElementById("back").addEventListener("click", () => { k++; draw(); });
+  document.getElementById("newm").addEventListener("click", () => { M = makeMachine(W.rand(2, 3)); k = 0; draw(); });
+  draw();
+
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { const m = makeMachine(W.rand(2, 3));
+      return { q: `一個數 ${m.steps.map(s => `${s.op} ${s.b}`).join("，再 ")}，最後得到 <b>${m.end}</b>。這個數是多少？`, ans: m.start, unit: "",
+        hint: `從 ${m.end} 倒著算：${m.steps.slice().reverse().map(s => `${OPS[s.op].inv} ${s.b}`).join("，")}`,
+        pic: `<text x="10" y="40" font-size="14">倒著走回去</text><text x="10" y="80" font-size="14">+ 變 −　× 變 ÷</text><text x="10" y="120" font-size="14" style="fill:var(--red)">最後再驗算一次</text>` }; },
+    () => { const left = W.rand(2, 10) * 10, spent = W.rand(1, 6) * 10, start = (left + spent) * 2;
+      return { q: `小美有一些錢，先花掉<b>一半</b>，又花了 <b>${spent}</b> 元，最後剩 <b>${left}</b> 元。她原來有多少錢？`, ans: start, unit: "元",
+        hint: `倒推：${left} + ${spent} = ${left + spent}，再 × 2`, pic: `<text x="10" y="40" font-size="14">原來 ? → ÷2 → −${spent} → ${left}</text><text x="10" y="80" font-size="14" style="fill:var(--red)">倒推：${left} → +${spent} → ×2</text>` }; },
+    () => { const left = W.rand(3, 15), give = W.rand(2, 8), start = (left + give) * 3;
+      return { q: `一盒糖果分給 3 個人，每人拿到一樣多。小強把自己的糖果又送給朋友 <b>${give}</b> 顆，剩 <b>${left}</b> 顆。整盒原來有幾顆？`, ans: start, unit: "顆",
+        hint: `小強原來有 ${left} + ${give} = ${left + give} 顆，整盒是 3 個人的 → × 3`, pic: `<text x="10" y="40" font-size="14">整盒 ? → ÷3 → −${give} → ${left}</text><text x="10" y="80" font-size="14" style="fill:var(--red)">倒推：${left} → +${give} → ×3</text>` }; },
+  ] });
+</script>
+</body>
+</html>

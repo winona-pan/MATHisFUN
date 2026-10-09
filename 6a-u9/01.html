@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>畫線段圖：和差問題</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u9" data-page="6a-u9/01">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-learn">學會方法</span>
+  <h1>畫線段圖：和差問題</h1>
+  <p class="lead">知道兩個數的「和」與「差」，求這兩個數。畫成線段就看得懂！</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>哥哥和弟弟的彈珠</h2>
+    <p style="margin:0 0 8px">哥哥和弟弟共有 <b id="tS"></b> 顆彈珠，哥哥比弟弟多 <b id="tD"></b> 顆。兩人各有幾顆？</p>
+    <div class="stage"><svg id="g" viewBox="0 0 400 220"></svg></div>
+    <div class="controls">
+      <label>和 <input type="range" id="S" min="10" max="40" step="2" value="30"></label>
+      <label>差 <input type="range" id="D" min="2" max="10" step="2" value="6"></label>
+    </div>
+    <div class="controls"><button class="btn primary" id="step">下一步 →</button><button class="btn" id="again">重來</button></div>
+    <div class="work" id="work"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>解題步驟</h2>
+    <div class="steps">
+      <div class="step"><p>① 畫兩條線段：哥哥長、弟弟短，<b>多出來的那一段就是「差」</b>。兩條合起來是「和」。</p></div>
+      <div class="step"><p>② 把哥哥多出來的那段<b>剪掉</b>：和 − 差，剩下的剛好是<b>兩個弟弟</b>。</p></div>
+      <div class="step"><p>③ 兩個弟弟 ÷ 2 = <b>弟弟</b>（小的數）。</p></div>
+      <div class="step"><p>④ 弟弟 + 差 = <b>哥哥</b>（大的數）。也可以：(和 + 差) ÷ 2 = 哥哥。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula">
+    <div class="label">公式</div>
+    <div class="big">小的數 = (和 − 差) ÷ 2</div>
+    <div class="big">大的數 = (和 + 差) ÷ 2</div>
+    <div class="sub">驗算：大 + 小 = 和、大 − 小 = 差</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中會用<b>聯立方程式</b>：設哥哥 x、弟弟 y，<code>x + y = 30</code>、<code>x − y = 6</code>，兩式相加 → <code>2x = 36</code>。其實就是今天的線段圖！</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  const S = document.getElementById("S"), D = document.getElementById("D");
+  let st = 0;
+  function draw() {
+    const s = +S.value, d = +D.value, small = (s - d) / 2, big = small + d;
+    document.getElementById("tS").textContent = s; document.getElementById("tD").textContent = d;
+    const u = 300 / Math.max(big, 1), x0 = 70;
+    let o = `<text x="10" y="56" font-size="15">哥哥</text><text x="10" y="126" font-size="15">弟弟</text>`;
+    // 哥哥：小的部分 + 差
+    o += `<rect x="${x0}" y="36" width="${small * u}" height="28" fill="var(--blue)" stroke="var(--ink)" stroke-width="1.5"/>`;
+    o += `<rect x="${x0 + small * u}" y="36" width="${d * u}" height="28" fill="var(--red)" fill-opacity="${st >= 1 ? 0.15 : 0.85}" stroke="var(--ink)" stroke-width="1.5" ${st >= 1 ? 'stroke-dasharray="5 4"' : ""}/>`;
+    o += `<text x="${x0 + small * u + d * u / 2 - 8}" y="30" font-size="13" style="fill:var(--red)">差 ${d}</text>`;
+    if (st >= 1) o += `<text x="${x0 + small * u + d * u / 2 - 8}" y="56" font-size="18" style="fill:var(--red)">✂</text>`;
+    o += `<rect x="${x0}" y="106" width="${small * u}" height="28" fill="var(--yellow)" stroke="var(--ink)" stroke-width="1.5"/>`;
+    // 和的大括號
+    o += `<path d="M${x0 - 14} 36 q-8 0 -8 10 l0 30 q0 8 -6 8 q6 0 6 8 l0 30 q0 10 8 10" fill="none" stroke="var(--green)" stroke-width="2.5"/>`;
+    o += `<text x="10" y="90" font-size="13" style="fill:var(--green)">和 ${s}</text>`;
+    if (st >= 2) {
+      o += `<text x="${x0 + small * u / 2 - 14}" y="56" font-size="15" style="fill:#fff">${small}</text><text x="${x0 + small * u / 2 - 14}" y="126" font-size="15" style="fill:#2b2a33">${small}</text>`;
+      o += `<text x="${x0}" y="170" font-size="14">剪掉差以後：兩條一樣長 → 每條 (${s} − ${d}) ÷ 2 = ${small}</text>`;
+    }
+    if (st >= 3) o += `<text x="${x0}" y="198" font-size="14" style="fill:var(--blue)">哥哥 = ${small} + ${d} = ${big}</text>`;
+    document.getElementById("g").innerHTML = o;
+    document.getElementById("work").innerHTML = [
+      "① 先看圖：哥哥比弟弟多出紅色那段（差）。",
+      `② 剪掉差：${s} − ${d} = ${s - d}，剩下兩個弟弟。`,
+      `③ ${s - d} ÷ 2 = <b>${small}</b>（弟弟）`,
+      `④ ${small} + ${d} = <b>${big}</b>（哥哥）　驗算：${big} + ${small} = ${s} ✓`,
+    ].slice(0, st + 1).join("<br>");
+    document.getElementById("step").disabled = st >= 3;
+  }
+  S.addEventListener("input", () => { st = 0; draw(); }); D.addEventListener("input", () => { st = 0; draw(); });
+  document.getElementById("step").addEventListener("click", () => { st++; draw(); });
+  document.getElementById("again").addEventListener("click", () => { st = 0; draw(); });
+  draw();
+
+  const CTX = [
+    ["哥哥", "弟弟", "張貼紙", "張"], ["姊姊", "妹妹", "元", "元"], ["小明", "小華", "顆糖果", "顆"], ["甲班", "乙班", "人", "人"],
+  ];
+  function barPic(a, b) {
+    return `<text x="6" y="44" font-size="12">${a}</text><rect x="44" y="30" width="140" height="20" fill="var(--blue)" stroke="var(--ink)"/>
+      <text x="6" y="94" font-size="12">${b}</text><rect x="44" y="80" width="96" height="20" fill="var(--yellow)" stroke="var(--ink)"/>
+      <line x1="140" y1="90" x2="184" y2="90" stroke="var(--red)" stroke-width="3" stroke-dasharray="5 4"/><text x="150" y="118" font-size="12" style="fill:var(--red)">差</text>`;
+  }
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { const [a, b, w, u] = W.pick(CTX), small = W.rand(5, 40), d = W.rand(2, 20), s = 2 * small + d;
+      return { q: `${a}和${b}共有 <b>${s}</b> ${w}，${a}比${b}多 <b>${d}</b>。<b>${b}</b>有多少？`, ans: small, unit: u, hint: `(和 − 差) ÷ 2 = (${s} − ${d}) ÷ 2`, pic: barPic(a, b) }; },
+    () => { const [a, b, w, u] = W.pick(CTX), small = W.rand(5, 40), d = W.rand(2, 20), s = 2 * small + d;
+      return { q: `${a}和${b}共有 <b>${s}</b> ${w}，${a}比${b}多 <b>${d}</b>。<b>${a}</b>有多少？`, ans: small + d, unit: u, hint: `(和 + 差) ÷ 2 = (${s} + ${d}) ÷ 2`, pic: barPic(a, b) }; },
+  ] });
+</script>
+</body>
+</html>

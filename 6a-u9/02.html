@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>列表找答案：雞兔同籠</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+<style>
+  table.t { border-collapse: collapse; margin-top: 12px; font-weight: 700; text-align: center; width: 100%; max-width: 520px; }
+  table.t th, table.t td { border: 2px solid var(--line); padding: 4px 8px; }
+  table.t th { background: var(--bg); color: var(--muted); font-size: .9rem; }
+  table.t tr.cur td { background: var(--yellow); color: #2b2a33; }
+  table.t tr.hit td { background: #e2f5ea; color: #1f5e3d; }
+</style>
+</head>
+<body data-seq="6a-u9" data-page="6a-u9/02">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-learn">學會方法</span>
+  <h1>列表找答案：雞兔同籠</h1>
+  <p class="lead">籠子裡有雞也有兔，數頭、數腳，猜猜各有幾隻？用表格一個一個試！</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>換換看</h2>
+    <p style="margin:0 0 8px">籠子裡有 <b id="tH"></b> 個頭、<b id="tL"></b> 隻腳。雞、兔各幾隻？</p>
+    <div class="stage"><svg id="g" viewBox="0 0 400 150"></svg></div>
+    <div class="controls">
+      <label>兔子 <input type="range" id="r" min="0" max="10" value="0"> <b id="rv"></b> 隻</label>
+      <button class="btn" id="newp">換一題</button>
+    </div>
+    <div class="readout">
+      <div class="r"><small>雞（2 隻腳）</small><span id="c1"></span></div>
+      <div class="r"><small>兔（4 隻腳）</small><span id="c2"></span></div>
+      <div class="r" id="legBox"><small>腳一共</small><span id="c3"></span></div>
+    </div>
+    <table class="t"><thead><tr><th>兔</th><th>雞</th><th>腳</th><th></th></tr></thead><tbody id="tb"></tbody></table>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>發現規律</h2>
+    <div class="steps">
+      <div class="step"><p>① 先假設<b>全部都是雞</b>（兔子 0 隻），算出腳有幾隻。</p></div>
+      <div class="step"><p>② 把<b>一隻雞換成一隻兔</b>：頭數不變，腳<b>多 2 隻</b>（4 − 2 = 2）。</p></div>
+      <div class="step"><p>③ 表格往下，腳每次都多 2。一直換，換到腳數<b>剛好對了</b>就是答案！</p></div>
+      <div class="step"><p>④ 這個「每換一次多 2」的規律，下一課可以讓我們<b>不用一個一個試</b>，直接算出來。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula word">
+    <div class="label">方法</div>
+    <div class="big" style="font-size:1.35rem">列表：從「全部是雞」開始，一隻一隻換成兔</div>
+    <div class="sub">每換 1 隻，腳多 2 隻</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中會設雞 x 隻、兔 y 隻：<code>x + y = 10</code>、<code>2x + 4y = 28</code>，叫做二元一次<b>聯立方程式</b>。列表法是它的好朋友，可以用來驗算！</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  let H = 10, R = 4;           // 頭數、正確的兔子數
+  const rIn = document.getElementById("r");
+  function animal(x, y, rabbit) {
+    const col = rabbit ? "#c9c3d6" : "var(--yellow)";
+    let s = `<ellipse cx="${x}" cy="${y}" rx="14" ry="12" fill="${col}" stroke="var(--ink)" stroke-width="1.5"/>`;
+    s += rabbit ? `<ellipse cx="${x - 5}" cy="${y - 18}" rx="3" ry="8" fill="${col}" stroke="var(--ink)" stroke-width="1.2"/><ellipse cx="${x + 5}" cy="${y - 18}" rx="3" ry="8" fill="${col}" stroke="var(--ink)" stroke-width="1.2"/>`
+                : `<path d="M${x - 3} ${y - 12} l3 -6 l3 6" fill="var(--red)"/><path d="M${x + 13} ${y - 2} l7 2 l-7 3" fill="var(--orange)"/>`;
+    const legs = rabbit ? [-9, -3, 3, 9] : [-4, 4];
+    legs.forEach(dx => s += `<line x1="${x + dx}" y1="${y + 10}" x2="${x + dx}" y2="${y + 24}" stroke="var(--ink)" stroke-width="2"/>`);
+    return s;
+  }
+  function draw() {
+    const r = +rIn.value, c = H - r, legs = 2 * c + 4 * r, L = 2 * (H - R) + 4 * R;
+    document.getElementById("tH").textContent = H; document.getElementById("tL").textContent = L;
+    document.getElementById("rv").textContent = r;
+    let s = "";
+    for (let i = 0; i < H; i++) s += animal(30 + (i % 10) * 38, 50 + Math.floor(i / 10) * 60, i >= c);
+    s += `<text x="10" y="140" font-size="14">${legs === L ? "🎉 腳數剛好對了！" : legs < L ? `腳還少 ${L - legs} 隻 → 再把雞換成兔` : `腳太多 ${legs - L} 隻 → 兔子太多了`}</text>`;
+    document.getElementById("g").innerHTML = s;
+    document.getElementById("c1").textContent = `${c} 隻 → ${2 * c} 隻腳`;
+    document.getElementById("c2").textContent = `${r} 隻 → ${4 * r} 隻腳`;
+    document.getElementById("c3").textContent = `${legs}（目標 ${L}）`;
+    document.getElementById("legBox").style.color = legs === L ? "var(--green)" : "";
+    document.getElementById("tb").innerHTML = Array.from({ length: H + 1 }, (_, i) => {
+      const lg = 2 * (H - i) + 4 * i;
+      return `<tr class="${lg === L && i <= r ? "hit" : i === r ? "cur" : ""}" style="${i > r ? "opacity:.35" : ""}"><td>${i}</td><td>${H - i}</td><td>${lg}</td><td>${i ? "+2" : ""}</td></tr>`;
+    }).join("");
+  }
+  rIn.addEventListener("input", draw);
+  document.getElementById("newp").addEventListener("click", () => {
+    H = W.rand(6, 10); R = W.rand(1, H - 1); rIn.max = H; rIn.value = 0; draw();
+  });
+  rIn.max = H; draw();
+
+  const PAIRS = [
+    { a: "雞", b: "兔", na: 2, nb: 4, head: "個頭", part: "隻腳", ua: "隻", ub: "隻" },
+    { a: "腳踏車", b: "三輪車", na: 2, nb: 3, head: "台車", part: "個輪子", ua: "台", ub: "台" },
+    { a: "5 元硬幣", b: "10 元硬幣", na: 5, nb: 10, head: "枚硬幣", part: "元", ua: "枚", ub: "枚" },
+    { a: "2 人座", b: "4 人座", na: 2, nb: 4, head: "張桌子", part: "個座位", ua: "張", ub: "張" },
+  ];
+  function pairPic(P, n) {
+    return `<text x="10" y="40" font-size="14">${P.a}：每個 ${P.na}</text><text x="10" y="70" font-size="14">${P.b}：每個 ${P.nb}</text>
+      <text x="10" y="110" font-size="14" style="fill:var(--red)">換 1 個，多 ${P.nb - P.na}</text>`;
+  }
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { const P = W.pick(PAIRS), n = W.rand(6, 20), b = W.rand(1, n - 1), tot = P.na * (n - b) + P.nb * b, askB = Math.random() < 0.5;
+      return { q: `共有 <b>${n}</b> ${P.head}，一共 <b>${tot}</b> ${P.part}。<b>${askB ? P.b : P.a}</b>有幾${askB ? P.ub : P.ua}？`, ans: askB ? b : n - b, unit: askB ? P.ub : P.ua,
+        hint: `全部當${P.a}：${n} × ${P.na} = ${n * P.na}，少了 ${tot - n * P.na}，每換一個多 ${P.nb - P.na}`, pic: pairPic(P, n) }; },
+  ] });
+</script>
+</body>
+</html>

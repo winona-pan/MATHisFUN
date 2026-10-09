@@ -313,11 +313,11 @@ const SEMESTERS = {
         { k: "learn", t: "名詞公式總整理", h: "名詞卡 + 隨機出題一直練", pic: "glossary8", ready: true },
       ]},
       { no: 9, title: "怎樣解題", status: "later", pic: "solve", items: [
-        { k: "pre", t: "四則運算的順序", h: "括號先算，先乘除後加減", g: "4年級", id: "order-of-operations" },
-        { k: "learn", t: "畫線段圖", h: "和差問題一看就懂" },
-        { k: "learn", t: "列表找答案", h: "雞兔同籠" },
-        { k: "learn", t: "假設法", h: "先假設全部都是同一種" },
-        { k: "learn", t: "倒推法", h: "從答案往回算" },
+        { k: "pre", t: "四則運算的順序", h: "括號先算，先乘除後加減", g: "4年級", id: "order-of-operations", ready: true },
+        { k: "learn", t: "畫線段圖", h: "和差問題一看就懂", ready: true },
+        { k: "learn", t: "列表找答案", h: "雞兔同籠", ready: true },
+        { k: "learn", t: "假設法", h: "先假設全部都是同一種", ready: true },
+        { k: "learn", t: "倒推法", h: "從答案往回算", ready: true },
       ]},
     ],
   },
@@ -711,7 +711,7 @@ const svg = name => `<svg viewBox="0 0 160 120" aria-hidden="true">${PICS[name] 
 
 function tile(item, unit, num) {
   const href = item.href || (item.k === "pre"
-    ? `review/${item.id}.html`
+    ? `review/${item.id}.html?u=${currentSem}-u${unit.no}`
     : `${currentSem}-u${unit.no}/${String(num).padStart(2, "0")}.html`);
   const ready = !!item.ready;
   return `

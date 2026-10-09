@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>四則運算的順序</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u9" data-page="review/order-of-operations">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-pre">先備知識・4 年級學過</span>
+  <h1>四則運算的順序</h1>
+  <p class="lead">一個算式裡有加、減、乘、除和括號，要先算哪一個？</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>為什麼要先算乘法？</h2>
+    <div class="stage"><svg viewBox="0 0 400 170">
+      <circle cx="40" cy="60" r="14" fill="var(--red)" stroke="var(--ink)" stroke-width="1.5"/><circle cx="72" cy="60" r="14" fill="var(--red)" stroke="var(--ink)" stroke-width="1.5"/><circle cx="104" cy="60" r="14" fill="var(--red)" stroke="var(--ink)" stroke-width="1.5"/>
+      <text x="44" y="104" font-size="14">3 顆散裝</text>
+      <text x="134" y="68" font-size="26">+</text>
+      <g id="bags"></g>
+      <text x="200" y="140" font-size="14">4 袋，每袋 2 顆 = 4 × 2</text>
+      <text x="20" y="160" font-size="15" style="fill:var(--red)">3 + 4 × 2 = 3 + 8 = 11 顆（袋子要先打開算！）</text>
+    </svg></div>
+  </section>
+
+  <section class="box">
+    <h2><span class="n">2</span>一步一步算</h2>
+    <div class="controls" style="margin-top:0" id="exs"></div>
+    <div class="calc" id="calc" style="margin-top:12px"></div>
+    <div class="controls"><button class="btn primary" id="step">下一步 →</button><button class="btn" id="again">重來</button></div>
+  </section>
+
+  <div class="formula pre">
+    <div class="label">順序口訣</div>
+    <div class="big">① 括號 → ② 乘、除 → ③ 加、減</div>
+    <div class="sub">同一層的，從左邊算到右邊</div>
+  </div>
+
+  <div class="warn"><span class="ic">⚠️</span><p>只有加減（或只有乘除）的時候，<b>從左往右</b>算。例如 20 − 5 + 3 = 18，不是 12！</p></div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中還會多一種「次方」：<code>2 + 3²</code> 要先算 3² = 9。順序變成：括號 → 次方 → 乘除 → 加減。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>練習一下</h2>
+    <div class="quiz">
+      <div class="q" data-answer="14" data-hint="先乘：3 × 4 = 12，再加 2">
+        <p class="qt">2 + 3 × 4 = ?</p>
+        <div class="row"><input type="text" inputmode="decimal"> <button class="btn">對答案</button></div>
+      </div>
+      <div class="q" data-answer="20" data-hint="括號先算：2 + 3 = 5，再 × 4">
+        <p class="qt">(2 + 3) × 4 = ?</p>
+        <div class="row"><input type="text" inputmode="decimal"> <button class="btn">對答案</button></div>
+      </div>
+      <div class="q" data-answer="14" data-hint="先算乘除（從左到右）：12 ÷ 3 = 4，4 × 2 = 8，最後 22 − 8">
+        <p class="qt">22 − 12 ÷ 3 × 2 = ?</p>
+        <div class="row"><input type="text" inputmode="decimal"> <button class="btn">對答案</button></div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script>
+  document.getElementById("bags").innerHTML = Array.from({ length: 4 }, (_, i) => `
+    <rect x="${170 + i * 56}" y="36" width="46" height="50" rx="10" fill="var(--yellow)" fill-opacity=".5" stroke="var(--ink)" stroke-width="1.5"/>
+    <circle cx="${183 + i * 56}" cy="62" r="9" fill="var(--red)"/><circle cx="${203 + i * 56}" cy="62" r="9" fill="var(--red)"/>`).join("");
+  // 每一題：一行一行的算式，[[ ]] 是下一步要算的地方
+  const EX = [
+    { name: "3 + 4 × 2", rows: ["3 + [[4 × 2]]", "[[3 + 8]]", "11"], why: ["先算乘法", "再算加法"] },
+    { name: "(3 + 4) × 2", rows: ["([[3 + 4]]) × 2", "[[7 × 2]]", "14"], why: ["括號先算", "再算乘法"] },
+    { name: "20 − 5 + 3", rows: ["[[20 − 5]] + 3", "[[15 + 3]]", "18"], why: ["只有加減，從左邊開始", "再往右算"] },
+    { name: "24 ÷ 4 × 2", rows: ["[[24 ÷ 4]] × 2", "[[6 × 2]]", "12"], why: ["只有乘除，從左邊開始", "再往右算"] },
+    { name: "30 − (6 + 4) × 2", rows: ["30 − ([[6 + 4]]) × 2", "30 − [[10 × 2]]", "[[30 − 20]]", "10"], why: ["括號先算", "再算乘法", "最後算減法"] },
+  ];
+  let ex = 0, k = 0;
+  const show = r => r.replace(/\[\[(.+?)\]\]/g, '<span class="hl">$1</span>');
+  function draw() {
+    const E = EX[ex];
+    document.getElementById("calc").innerHTML = E.rows.slice(0, k + 1).map((r, i) =>
+      `<span class="row">${i ? "= " : ""}${i === k ? show(r) : r.replace(/\[\[|\]\]/g, "")}${i === k && E.why[i] ? ` <small style="font-size:.9rem;color:var(--muted)">← ${E.why[i]}</small>` : ""}</span>`).join("");
+    document.getElementById("step").disabled = k >= E.rows.length - 1;
+    document.querySelectorAll("[data-ex]").forEach(b => b.setAttribute("aria-pressed", +b.dataset.ex === ex));
+  }
+  document.getElementById("exs").innerHTML = EX.map((e, i) => `<button class="btn" data-ex="${i}">${e.name}</button>`).join("");
+  document.querySelectorAll("[data-ex]").forEach(b => b.addEventListener("click", () => { ex = +b.dataset.ex; k = 0; draw(); }));
+  document.getElementById("step").addEventListener("click", () => { k++; draw(); });
+  document.getElementById("again").addEventListener("click", () => { k = 0; draw(); });
+  draw();
+</script>
+</body>
+</html>

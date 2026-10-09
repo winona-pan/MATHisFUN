@@ -198,3 +198,53 @@ svg text { font-family: "Noto Sans TC", system-ui, sans-serif; font-weight: 700;
 @media (prefers-reduced-motion: reduce) {
   .step.show { animation: none; }
 }
+
+/* ---------- 共用小工具（widgets.js）---------- */
+.gen { display: grid; grid-template-columns: minmax(0, 220px) minmax(0, 1fr); gap: 14px; align-items: center; }
+.gen .qpic { background: var(--soft); border-radius: 12px; }
+.gen .qpic svg { width: 100%; height: auto; display: block; }
+.gen .qt { font-size: 1.15rem; font-weight: 700; margin: 0 0 8px; }
+.gen input[type="text"] { width: 130px; padding: 6px 10px; border-radius: 10px; border: 2px solid var(--line); background: var(--bg); font-weight: 900; font-size: 1.15rem; }
+.gen .choices { display: flex; flex-wrap: wrap; gap: 8px; }
+.gen .choice { border: 2px solid var(--line); background: var(--card); border-radius: 12px; padding: 6px 12px; cursor: pointer; font-weight: 700; min-width: 64px; }
+.gen .choice.right { border-color: var(--green); background: #e2f5ea; color: #1f5e3d; }
+.gen .choice.wrong { border-color: var(--red); background: #fde7e1; color: #8a2d14; }
+.gen .fb { font-weight: 700; margin-top: 8px; min-height: 1.5em; }
+.gen .fb.ok { color: var(--green); } .gen .fb.no { color: var(--red); }
+.tri-wrap { display: grid; grid-template-columns: minmax(0, 280px) minmax(0, 1fr); gap: 16px; align-items: center; }
+.tri-wrap svg { width: 100%; height: auto; display: block; }
+.tri-cell { cursor: pointer; }
+.tri-out { font-size: 1.3rem; font-weight: 900; line-height: 1.6; }
+.tri-out small { display: block; font-size: .95rem; color: var(--muted); font-weight: 700; }
+.chain { display: flex; align-items: stretch; overflow-x: auto; padding-bottom: 4px; }
+.chain .node { flex: 1 1 0; min-width: 92px; border: 3px solid var(--line); border-radius: 16px; padding: 8px; text-align: center; background: var(--card); }
+.chain .node b { display: block; font-size: 1.02rem; }
+.chain .node input { width: 100%; max-width: 130px; text-align: center; padding: 6px; border-radius: 10px; border: 2px solid var(--line); background: var(--bg); font-weight: 900; font-size: 1.1rem; }
+.chain .node.src { border-color: var(--ink); } .chain .node.got { border-color: var(--green); }
+.chain .link { flex: 0 0 70px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 6px; font-weight: 900; font-size: .9rem; }
+.chain .link span { padding: 1px 6px; border-radius: 8px; color: var(--muted); white-space: nowrap; }
+.chain .link span.on { background: var(--yellow); color: #2b2a33; }
+.work { margin-top: 10px; font-weight: 700; font-size: 1.05rem; min-height: 1.6em; line-height: 1.7; }
+/* 名詞卡 */
+.cards { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); margin-top: 12px; }
+.card { border: 2px solid var(--line); border-radius: 16px; padding: 10px; background: var(--card); display: flex; flex-direction: column; gap: 4px; }
+.card .pic { background: var(--soft); border-radius: 12px; }
+.card .pic svg { width: 100%; height: auto; display: block; }
+.card h3 { margin: 4px 2px 0; font-size: 1.3rem; font-weight: 900; }
+.card .def { margin: 0 2px; }
+.card .how { margin: 2px 2px 0; padding: 6px 10px; border-radius: 10px; background: var(--k-formula-soft); font-weight: 900; line-height: 1.6; }
+.card .how small { display: block; color: var(--k-formula); font-size: .8rem; }
+.card a { font-size: .85rem; font-weight: 700; color: var(--blue); text-decoration: none; margin: 2px; }
+.quizmode .card .ans { filter: blur(7px); cursor: pointer; user-select: none; transition: filter .2s; }
+.quizmode .card .ans.peek { filter: none; }
+/* 一步一步算（算式動畫） */
+.calc { font-size: 1.5rem; font-weight: 900; line-height: 2; font-variant-numeric: tabular-nums; }
+.calc .hl { background: var(--yellow); color: #2b2a33; border-radius: 8px; padding: 0 6px; }
+.calc .row { display: block; }
+@media (max-width: 560px) {
+  .gen, .tri-wrap { grid-template-columns: minmax(0, 1fr); }
+  .gen .qpic { max-width: 260px; }
+  .chain .link { flex-basis: 52px; font-size: .78rem; }
+  .chain .node { min-width: 78px; padding: 6px 3px; }
+  .calc { font-size: 1.25rem; }
+}
