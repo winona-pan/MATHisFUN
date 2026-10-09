@@ -288,7 +288,7 @@ const SEMESTERS = {
       ]},
       { no: 7, title: "圓周長與扇形周長", status: "now", pic: "parts", items: [
         { k: "pre", t: "圓心、半徑、直徑", h: "直徑 = 半徑 × 2", g: "3年級", id: "circle-parts", pic: "parts", ready: true },
-        { k: "pre", t: "角度與量角器", h: "繞一整圈是 360°", g: "4年級", id: "angles", pic: "angle360", ready: true },
+        { k: "pre", t: "角度與量角器", h: "一整圈（周角）是 360°", g: "4年級", id: "angles", pic: "angle360", ready: true },
         { k: "pre", t: "小數乘法", h: "× 3.14 會用到", g: "5年級", id: "decimal-multiply", pic: "decMul", ready: true },
         { k: "word", t: "圓周長", h: "沿著圓走一圈的長度", pic: "perimeterWalk", ready: true },
         { k: "formula", t: "圓周率 π 怎麼來", h: "滾一圈 ≈ 直徑的 3.14 倍", pic: "pi", ready: true },
@@ -297,6 +297,8 @@ const SEMESTERS = {
         { k: "formula", t: "弧長怎麼算", h: "圓周長 × 圓心角 / 360", pic: "arc", ready: true },
         { k: "formula", t: "扇形周長", h: "兩條半徑 + 弧長", pic: "sectorPerimeter", ready: true },
         { k: "learn", t: "組合圖形的周長", h: "一段一段加起來", pic: "compound", ready: true },
+        { k: "formula", t: "公式翻過來用", h: "知道圓周長，求直徑、半徑", pic: "flip", ready: true },
+        { k: "learn", t: "名詞公式總整理", h: "名詞卡 + 隨機出題一直練", pic: "glossary", ready: true },
       ]},
       { no: 8, title: "放大、縮小與比例尺", status: "next", pic: "enlarge", items: [
         { k: "pre", t: "長度單位換算", h: "1 公里 = 1000 公尺，1 公尺 = 100 公分", g: "2–4年級", id: "length-units", pic: "units" },
@@ -530,6 +532,17 @@ const PICS = {
     <path d="M40 56 L40 104 L120 104 L120 56" fill="none" stroke="var(--blue)" stroke-width="5" stroke-linejoin="round"/>
     <path d="M40 56 A40 40 0 0 1 120 56" fill="none" stroke="var(--red)" stroke-width="5"/>
     <text x="50" y="86" font-size="12">直線 + 曲線</text>`,
+  flip: `
+    <text x="18" y="40" font-size="14"><tspan style="fill:var(--blue)">直徑</tspan> × 3.14 = 圓周長</text>
+    <path d="M80 50 q22 14 0 28" fill="none" stroke="var(--red)" stroke-width="3"/><path d="M74 74 l6 5 l2 -8" fill="none" stroke="var(--red)" stroke-width="3"/>
+    <text x="96" y="70" font-size="12" style="fill:var(--red)">翻過來</text>
+    <text x="18" y="102" font-size="14">圓周長 ÷ 3.14 = <tspan style="fill:var(--blue)">直徑</tspan></text>`,
+  glossary: `
+    <rect x="14" y="20" width="60" height="80" rx="8" fill="var(--card)" class="stroke"/>
+    <rect x="50" y="14" width="60" height="80" rx="8" fill="var(--card)" class="stroke"/>
+    <rect x="86" y="20" width="60" height="80" rx="8" fill="var(--yellow)" class="stroke"/>
+    <circle cx="80" cy="42" r="14" fill="none" stroke="var(--red)" stroke-width="3"/><text x="62" y="80" font-size="11">圓周長</text>
+    <text x="102" y="64" font-size="22">?</text>`,
   shaded: `
     <rect x="44" y="16" width="88" height="88" fill="var(--shade)" class="stroke"/>
     <path d="M44 104 L44 16 A88 88 0 0 1 132 104 Z" fill="var(--card)" stroke="var(--ink)" stroke-width="2.5"/>

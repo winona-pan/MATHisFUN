@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>公式翻過來用</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+<style>
+  .fam { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; align-items: center; }
+  .eqs p { margin: 4px 0; font-size: 1.2rem; font-weight: 900; }
+  .c-total { color: var(--orange); } .c-a { color: var(--blue); } .c-b { color: var(--red); }
+  .tri-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+  .tri-wrap { display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 16px; align-items: center; margin-top: 12px; }
+  .tri-wrap svg { width: 100%; height: auto; display: block; }
+  .tri-cell { cursor: pointer; }
+  .tri-cell:hover rect, .tri-cell:hover path { filter: brightness(.95); }
+  .tri-out { font-size: 1.35rem; font-weight: 900; line-height: 1.6; }
+  .tri-out small { display: block; font-size: .95rem; color: var(--muted); font-weight: 700; }
+  /* 換算機 */
+  .chain { display: flex; align-items: stretch; gap: 0; flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; }
+  .node { flex: 1 1 0; min-width: 92px; border: 3px solid var(--line); border-radius: 16px; padding: 8px; text-align: center; background: var(--card); }
+  .node b { display: block; font-size: 1.05rem; }
+  .node input { width: 100%; max-width: 110px; text-align: center; padding: 6px; border-radius: 10px; border: 2px solid var(--line); background: var(--bg); font-weight: 900; font-size: 1.15rem; }
+  .node.src { border-color: var(--ink); }
+  .node.got { border-color: var(--green); }
+  .link { flex: 0 0 64px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 6px; font-weight: 900; font-size: .95rem; }
+  .link span { padding: 1px 6px; border-radius: 8px; color: var(--muted); white-space: nowrap; }
+  .link span.on { background: var(--yellow); color: #2b2a33; }
+  .work { margin-top: 10px; font-weight: 700; font-size: 1.1rem; min-height: 1.6em; }
+  /* 練習產生器 */
+  .gen { display: grid; grid-template-columns: minmax(0, 220px) minmax(0, 1fr); gap: 14px; align-items: center; }
+  .gen .qpic { background: var(--soft); border-radius: 12px; }
+  .gen .qpic svg { width: 100%; height: auto; display: block; }
+  .gen .qt { font-size: 1.15rem; font-weight: 700; margin: 0 0 8px; }
+  .gen input { width: 120px; padding: 6px 10px; border-radius: 10px; border: 2px solid var(--line); background: var(--bg); font-weight: 900; font-size: 1.15rem; }
+  .gen .fb { font-weight: 700; margin-top: 8px; min-height: 1.5em; }
+  .gen .fb.ok { color: var(--green); } .gen .fb.no { color: var(--red); }
+  @media (max-width: 560px) {
+    .fam, .tri-wrap, .gen { grid-template-columns: minmax(0, 1fr); }
+    .link { flex-basis: 48px; font-size: .8rem; }
+    .node { min-width: 78px; padding: 6px 4px; }
+  }
+</style>
+</head>
+<body data-seq="6a-u7" data-page="6a-u7/08">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-formula">公式怎麼來</span>
+  <h1>公式翻過來用</h1>
+  <p class="lead">知道圓周長，怎麼求直徑？怎麼求半徑？</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>乘法和除法是一家人</h2>
+    <div class="fam">
+      <div class="stage"><svg viewBox="0 0 200 150" id="blocks"></svg></div>
+      <div class="eqs">
+        <p><span class="c-a">3 排</span> × <span class="c-b">每排 4 個</span> = <span class="c-total">12 個</span></p>
+        <p><span class="c-total">12</span> ÷ <span class="c-a">3 排</span> = <span class="c-b">每排 4 個</span></p>
+        <p><span class="c-total">12</span> ÷ <span class="c-b">每排 4 個</span> = <span class="c-a">3 排</span></p>
+        <p class="hint" style="font-weight:400">同一張圖，可以寫出 3 個算式！</p>
+      </div>
+    </div>
+    <div class="fam" style="margin-top:16px">
+      <div class="stage"><svg viewBox="0 0 200 150">
+        <circle cx="46" cy="50" r="28" fill="var(--card)" class="stroke"/>
+        <line x1="18" y1="50" x2="74" y2="50" stroke="var(--blue)" stroke-width="4"/>
+        <text x="30" y="44" font-size="11" style="fill:var(--blue)">直徑</text>
+        <text x="100" y="40" font-size="12">拉直的圓周長 ↓</text>
+        <g stroke="var(--ink)" stroke-width="1">
+          <rect x="10" y="100" width="56" height="18" fill="var(--blue)"/><rect x="66" y="100" width="56" height="18" fill="var(--blue)" fill-opacity=".7"/><rect x="122" y="100" width="56" height="18" fill="var(--blue)"/><rect x="178" y="100" width="8" height="18" fill="var(--red)"/>
+        </g>
+        <text x="30" y="136" font-size="11">直徑</text><text x="86" y="136" font-size="11">直徑</text><text x="142" y="136" font-size="11">直徑</text>
+        <text x="40" y="92" font-size="11" style="fill:var(--muted)">圓周長 = 3.14 個直徑</text>
+      </svg></div>
+      <div class="eqs">
+        <p><span class="c-a">直徑</span> × <span class="c-b">3.14</span> = <span class="c-total">圓周長</span></p>
+        <p><span class="c-total">圓周長</span> ÷ <span class="c-b">3.14</span> = <span class="c-a">直徑</span></p>
+        <p><span class="c-total">圓周長</span> ÷ <span class="c-a">直徑</span> = <span class="c-b">3.14</span></p>
+        <p class="hint" style="font-weight:400">圓周長裡面有 3.14 個直徑，所以把圓周長<b>平分成 3.14 份</b>，一份就是直徑。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="box">
+    <h2><span class="n">2</span>公式三角形</h2>
+    <div class="tri-tabs">
+      <button class="btn" data-tri="c" aria-pressed="true">圓周長・直徑・3.14</button>
+      <button class="btn" data-tri="d" aria-pressed="false">直徑・半徑・2</button>
+    </div>
+    <div class="tri-wrap">
+      <svg viewBox="0 0 300 240" id="tri"></svg>
+      <div class="tri-out" id="triOut"></div>
+    </div>
+    <p class="hint">👉 <b>點一下你要求的那一格</b>，用手把它遮住，剩下的就是算法：<br>
+      上下 → 用<b>除的</b>（上面 ÷ 下面）；左右並排 → 用<b>乘的</b>。</p>
+  </section>
+
+  <section class="box">
+    <h2><span class="n">3</span>換算機：半徑 ⇄ 直徑 ⇄ 圓周長</h2>
+    <div class="chain">
+      <div class="node" id="nR"><b style="color:var(--red)">半徑</b><input type="text" inputmode="decimal" data-k="r" placeholder="?"></div>
+      <div class="link"><span id="a1f">×2 →</span><span id="a1b">← ÷2</span></div>
+      <div class="node" id="nD"><b style="color:var(--blue)">直徑</b><input type="text" inputmode="decimal" data-k="d" placeholder="?"></div>
+      <div class="link"><span id="a2f">×3.14 →</span><span id="a2b">← ÷3.14</span></div>
+      <div class="node" id="nC"><b>圓周長</b><input type="text" inputmode="decimal" data-k="c" placeholder="?"></div>
+    </div>
+    <div class="work" id="work"></div>
+    <p class="hint">👉 在任何一格打數字，其他格會自動算出來。往右走用<b>乘的</b>，往左走用<b>除的</b>（反過來走就變相反的算法）。</p>
+    <div class="controls">
+      <button class="btn" data-demo="c:62.8">圓周長 62.8</button>
+      <button class="btn" data-demo="r:5">半徑 5</button>
+      <button class="btn" data-demo="c:18.84">圓周長 18.84</button>
+    </div>
+  </section>
+
+  <div class="warn"><span class="ic">⚠️</span><p><b>最常錯：</b>圓周長 ÷ 3.14 算出來的是<b style="color:var(--blue)">直徑</b>，不是半徑！要半徑還要再 <b>÷ 2</b>。</p></div>
+
+  <div class="formula">
+    <div class="label">反過來的公式</div>
+    <div class="big"><span style="color:var(--blue)">直徑</span> = 圓周長 ÷ 3.14</div>
+    <div class="big"><span style="color:var(--red)">半徑</span> = 圓周長 ÷ 3.14 ÷ 2</div>
+    <div class="sub">口訣：往回走，乘變除</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中會學「<b>解方程式</b>」，就是今天這件事！例如：</p>
+    <p><code>2 × 3.14 × r = 62.8</code> → <code>r = 62.8 ÷ 6.28 = 10</code></p>
+    <p>國中說這叫「<b>移項</b>」：乘的搬到另一邊變成除。現在把「乘除翻過來」練熟，國中會輕鬆很多。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">4</span>一直練：隨機出題</h2>
+    <div class="gen">
+      <div class="qpic"><svg viewBox="0 0 220 160" id="gpic"></svg></div>
+      <div>
+        <p class="qt" id="gq"></p>
+        <div class="row" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <input type="text" inputmode="decimal" id="ga"> <span id="gu"></span>
+          <button class="btn primary" id="gcheck">對答案</button>
+          <button class="btn" id="gnext">下一題 →</button>
+        </div>
+        <div class="fb" id="gfb"></div>
+      </div>
+    </div>
+    <div class="score" id="gscore"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script>
+  /* ---------- 1. 方塊 3 × 4 ---------- */
+  (() => {
+    let s = "";
+    for (let r = 0; r < 3; r++) for (let c = 0; c < 4; c++)
+      s += `<rect x="${62 + c * 32}" y="${20 + r * 36}" width="28" height="30" rx="4" fill="var(--yellow)" stroke="var(--ink)" stroke-width="1.5"/>`;
+    for (let r = 0; r < 3; r++) s += `<text x="8" y="${41 + r * 36}" font-size="13" style="fill:var(--blue)">第${r + 1}排</text>`;
+    s += `<path d="M62 136 l124 0" stroke="var(--red)" stroke-width="3"/><text x="100" y="150" font-size="12" style="fill:var(--red)">每排 4 個</text>`;
+    document.getElementById("blocks").innerHTML = s;
+  })();
+
+  /* ---------- 2. 公式三角形 ---------- */
+  const TRI = {
+    c: { top: "圓周長", l: "直徑", r: "3.14", lc: "var(--blue)", rc: "var(--red)" },
+    d: { top: "直徑", l: "半徑", r: "2", lc: "var(--red)", rc: "var(--green)" },
+  };
+  let tri = "c", hide = "top";
+  function drawTri() {
+    const T = TRI[tri];
+    const cell = (key, d, label, col, tx, ty) => {
+      const hidden = hide === key;
+      return `<g class="tri-cell" data-cell="${key}">
+        <path d="${d}" fill="${hidden ? "var(--muted)" : "var(--card)"}" fill-opacity="${hidden ? .35 : 1}" stroke="var(--ink)" stroke-width="3"/>
+        <text x="${tx}" y="${ty}" text-anchor="middle" font-size="${hidden ? 40 : 24}" style="fill:${hidden ? "var(--ink)" : col}">${hidden ? "?" : label}</text></g>`;
+    };
+    let s = cell("top", "M150 10 L230 130 L70 130 Z", T.top, "var(--ink)", 150, 105);
+    s += cell("l", "M70 130 L150 130 L150 230 L10 230 Z", T.l, T.lc, 95, 192);
+    s += cell("r", "M150 130 L230 130 L290 230 L150 230 Z", T.r, T.rc, 205, 192);
+    s += `<circle cx="150" cy="182" r="14" fill="var(--yellow)" stroke="var(--ink)" stroke-width="2"/><text x="150" y="189" text-anchor="middle" font-size="18" style="fill:#2b2a33">×</text>`;
+    s += `<line x1="50" y1="130" x2="250" y2="130" stroke="var(--ink)" stroke-width="5"/>`;
+    const svg = document.getElementById("tri");
+    svg.innerHTML = s;
+    svg.querySelectorAll("[data-cell]").forEach(g => g.addEventListener("click", () => { hide = g.dataset.cell; drawTri(); }));
+    const out = {
+      top: `要求 <b>${T.top}</b>：<br>${T.l} × ${T.r} = ${T.top}<small>左右並排 → 乘起來</small>`,
+      l: `要求 <b style="color:${T.lc}">${T.l}</b>：<br>${T.top} ÷ ${T.r} = ${T.l}<small>上下 → 上面 ÷ 下面</small>`,
+      r: `要求 <b style="color:${T.rc}">${T.r}</b>：<br>${T.top} ÷ ${T.l} = ${T.r}<small>上下 → 上面 ÷ 下面</small>`,
+    }[hide];
+    document.getElementById("triOut").innerHTML = out;
+  }
+  document.querySelectorAll("[data-tri]").forEach(b => b.addEventListener("click", () => {
+    tri = b.dataset.tri; hide = "l";
+    document.querySelectorAll("[data-tri]").forEach(x => x.setAttribute("aria-pressed", x === b));
+    drawTri();
+  }));
+  drawTri();
+
+  /* ---------- 3. 換算機 ---------- */
+  const inputs = [...document.querySelectorAll(".chain input")];
+  const f = n => L.fmt(n, 2);
+  function convert(k, v) {
+    let r, d, c;
+    if (k === "r") { r = v; d = v * 2; c = d * 3.14; }
+    if (k === "d") { d = v; r = v / 2; c = v * 3.14; }
+    if (k === "c") { c = v; d = v / 3.14; r = d / 2; }
+    const val = { r, d, c };
+    inputs.forEach(i => { if (i.dataset.k !== k) i.value = f(val[i.dataset.k]); });
+    ["nR", "nD", "nC"].forEach((id, i) => {
+      const el = document.getElementById(id);
+      el.className = "node " + ("rdc"[i] === k ? "src" : "got");
+    });
+    const on = { a1f: k === "r", a2f: k === "r" || k === "d", a1b: k === "d" || k === "c", a2b: k === "c" };
+    Object.entries(on).forEach(([id, v]) => document.getElementById(id).classList.toggle("on", v));
+    const work = {
+      r: `半徑 ${f(r)} <b>×2</b> = ${f(d)}（直徑） <b>×3.14</b> = ${f(c)}（圓周長）`,
+      d: `直徑 ${f(d)} <b>÷2</b> = ${f(r)}（半徑）；直徑 ${f(d)} <b>×3.14</b> = ${f(c)}（圓周長）`,
+      c: `圓周長 ${f(c)} <b>÷3.14</b> = ${f(d)}（直徑） <b>÷2</b> = ${f(r)}（半徑）`,
+    }[k];
+    document.getElementById("work").innerHTML = work;
+  }
+  inputs.forEach(i => i.addEventListener("input", () => {
+    const v = parseFloat(i.value);
+    if (!isNaN(v) && v > 0) convert(i.dataset.k, v);
+  }));
+  document.querySelectorAll("[data-demo]").forEach(b => b.addEventListener("click", () => {
+    const [k, v] = b.dataset.demo.split(":");
+    inputs.find(i => i.dataset.k === k).value = v;
+    convert(k, +v);
+  }));
+  inputs[2].value = "62.8"; convert("c", 62.8);
+
+  /* ---------- 4. 隨機出題 ---------- */
+  const rand = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+  // 每種題型：已知什麼、求什麼
+  const TYPES = [
+    { give: "r", ask: "c", hint: "半徑 ×2 變直徑，再 ×3.14" },
+    { give: "d", ask: "c", hint: "直徑 ×3.14" },
+    { give: "c", ask: "d", hint: "往回走：圓周長 ÷3.14 = 直徑" },
+    { give: "c", ask: "r", hint: "往回走兩步：圓周長 ÷3.14 = 直徑，再 ÷2 = 半徑" },
+    { give: "d", ask: "r", hint: "直徑 ÷2" },
+    { give: "r", ask: "d", hint: "半徑 ×2" },
+  ];
+  const NAME = { r: "半徑", d: "直徑", c: "圓周長" };
+  let cur, right = 0, tried = 0, wrongOnce = false;
+  function picture(q) {
+    const col = { r: "var(--red)", d: "var(--blue)", c: "var(--ink)" };
+    const lab = k => k === q.give ? f(q.vals[k]) : k === q.ask ? "?" : "";
+    let s = `<circle cx="110" cy="80" r="60" fill="var(--card)" stroke="${q.give === "c" || q.ask === "c" ? "var(--orange)" : "var(--ink)"}" stroke-width="${q.give === "c" || q.ask === "c" ? 5 : 2.5}" ${q.ask === "c" ? 'stroke-dasharray="8 6"' : ""}/>
+      <circle cx="110" cy="80" r="4" fill="var(--ink)"/>`;
+    if (q.give === "r" || q.ask === "r") s += `<line x1="110" y1="80" x2="152" y2="38" stroke="var(--red)" stroke-width="4" ${q.ask === "r" ? 'stroke-dasharray="6 4"' : ""}/><text x="140" y="30" font-size="16" style="fill:var(--red)">${lab("r")}</text>`;
+    if (q.give === "d" || q.ask === "d") s += `<line x1="50" y1="80" x2="170" y2="80" stroke="var(--blue)" stroke-width="4" ${q.ask === "d" ? 'stroke-dasharray="6 4"' : ""}/><text x="96" y="104" font-size="16" style="fill:var(--blue)">${lab("d")}</text>`;
+    if (q.give === "c" || q.ask === "c") s += `<text x="8" y="22" font-size="14" style="fill:var(--orange)">圓周長 ${lab("c")}</text>`;
+    document.getElementById("gpic").innerHTML = s;
+  }
+  function newQ() {
+    const t = TYPES[rand(0, TYPES.length - 1)];
+    const d = rand(1, 10) * 2; // 直徑用偶數，半徑才會是整數
+    const vals = { d, r: d / 2, c: Math.round(d * 314) / 100 };
+    cur = { ...t, vals };
+    wrongOnce = false;
+    document.getElementById("gq").innerHTML = `${NAME[t.give]}是 <b>${f(vals[t.give])}</b> 公分，<b>${NAME[t.ask]}</b>是幾公分？`;
+    document.getElementById("gu").textContent = "公分";
+    document.getElementById("ga").value = "";
+    document.getElementById("gfb").textContent = "";
+    document.getElementById("gfb").className = "fb";
+    picture(cur);
+  }
+  function check() {
+    const v = parseFloat(document.getElementById("ga").value);
+    const ans = cur.vals[cur.ask], fb = document.getElementById("gfb");
+    if (!isNaN(v) && Math.abs(v - ans) < 0.005) {
+      if (!wrongOnce) { right++; tried++; }
+      fb.className = "fb ok"; fb.textContent = `答對了！👏 ${f(ans)} 公分`;
+      setTimeout(newQ, 1200);
+    } else {
+      if (!wrongOnce) tried++;
+      wrongOnce = true;
+      fb.className = "fb no"; fb.textContent = "再想想 🤔 " + cur.hint;
+    }
+    document.getElementById("gscore").textContent = `一次就答對：${right} / ${tried} 題`;
+  }
+  document.getElementById("gcheck").addEventListener("click", check);
+  document.getElementById("ga").addEventListener("keydown", e => { if (e.key === "Enter") check(); });
+  document.getElementById("gnext").addEventListener("click", newQ);
+  newQ();
+</script>
+</body>
+</html>

@@ -15,7 +15,7 @@
 
   <span class="kind k-pre">先備知識・4 年級學過</span>
   <h1>角度與量角器</h1>
-  <p class="lead">繞一整圈是 360°。等一下學扇形會一直用到！</p>
+  <p class="lead">繞一整圈是 360°，叫做周角。等一下學扇形會一直用到！</p>
 
   <section class="box">
     <h2><span class="n">1</span>轉轉看</h2>
@@ -36,7 +36,7 @@
       <button class="btn" data-a="90">直角 90°</button>
       <button class="btn" data-a="180">半圈 180°</button>
       <button class="btn" data-a="270">270°</button>
-      <button class="btn" data-a="360">一整圈 360°</button>
+      <button class="btn" data-a="360">周角 360°</button>
     </div>
     <div class="readout">
       <div class="r"><small>角度</small><span id="dv"></span>°</div>
@@ -49,11 +49,11 @@
     <div class="steps">
       <div class="step has-pic">
         <div class="pic"><svg viewBox="0 0 160 120"><circle cx="80" cy="60" r="44" fill="var(--yellow)" fill-opacity=".7" class="stroke"/><text x="58" y="66" font-size="18">360°</text></svg></div>
-        <p>繞<b>一整圈</b>是 <b style="color:var(--red)">360°</b>。</p>
+        <p>繞<b>一整圈</b>是 <b style="color:var(--red)">360°</b>。<br>一整圈的角有名字，叫做 <b style="color:var(--red)">周角</b>。</p>
       </div>
       <div class="step has-pic">
         <div class="pic"><svg viewBox="0 0 160 120"><circle cx="80" cy="60" r="44" fill="var(--card)" class="stroke"/><path d="M80 60 L80 16 A44 44 0 0 1 80 104 Z" fill="var(--yellow)" fill-opacity=".7" class="stroke"/><text x="90" y="66" font-size="16">180°</text></svg></div>
-        <p><b>半圈</b>是 360 ÷ 2 = <b style="color:var(--red)">180°</b>，是一圈的 ½。</p>
+        <p><b>半圈</b>是 360 ÷ 2 = <b style="color:var(--red)">180°</b>，是一圈的 ½。<br>半圈的角變成一條直線，叫做 <b style="color:var(--red)">平角</b>。</p>
       </div>
       <div class="step has-pic">
         <div class="pic"><svg viewBox="0 0 160 120"><circle cx="80" cy="60" r="44" fill="var(--card)" class="stroke"/><path d="M80 60 L80 16 A44 44 0 0 1 124 60 Z" fill="var(--yellow)" fill-opacity=".7" class="stroke"/><rect x="80" y="50" width="10" height="10" fill="none" stroke="var(--ink)" stroke-width="2"/><text x="96" y="46" font-size="14">90°</text></svg></div>
@@ -68,7 +68,7 @@
 
   <div class="formula pre">
     <div class="label">記起來</div>
-    <div class="big">一圈 = 360°　半圈 = 180°　直角 = 90°</div>
+    <div class="big">周角（一圈）= 360°</div><div class="big" style="font-size:1.3rem">平角（半圈）= 180°　直角 = 90°</div>
     <div class="sub">是一圈的幾分之幾 = 角度 / 360</div>
   </div>
 
@@ -90,6 +90,10 @@
           <button class="choice">½</button><button class="choice">⅓</button><button class="choice" data-right>¼</button><button class="choice">⅙</button>
         </div>
       </div>
+      <div class="q" data-answer="360" data-hint="周角就是繞一整圈">
+        <p class="qt">周角是幾度？</p>
+        <div class="row"><input type="text" inputmode="decimal"> 度 <button class="btn">對答案</button></div>
+      </div>
       <div class="q" data-answer="60" data-hint="360 ÷ 6 = ?">
         <p class="qt">把一圈平分成 6 份，每份是幾度？</p>
         <div class="row"><input type="text" inputmode="decimal"> 度 <button class="btn">對答案</button></div>
@@ -108,7 +112,7 @@
     const [x1, y1] = L.pol(200, 150, R, i * 10), [x2, y2] = L.pol(200, 150, R - (i % 9 ? 6 : 14), i * 10);
     return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="var(--ink)" stroke-width="${i % 9 ? 1.5 : 3}"/>`;
   }).join("");
-  const FR = { 30: "1/12", 45: "⅛", 60: "⅙", 90: "¼", 120: "⅓", 135: "⅜", 150: "5/12", 180: "½", 210: "7/12", 225: "⅝", 240: "⅔", 270: "¾", 300: "⅚", 315: "⅞", 330: "11/12", 360: "1（整圈）" };
+  const FR = { 30: "1/12", 45: "⅛", 60: "⅙", 90: "¼", 120: "⅓", 135: "⅜", 150: "5/12", 180: "½", 210: "7/12", 225: "⅝", 240: "⅔", 270: "¾", 300: "⅚", 315: "⅞", 330: "11/12", 360: "1（一整圈 = 周角）" };
   function draw() {
     const [x, y] = L.pol(200, 150, R, a);
     document.getElementById("arm").setAttribute("x2", x);

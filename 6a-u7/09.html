@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>名詞公式總整理</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+<style>
+  .cards { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); margin-top: 12px; }
+  .card { border: 2px solid var(--line); border-radius: 16px; padding: 10px; background: var(--card); display: flex; flex-direction: column; gap: 4px; }
+  .card .pic { background: var(--soft); border-radius: 12px; }
+  .card .pic svg { width: 100%; height: auto; display: block; }
+  .card h3 { margin: 4px 2px 0; font-size: 1.3rem; font-weight: 900; }
+  .card .def { margin: 0 2px; }
+  .card .how { margin: 2px 2px 0; padding: 6px 10px; border-radius: 10px; background: var(--k-formula-soft); font-weight: 900; line-height: 1.6; }
+  .card .how small { display: block; color: var(--k-formula); font-size: .8rem; }
+  .card a { font-size: .85rem; font-weight: 700; color: var(--blue); text-decoration: none; margin: 2px; }
+  .quizmode .card .ans { filter: blur(7px); cursor: pointer; user-select: none; transition: filter .2s; }
+  .quizmode .card .ans.peek { filter: none; }
+  .gen { display: grid; grid-template-columns: minmax(0, 220px) minmax(0, 1fr); gap: 14px; align-items: center; }
+  .gen .qpic { background: var(--soft); border-radius: 12px; }
+  .gen .qpic svg { width: 100%; height: auto; display: block; }
+  .gen .qt { font-size: 1.15rem; font-weight: 700; margin: 0 0 8px; }
+  .gen input { width: 120px; padding: 6px 10px; border-radius: 10px; border: 2px solid var(--line); background: var(--bg); font-weight: 900; font-size: 1.15rem; }
+  .gen .fb { font-weight: 700; margin-top: 8px; min-height: 1.5em; }
+  .gen .fb.ok { color: var(--green); } .gen .fb.no { color: var(--red); }
+  @media (max-width: 560px) { .gen { grid-template-columns: minmax(0, 1fr); } .gen .qpic { max-width: 260px; } }
+</style>
+</head>
+<body data-seq="6a-u7" data-page="6a-u7/09">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-learn">總整理</span>
+  <h1>名詞公式總整理</h1>
+  <p class="lead">看圖記名字、記怎麼求。最下面可以一直隨機出題練習。</p>
+
+  <section class="box" id="gloss">
+    <h2><span class="n">1</span>名詞卡</h2>
+    <div class="controls" style="margin-top:0">
+      <button class="btn" id="mode" aria-pressed="false">🙈 遮住答案考自己</button>
+      <span class="hint" style="margin:0">打開後，點模糊的地方就會出現答案。</span>
+    </div>
+    <div class="cards" id="cards"></div>
+  </section>
+
+  <div class="formula">
+    <div class="label">一張圖記全部</div>
+    <div class="big" style="font-size:1.2rem;line-height:2">
+      <span style="color:var(--red)">半徑</span> <span style="color:var(--muted)">⇄ ×2 / ÷2 ⇄</span>
+      <span style="color:var(--blue)">直徑</span> <span style="color:var(--muted)">⇄ ×3.14 / ÷3.14 ⇄</span>
+      圓周長 <span style="color:var(--muted)">→ × 圓心角/360 →</span> <span style="color:var(--red)">弧長</span>
+      <span style="color:var(--muted)">→ + 半徑 × 2 →</span> 扇形周長
+    </div>
+    <div class="sub">往右走用乘的；往回走（往左）用除的</div>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">2</span>綜合練習：隨機出題</h2>
+    <div class="controls" style="margin-top:0">
+      <label><input type="checkbox" id="tCirc" checked> 圓周長・直徑・半徑</label>
+      <label><input type="checkbox" id="tSec" checked> 弧長・扇形周長</label>
+      <label><input type="checkbox" id="tWord" checked> 名詞・角度</label>
+    </div>
+    <div class="gen" style="margin-top:12px">
+      <div class="qpic"><svg viewBox="0 0 220 160" id="gpic"></svg></div>
+      <div>
+        <p class="qt" id="gq"></p>
+        <div id="gin" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"></div>
+        <div class="fb" id="gfb"></div>
+      </div>
+    </div>
+    <div class="score" id="gscore"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script>
+  /* ---------- 名詞卡 ---------- */
+  const P = (inner) => `<svg viewBox="0 0 160 100">${inner}</svg>`;
+  const circ = (extra = "", stroke = "var(--ink)", w = 2.5) => `<circle cx="80" cy="50" r="38" fill="var(--card)" stroke="${stroke}" stroke-width="${w}"/>${extra}<circle cx="80" cy="50" r="3.5" fill="var(--ink)"/>`;
+  const CARDS = [
+    { t: "圓心", pic: circ(`<circle cx="80" cy="50" r="7" fill="var(--red)"/>`), def: "圓正中間的那一點（圓規針腳插的地方）。", link: "../review/circle-parts.html" },
+    { t: "半徑", pic: circ(`<line x1="80" y1="50" x2="118" y2="50" stroke="var(--red)" stroke-width="5"/>`), def: "從圓心連到圓上的線，每一條都一樣長。", how: "半徑 = 直徑 ÷ 2<br>半徑 = 圓周長 ÷ 3.14 ÷ 2", link: "../review/circle-parts.html" },
+    { t: "直徑", pic: circ(`<line x1="42" y1="50" x2="118" y2="50" stroke="var(--blue)" stroke-width="5"/>`), def: "穿過圓心、兩頭都碰到圓的線。", how: "直徑 = 半徑 × 2<br>直徑 = 圓周長 ÷ 3.14", link: "08.html" },
+    { t: "周長", pic: `<svg viewBox="0 0 160 100"><rect x="45" y="18" width="70" height="64" fill="var(--card)" stroke="var(--orange)" stroke-width="5"/></svg>`, def: "繞著圖形外圍走一圈的長度。", how: "正方形 = 邊長 × 4<br>長方形 = (長 + 寬) × 2", link: "01.html" },
+    { t: "圓周長", pic: circ("", "var(--orange)", 6), def: "繞圓一圈的長度（圓的周長）。", how: "圓周長 = 直徑 × 3.14<br>= 半徑 × 2 × 3.14", link: "03.html" },
+    { t: "圓周率（π）", pic: P(`<g stroke-width="8"><line x1="10" y1="50" x2="50" y2="50" stroke="var(--blue)"/><line x1="50" y1="50" x2="90" y2="50" stroke="var(--yellow)"/><line x1="90" y1="50" x2="130" y2="50" stroke="var(--blue)"/><line x1="130" y1="50" x2="136" y2="50" stroke="var(--red)"/></g><text x="40" y="84" font-size="16">3.14 個直徑</text>`), def: "圓周長是直徑的幾倍。不管圓多大都一樣。", how: "圓周率 = 圓周長 ÷ 直徑 ≈ 3.14", link: "02.html" },
+    { t: "周角", pic: circ(`<circle cx="80" cy="50" r="16" fill="none" stroke="var(--red)" stroke-width="4"/><line x1="80" y1="50" x2="118" y2="50" stroke="var(--ink)" stroke-width="3"/>`), def: "繞一整圈的角。", how: "周角 = 360°<br>平角（半圈）= 180°　直角 = 90°", link: "../review/angles.html" },
+    { t: "扇形", pic: P(`<circle cx="80" cy="54" r="40" fill="none" stroke="var(--line)" stroke-width="2" stroke-dasharray="5 4"/><path d="M80 54 L80 14 A40 40 0 0 1 120 54 Z" fill="var(--yellow)" stroke="var(--ink)" stroke-width="2.5"/>`), def: "兩條半徑和一段弧圍成的圖形。", how: "扇形是圓的 圓心角/360", link: "04.html" },
+    { t: "弧", pic: P(`<circle cx="80" cy="54" r="40" fill="none" stroke="var(--line)" stroke-width="2"/><path d="M80 14 A40 40 0 0 1 120 54" fill="none" stroke="var(--red)" stroke-width="6" stroke-linecap="round"/>`), def: "圓上彎彎的一段。", link: "04.html" },
+    { t: "圓心角", pic: P(`<line x1="80" y1="60" x2="80" y2="16" stroke="var(--blue)" stroke-width="4"/><line x1="80" y1="60" x2="122" y2="44" stroke="var(--blue)" stroke-width="4"/><path d="M80 40 A20 20 0 0 1 99 53" fill="none" stroke="var(--purple)" stroke-width="4"/><circle cx="80" cy="60" r="4" fill="var(--ink)"/>`), def: "兩條半徑夾的角，頂點在圓心。最大是周角 360°。", how: "是一圈的幾分之幾 = 圓心角/360", link: "04.html" },
+    { t: "弧長", pic: P(`<circle cx="80" cy="54" r="40" fill="none" stroke="var(--line)" stroke-width="2"/><path d="M80 14 A40 40 0 0 1 120 54" fill="none" stroke="var(--red)" stroke-width="6" stroke-linecap="round"/><text x="104" y="22" font-size="14" style="fill:var(--red)">?</text>`), def: "弧的長度。", how: "弧長 = 圓周長 × 圓心角/360<br>= 半徑 × 2 × 3.14 × 圓心角/360", link: "05.html" },
+    { t: "扇形周長", pic: P(`<path d="M50 88 L50 20" stroke="var(--blue)" stroke-width="5"/><path d="M50 88 L118 88" stroke="var(--blue)" stroke-width="5"/><path d="M50 20 A68 68 0 0 1 118 88" fill="none" stroke="var(--red)" stroke-width="5"/>`), def: "繞扇形外圍一圈：兩條半徑 + 一段弧。", how: "扇形周長 = 半徑 × 2 + 弧長", link: "06.html" },
+  ];
+  document.getElementById("cards").innerHTML = CARDS.map(c => `
+    <div class="card">
+      <div class="pic">${c.pic.startsWith("<svg") ? c.pic : P(c.pic)}</div>
+      <h3>${c.t}</h3>
+      <p class="def ans">${c.def}</p>
+      ${c.how ? `<div class="how ans"><small>怎麼求</small>${c.how}</div>` : ""}
+      <a href="${c.link}">看這一課 →</a>
+    </div>`).join("");
+  const gloss = document.getElementById("gloss");
+  document.getElementById("mode").addEventListener("click", e => {
+    const on = gloss.classList.toggle("quizmode");
+    e.currentTarget.setAttribute("aria-pressed", on);
+    gloss.querySelectorAll(".ans").forEach(a => a.classList.remove("peek"));
+  });
+  gloss.addEventListener("click", e => { const a = e.target.closest(".ans"); if (a && gloss.classList.contains("quizmode")) a.classList.toggle("peek"); });
+
+  /* ---------- 隨機出題 ---------- */
+  const rand = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+  const pick = arr => arr[rand(0, arr.length - 1)];
+  const f = n => L.fmt(n, 2);
+  const gcd = (x, y) => y ? gcd(y, x % y) : x;
+  // 圓心角和半徑的組合：讓答案最多兩位小數
+  const ANG = [{ a: 90, rs: [2, 4, 6, 8, 10] }, { a: 180, rs: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] }, { a: 60, rs: [3, 6, 9] }, { a: 120, rs: [3, 6, 9] }, { a: 45, rs: [4, 8] }, { a: 270, rs: [2, 4, 6] }, { a: 30, rs: [6, 12] }];
+
+  function circlePic({ r, d, c, ask }) {
+    let s = `<circle cx="110" cy="80" r="60" fill="var(--card)" stroke="${c !== undefined || ask === "c" ? "var(--orange)" : "var(--ink)"}" stroke-width="${c !== undefined || ask === "c" ? 5 : 2.5}" ${ask === "c" ? 'stroke-dasharray="8 6"' : ""}/><circle cx="110" cy="80" r="4" fill="var(--ink)"/>`;
+    if (r !== undefined || ask === "r") s += `<line x1="110" y1="80" x2="152" y2="38" stroke="var(--red)" stroke-width="4" ${ask === "r" ? 'stroke-dasharray="6 4"' : ""}/><text x="140" y="30" font-size="16" style="fill:var(--red)">${ask === "r" ? "?" : r}</text>`;
+    if (d !== undefined || ask === "d") s += `<line x1="50" y1="80" x2="170" y2="80" stroke="var(--blue)" stroke-width="4" ${ask === "d" ? 'stroke-dasharray="6 4"' : ""}/><text x="100" y="104" font-size="16" style="fill:var(--blue)">${ask === "d" ? "?" : d}</text>`;
+    if (c !== undefined || ask === "c") s += `<text x="6" y="22" font-size="14" style="fill:var(--orange)">圓周長 ${ask === "c" ? "?" : c}</text>`;
+    return s;
+  }
+  function sectorPic(r, a, ask) {
+    const cx = 90, cy = 100, R = 62;
+    let s = `<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="var(--line)" stroke-width="2" stroke-dasharray="5 4"/>
+      <path d="${L.sectorPath(cx, cy, R, a)}" fill="var(--yellow)" fill-opacity=".5"/>
+      <path d="${L.arcPath(cx, cy, R, a)}" fill="none" stroke="var(--red)" stroke-width="${ask === "arc" ? 6 : 4}" ${ask === "arc" ? 'stroke-dasharray="8 5"' : ""}/>`;
+    const [ex, ey] = L.pol(cx, cy, R, a);
+    s += `<line x1="${cx}" y1="${cy}" x2="${cx}" y2="${cy - R}" stroke="var(--blue)" stroke-width="${ask === "per" ? 6 : 3}"/><line x1="${cx}" y1="${cy}" x2="${ex}" y2="${ey}" stroke="var(--blue)" stroke-width="${ask === "per" ? 6 : 3}"/>
+      <circle cx="${cx}" cy="${cy}" r="4" fill="var(--ink)"/>
+      <text x="${cx - 30}" y="${cy - R / 2}" font-size="15" style="fill:var(--blue)">${r}</text>
+      <text x="${cx + 8}" y="${cy + 22}" font-size="14" style="fill:var(--purple)">${a}°</text>
+      <text x="160" y="22" font-size="14" style="fill:var(--red)">${ask === "arc" ? "弧長 ?" : "周長 ?"}</text>`;
+    return s;
+  }
+  const GEN = {
+    circ: [
+      () => { const r = rand(1, 10); return { q: `半徑 <b>${r}</b> 公分，<b>圓周長</b>是幾公分？`, ans: r * 2 * 3.14, unit: "公分", hint: "半徑 × 2 × 3.14", pic: circlePic({ r, ask: "c" }) }; },
+      () => { const d = rand(1, 20); return { q: `直徑 <b>${d}</b> 公分，<b>圓周長</b>是幾公分？`, ans: d * 3.14, unit: "公分", hint: "直徑 × 3.14", pic: circlePic({ d, ask: "c" }) }; },
+      () => { const d = rand(1, 20), c = f(d * 3.14); return { q: `圓周長 <b>${c}</b> 公分，<b>直徑</b>是幾公分？`, ans: d, unit: "公分", hint: "往回走：圓周長 ÷ 3.14 = 直徑", pic: circlePic({ c, ask: "d" }) }; },
+      () => { const r = rand(1, 10), c = f(r * 6.28); return { q: `圓周長 <b>${c}</b> 公分，<b>半徑</b>是幾公分？`, ans: r, unit: "公分", hint: "圓周長 ÷ 3.14 是直徑，還要再 ÷ 2 才是半徑", pic: circlePic({ c, ask: "r" }) }; },
+      () => { const d = rand(1, 10) * 2; return { q: `直徑 <b>${d}</b> 公分，<b>半徑</b>是幾公分？`, ans: d / 2, unit: "公分", hint: "直徑 ÷ 2", pic: circlePic({ d, ask: "r" }) }; },
+    ],
+    sec: [
+      () => { const A = pick(ANG), r = pick(A.rs); return { q: `半徑 <b>${r}</b> 公分、圓心角 <b>${A.a}°</b> 的扇形，<b>弧長</b>是幾公分？`, ans: r * 2 * 3.14 * A.a / 360, unit: "公分", hint: `圓周長 ${f(r * 6.28)} × ${A.a / gcd(A.a, 360)}/${360 / gcd(A.a, 360)}`, pic: sectorPic(r, A.a, "arc") }; },
+      () => { const A = pick(ANG), r = pick(A.rs); const arc = r * 2 * 3.14 * A.a / 360; return { q: `半徑 <b>${r}</b> 公分、圓心角 <b>${A.a}°</b> 的扇形，<b>周長</b>是幾公分？`, ans: arc + 2 * r, unit: "公分", hint: `弧長 ${f(arc)}，別忘了再加兩條半徑 ${r} + ${r}`, pic: sectorPic(r, A.a, "per") }; },
+    ],
+    word: [
+      () => ({ q: `<b>周角</b>是幾度？`, ans: 360, unit: "度", hint: "繞一整圈", pic: circlePic({}) }),
+      () => ({ q: `<b>平角</b>（半圈）是幾度？`, ans: 180, unit: "度", hint: "周角的一半", pic: sectorPic(5, 180, "x").replace("周長 ?", "") }),
+      () => { const A = pick(ANG.filter(x => x.a !== 45 && x.a !== 270)); const g = gcd(A.a, 360); return { q: `圓心角 <b>${A.a}°</b> 的扇形，是整個圓的<b>幾分之幾</b>？（例如寫 1/4）`, ans: A.a / 360, frac: true, unit: "", hint: `${A.a} ÷ 360，再約分 → ${A.a / g}/${360 / g}`, pic: sectorPic("", A.a, "x").replace("周長 ?", "") }; },
+      () => ({ q: `<b>圓周率</b>大約是多少？`, ans: 3.14, unit: "", hint: "圓周長是直徑的幾倍？", pic: circlePic({}) }),
+    ],
+  };
+  let cur, right = 0, tried = 0, wrongOnce = false;
+  function newQ() {
+    const pools = [];
+    if (document.getElementById("tCirc").checked) pools.push(...GEN.circ, ...GEN.circ); // 這類多出一些
+    if (document.getElementById("tSec").checked) pools.push(...GEN.sec, ...GEN.sec);
+    if (document.getElementById("tWord").checked) pools.push(...GEN.word);
+    if (!pools.length) pools.push(...GEN.circ);
+    cur = pick(pools)();
+    wrongOnce = false;
+    document.getElementById("gq").innerHTML = cur.q;
+    document.getElementById("gpic").innerHTML = cur.pic;
+    document.getElementById("gin").innerHTML = `<input type="text" inputmode="decimal" id="ga"> ${cur.unit}
+      <button class="btn primary" id="gcheck">對答案</button><button class="btn" id="gnext">下一題 →</button>`;
+    document.getElementById("gfb").className = "fb"; document.getElementById("gfb").textContent = "";
+    document.getElementById("gcheck").onclick = check;
+    document.getElementById("gnext").onclick = newQ;
+    document.getElementById("ga").onkeydown = e => { if (e.key === "Enter") check(); };
+  }
+  function parse(s) {
+    s = String(s).trim();
+    const m = s.match(/^(\d+)\s*\/\s*(\d+)$/);
+    return m ? +m[1] / +m[2] : parseFloat(s);
+  }
+  function check() {
+    const v = parse(document.getElementById("ga").value), fb = document.getElementById("gfb");
+    if (!isNaN(v) && Math.abs(v - cur.ans) < 0.005) {
+      if (!wrongOnce) { right++; tried++; }
+      fb.className = "fb ok"; fb.textContent = "答對了！👏" + (cur.frac ? "" : ` ${f(cur.ans)} ${cur.unit}`);
+      setTimeout(newQ, 1200);
+    } else {
+      if (!wrongOnce) tried++;
+      wrongOnce = true;
+      fb.className = "fb no"; fb.textContent = "再想想 🤔 " + cur.hint;
+    }
+    document.getElementById("gscore").textContent = `一次就答對：${right} / ${tried} 題`;
+  }
+  ["tCirc", "tSec", "tWord"].forEach(id => document.getElementById(id).addEventListener("change", newQ));
+  newQ();
+</script>
+</body>
+</html>
