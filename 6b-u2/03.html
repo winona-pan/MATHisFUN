@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>陰影面積</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6b-u2" data-page="6b-u2/03">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-learn">學會方法</span>
+  <h1>陰影面積</h1>
+  <p class="lead">陰影的形狀很怪？用「大的減小的」或「拼拼看」！</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>大的減小的</h2>
+    <div class="controls" style="margin-top:0" id="tabs"></div>
+    <div class="stage" style="margin-top:12px"><svg id="g" viewBox="0 0 400 230"></svg></div>
+    <div class="controls"><button class="btn primary" id="step">下一步 →</button><button class="btn" id="again">重來</button></div>
+    <div class="work" id="w"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>解題步驟</h2>
+    <div class="steps">
+      <div class="step"><p>① 看陰影是「<b>哪個大圖形</b>」挖掉「<b>哪個小圖形</b>」。</p></div>
+      <div class="step"><p>② 分別算出大圖形、小圖形的面積（正方形、圓、扇形…）。</p></div>
+      <div class="step"><p>③ <b>陰影 = 大的 − 小的</b>。有時候要減兩次，或先加起來再減（像葉子形）。</p></div>
+      <div class="step"><p>④ 看不出來時，試試<b>把陰影搬一搬、拼一拼</b>，常常會變成簡單的形狀。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula word">
+    <div class="label">方法</div>
+    <div class="big">陰影 = 大的 − 小的</div>
+    <div class="sub">記住：正方形邊長 10 的四分之一圓 = 78.5，正方形 = 100</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中答案常寫成 <code>100 − 25π</code> 這種樣子：正方形的部分是數字，圓的部分帶 π。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  // 每一題：底圖、步驟（每步顯示什麼）
+  const SH = [
+    { name: "正方形 − 四分之一圓", base: (k) => `
+        <rect x="100" y="20" width="180" height="180" fill="${(k >= 3 || k === 0) ? "var(--yellow)" : "var(--card)"}" stroke="var(--ink)" stroke-width="2.5"/>
+        <path d="M100 200 L100 20 A180 180 0 0 1 280 200 Z" fill="${k === 2 ? "var(--blue)" : "var(--card)"}" fill-opacity="${k === 2 ? .5 : 1}" stroke="var(--ink)" stroke-width="2.5"/>
+        ${k === 1 ? `<rect x="100" y="20" width="180" height="180" fill="var(--orange)" fill-opacity=".45"/>` : ""}
+        <text x="180" y="218" font-size="14">10 公分</text>`,
+      steps: ["陰影在哪裡？在正方形右上角、圓的外面。", "大的：正方形 10 × 10 = <b>100</b>", "小的：四分之一圓 10 × 10 × 3.14 ÷ 4 = <b>78.5</b>", "陰影 = 100 − 78.5 = <b>21.5 平方公分</b>"] },
+    { name: "圓環", base: (k) => `
+        <circle cx="200" cy="112" r="95" fill="${k === 1 ? "var(--orange)" : (k >= 3 || k === 0) ? "var(--yellow)" : "var(--card)"}" fill-opacity="${k === 1 ? .5 : 1}" stroke="var(--ink)" stroke-width="2.5"/>
+        <circle cx="200" cy="112" r="57" fill="${k === 2 ? "var(--blue)" : "var(--card)"}" fill-opacity="${k === 2 ? .5 : 1}" stroke="var(--ink)" stroke-width="2.5"/>
+        <line x1="200" y1="112" x2="295" y2="112" stroke="var(--red)" stroke-width="3"/><text x="262" y="106" font-size="13" style="fill:var(--red)">5</text>
+        <line x1="200" y1="112" x2="200" y2="55" stroke="var(--blue)" stroke-width="3"/><text x="206" y="82" font-size="13" style="fill:var(--blue)">3</text>`,
+      steps: ["陰影是大圓挖掉中間的小圓（像甜甜圈）。", "大圓：5 × 5 × 3.14 = <b>78.5</b>", "小圓：3 × 3 × 3.14 = <b>28.26</b>", "陰影 = 78.5 − 28.26 = <b>50.24 平方公分</b>"] },
+    { name: "正方形 − 圓", base: (k) => `
+        <rect x="110" y="20" width="180" height="180" fill="${k === 1 ? "var(--orange)" : (k >= 3 || k === 0) ? "var(--yellow)" : "var(--card)"}" fill-opacity="${k === 1 ? .5 : 1}" stroke="var(--ink)" stroke-width="2.5"/>
+        <circle cx="200" cy="110" r="90" fill="${k === 2 ? "var(--blue)" : "var(--card)"}" fill-opacity="${k === 2 ? .5 : 1}" stroke="var(--ink)" stroke-width="2.5"/>
+        <text x="180" y="218" font-size="14">10 公分</text>`,
+      steps: ["陰影是正方形的四個角（圓外面）。", "大的：正方形 10 × 10 = <b>100</b>", "小的：圓的直徑 10 → 半徑 5，5 × 5 × 3.14 = <b>78.5</b>", "陰影 = 100 − 78.5 = <b>21.5 平方公分</b>（和第一題一樣！）"] },
+    { name: "葉子形", base: (k) => `
+        <rect x="110" y="20" width="180" height="180" fill="var(--card)" stroke="var(--ink)" stroke-width="2.5"/>
+        ${k === 1 ? `<path d="M110 200 L110 20 A180 180 0 0 1 290 200 Z" fill="var(--orange)" fill-opacity=".45"/>` : ""}
+        ${k === 2 ? `<path d="M110 200 L110 20 A180 180 0 0 1 290 200 Z" fill="var(--orange)" fill-opacity=".45"/><path d="M290 20 L290 200 A180 180 0 0 1 110 20 Z" fill="var(--blue)" fill-opacity=".45"/>` : ""}
+        ${k === 0 || k >= 3 ? `<path d="M110 20 A180 180 0 0 1 290 200 A180 180 0 0 1 110 20 Z" fill="var(--yellow)" stroke="var(--ink)" stroke-width="2"/>` : ""}
+        <path d="M110 20 A180 180 0 0 1 290 200" fill="none" stroke="var(--ink)" stroke-width="2"/><path d="M290 200 A180 180 0 0 1 110 20" fill="none" stroke="var(--ink)" stroke-width="2"/>
+        <text x="180" y="218" font-size="14">10 公分</text>`,
+      steps: ["陰影是兩個四分之一圓<b>重疊</b>的地方（像一片葉子）。", "一個四分之一圓 = 78.5（橘色）。", "兩個四分之一圓加起來 = 157，比正方形 100 多出來的，就是重疊兩次的葉子！", "葉子 = 78.5 + 78.5 − 100 = <b>57 平方公分</b>"] },
+  ];
+  let si = 0, k = 0;
+  function draw() {
+    const S = SH[si];
+    document.getElementById("g").innerHTML = S.base(k);
+    document.getElementById("w").innerHTML = S.steps.slice(0, k + 1).map((t, i) => `${"①②③④"[i]} ${t}`).join("<br>");
+    document.getElementById("step").disabled = k >= S.steps.length - 1;
+    document.querySelectorAll("[data-s]").forEach(b => b.setAttribute("aria-pressed", +b.dataset.s === si));
+  }
+  document.getElementById("tabs").innerHTML = SH.map((s, i) => `<button class="btn" data-s="${i}">${s.name}</button>`).join("");
+  document.querySelectorAll("[data-s]").forEach(b => b.addEventListener("click", () => { si = +b.dataset.s; k = 0; draw(); }));
+  document.getElementById("step").addEventListener("click", () => { k++; draw(); });
+  document.getElementById("again").addEventListener("click", () => { k = 0; draw(); });
+  draw();
+
+  const mini = i => `<g transform="translate(10 0) scale(.6)">${SH[i].base(3).replace(/10 公分/g, "")}</g>`;
+  const r2 = x => Math.round(x * 100) / 100;
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { const a = W.pick([2, 4, 6, 8, 10, 12]); return { q: `正方形邊長 <b>${a}</b> 公分，挖掉一個半徑 ${a} 的四分之一圓，陰影面積是多少？`, ans: r2(a * a - a * a * 3.14 / 4), unit: "平方公分", hint: `${a} × ${a} − ${a} × ${a} × 3.14 ÷ 4`, pic: mini(0) }; },
+    () => { const R = W.rand(3, 10), r = W.rand(1, R - 1); return { q: `大圓半徑 <b>${R}</b>、小圓半徑 <b>${r}</b>（同一個圓心），圓環面積是多少？`, ans: r2((R * R - r * r) * 3.14), unit: "平方公分", hint: `${R} × ${R} × 3.14 − ${r} × ${r} × 3.14`, pic: mini(1) }; },
+    () => { const a = W.pick([2, 4, 6, 8, 10]); return { q: `正方形邊長 <b>${a}</b> 公分，裡面有一個最大的圓。圓外面（四個角）的面積是多少？`, ans: r2(a * a - (a / 2) ** 2 * 3.14), unit: "平方公分", hint: `圓的直徑 ${a}，半徑 ${a / 2}：${a} × ${a} − ${a / 2} × ${a / 2} × 3.14`, pic: mini(2) }; },
+    () => { const a = W.pick([2, 4, 6, 10]); return { q: `正方形邊長 <b>${a}</b> 公分，兩個四分之一圓重疊成葉子形，葉子面積是多少？`, ans: r2(a * a * 3.14 / 2 - a * a), unit: "平方公分", hint: `兩個四分之一圓 − 正方形：${a} × ${a} × 3.14 ÷ 4 × 2 − ${a} × ${a}`, pic: mini(3) }; },
+  ] });
+</script>
+</body>
+</html>

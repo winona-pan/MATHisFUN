@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>平行四邊形、三角形面積</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6b-u2" data-page="review/area-shapes">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-pre">先備知識・4–5 年級學過</span>
+  <h1>長方形、平行四邊形、三角形面積</h1>
+  <p class="lead">圓面積公式就是把圓「變成長方形」算出來的，先複習這招。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>平行四邊形 → 長方形</h2>
+    <div class="stage"><svg id="g1" viewBox="0 0 400 200"></svg></div>
+    <div class="controls"><label>剪下來搬過去 <input type="range" id="t1" min="0" max="100" value="0"></label></div>
+    <div class="work">剪下左邊的三角形，搬到右邊 → 變成長方形！面積 = <b>底 × 高</b></div>
+  </section>
+
+  <section class="box">
+    <h2><span class="n">2</span>三角形 = 平行四邊形的一半</h2>
+    <div class="stage"><svg id="g2" viewBox="0 0 400 200"></svg></div>
+    <div class="controls"><label>再拿一個一樣的三角形轉過來 <input type="range" id="t2" min="0" max="100" value="0"></label></div>
+    <div class="work">兩個一樣的三角形拼成平行四邊形 → 三角形面積 = <b>底 × 高 ÷ 2</b></div>
+  </section>
+
+  <div class="formula pre">
+    <div class="label">記起來</div>
+    <div class="big">長方形 = 長 × 寬</div>
+    <div class="big">平行四邊形 = 底 × 高</div>
+    <div class="big">三角形 = 底 × 高 ÷ 2</div>
+  </div>
+
+  <div class="warn"><span class="ic">⚠️</span><p>「高」要跟底<b>垂直</b>（直角），不是斜斜的那條邊！</p></div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>「剪下來拼成會算的圖形」這招，國中證明公式時會一直用。下一課的圓面積就是這樣來的！</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>練習一下</h2>
+    <div class="quiz">
+      <div class="q" data-answer="48" data-hint="底 × 高">
+        <p class="qt">平行四邊形底 8 公分、高 6 公分，面積是幾平方公分？</p>
+        <div class="row"><input type="text" inputmode="decimal"> 平方公分 <button class="btn">對答案</button></div>
+      </div>
+      <div class="q" data-answer="15" data-hint="底 × 高 ÷ 2">
+        <p class="qt">三角形底 6 公分、高 5 公分，面積是幾平方公分？</p>
+        <div class="row"><input type="text" inputmode="decimal"> 平方公分 <button class="btn">對答案</button></div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script>
+  const B = 160, H = 110, SH = 60, X = 60, Y = 150; // 底、高、斜移
+  function d1() {
+    const t = +document.getElementById("t1").value / 100;
+    let s = `<path d="M${X + SH} ${Y - H} L${X + B + SH} ${Y - H} L${X + B} ${Y} L${X + SH} ${Y} Z" fill="var(--blue)" fill-opacity=".6" stroke="var(--ink)" stroke-width="2"/>`;
+    const dx = B * t;
+    s += `<path d="M${X + dx} ${Y} L${X + SH + dx} ${Y - H} L${X + SH + dx} ${Y} Z" fill="var(--orange)" fill-opacity=".8" stroke="var(--ink)" stroke-width="2"/>`;
+    s += `<line x1="${X + SH}" y1="${Y - H}" x2="${X + SH}" y2="${Y}" stroke="var(--red)" stroke-width="2.5" stroke-dasharray="6 4"/><text x="${X + SH + 6}" y="${Y - H / 2}" font-size="14" style="fill:var(--red)">高</text>`;
+    s += `<text x="${X + SH + B / 2 - 10}" y="${Y + 22}" font-size="14">底</text>`;
+    document.getElementById("g1").innerHTML = s;
+  }
+  function d2() {
+    const t = +document.getElementById("t2").value / 100;
+    let s = `<path d="M${X} ${Y} L${X + B} ${Y} L${X + SH} ${Y - H} Z" fill="var(--yellow)" stroke="var(--ink)" stroke-width="2"/>`;
+    // 第二個三角形：繞中心轉 180 度後到右上方
+    const ang = 180 * t, cx = X + (B + SH) / 2, cy = Y - H / 2;
+    const ox = (1 - t) * 170;
+    s += `<g transform="translate(${ox} 0) rotate(${ang} ${cx} ${cy})"><path d="M${X} ${Y} L${X + B} ${Y} L${X + SH} ${Y - H} Z" fill="var(--green)" fill-opacity=".7" stroke="var(--ink)" stroke-width="2"/></g>`;
+    s += `<text x="${X + B / 2 - 10}" y="${Y + 22}" font-size="14">底</text>`;
+    document.getElementById("g2").innerHTML = s;
+  }
+  document.getElementById("t1").addEventListener("input", d1);
+  document.getElementById("t2").addEventListener("input", d2);
+  d1(); d2();
+</script>
+</body>
+</html>

@@ -55,6 +55,20 @@
         { path: "6b-u1/04", t: "簡便計算" },
       ],
     },
+    "6b-u2": {
+      name: "六下 第 2 單元・圓面積與扇形面積",
+      pages: [
+        { path: "review/area-shapes", t: "長方形、平行四邊形、三角形面積", pre: true },
+        { path: "review/area-units", t: "面積單位", pre: true },
+        { path: "6a-u7/03", t: "圓周長公式（六上）", pre: true },
+        { path: "6b-u2/01", t: "圓面積公式" },
+        { path: "6b-u2/02", t: "扇形面積" },
+        { path: "6b-u2/03", t: "陰影面積" },
+        { path: "6b-u2/04", t: "半徑變 2 倍，面積變幾倍" },
+        { path: "6b-u2/05", t: "知道面積，求半徑" },
+        { path: "6b-u2/06", t: "名詞公式總整理" },
+      ],
+    },
   };
 
   const body = document.body;

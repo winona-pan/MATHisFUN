@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>半徑變 2 倍，面積變幾倍</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6b-u2" data-page="6b-u2/04">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-learn">學會方法</span>
+  <h1>半徑變 2 倍，面積變幾倍？</h1>
+  <p class="lead">圓也是「放大圖」：半徑 × 2，面積 × 2 × 2！</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>比比看</h2>
+    <div class="stage"><svg id="g" viewBox="0 0 400 240"></svg></div>
+    <div class="controls"><label>半徑變 <input type="range" id="k" min="1" max="4" value="2"> <b id="kv"></b> 倍</label></div>
+    <div class="readout">
+      <div class="r"><small>半徑</small><span id="c1"></span></div>
+      <div class="r"><small>圓周長</small><span id="c2"></span></div>
+      <div class="r" style="color:var(--red)"><small>面積</small><span id="c3"></span></div>
+    </div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>為什麼？</h2>
+    <div class="steps">
+      <div class="step"><p>① 圓面積 = <b>半徑 × 半徑</b> × 3.14。半徑出現了<b>兩次</b>。</p></div>
+      <div class="step"><p>② 半徑 × 2，兩個半徑都 × 2 → 面積 × 2 × 2 = <b>× 4</b>。看圖：半徑上的小正方形，變成 4 個！</p></div>
+      <div class="step"><p>③ 圓周長 = 半徑 × 2 × 3.14，半徑只出現<b>一次</b> → 圓周長只 × 2。</p></div>
+      <div class="step"><p>④ 這跟第八單元「放大圖：周長 × 倍數、面積 × 倍數 × 倍數」<b>一模一樣</b>！</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula">
+    <div class="label">記起來</div>
+    <div class="big">半徑 × k → 圓周長 × k，面積 × k × k</div>
+    <div class="sub">2 倍 → 4 倍；3 倍 → 9 倍</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中說：面積和「長度的平方」成正比。半徑變 k 倍 → 面積變 <code>k²</code> 倍。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  const kIn = document.getElementById("k");
+  function draw() {
+    const k = +kIn.value, u = 24, r1 = u, r2 = u * k, base = 220;
+    let s = `<circle cx="${20 + r1}" cy="${base - r1}" r="${r1}" fill="var(--yellow)" fill-opacity=".5" stroke="var(--ink)" stroke-width="2"/>`;
+    s += `<rect x="${20 + r1}" y="${base - 2 * r1}" width="${r1}" height="${r1}" fill="var(--red)" fill-opacity=".6" stroke="var(--ink)" stroke-width="1"/>`;
+    s += `<text x="20" y="${base + 16}" font-size="12">原來</text>`;
+    const cx = 110 + r2;
+    s += `<circle cx="${cx}" cy="${base - r2}" r="${r2}" fill="var(--yellow)" fill-opacity=".5" stroke="var(--ink)" stroke-width="2"/>`;
+    for (let i = 0; i < k; i++) for (let j = 0; j < k; j++) s += `<rect x="${cx + j * u}" y="${base - 2 * r2 + i * u}" width="${u}" height="${u}" fill="var(--red)" fill-opacity=".6" stroke="var(--ink)" stroke-width="1"/>`;
+    s += `<line x1="${cx}" y1="${base - r2}" x2="${cx + r2}" y2="${base - r2}" stroke="var(--blue)" stroke-width="3"/>`;
+    s += `<text x="${cx - 40}" y="${base + 16}" font-size="12">半徑 × ${k}：紅色小正方形有 ${k * k} 個</text>`;
+    document.getElementById("g").innerHTML = s;
+    document.getElementById("kv").textContent = k;
+    document.getElementById("c1").textContent = `× ${k}`;
+    document.getElementById("c2").textContent = `× ${k}`;
+    document.getElementById("c3").textContent = `× ${k} × ${k} = × ${k * k}`;
+  }
+  kIn.addEventListener("input", draw); draw();
+
+  const P = k => `<circle cx="40" cy="100" r="20" fill="var(--yellow)" stroke="var(--ink)"/><circle cx="${90 + 10 * k}" cy="${120 - 10 * k}" r="${Math.min(10 * k, 30)}" fill="var(--yellow)" stroke="var(--ink)"/><text x="10" y="30" font-size="14">半徑 × ${k}</text>`;
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { const k = W.rand(2, 5); return { q: `圓的半徑變成原來的 <b>${k}</b> 倍，面積變成幾倍？`, ans: k * k, unit: "倍", hint: `× ${k} × ${k}`, pic: P(k) }; },
+    () => { const k = W.rand(2, 5); return { q: `圓的半徑變成原來的 <b>${k}</b> 倍，<b>圓周長</b>變成幾倍？`, ans: k, unit: "倍", hint: "圓周長裡半徑只乘一次", pic: P(k) }; },
+    () => { const k = W.rand(2, 3), A = W.pick([3.14, 12.56, 28.26, 50.24]); return { q: `一個圓面積 <b>${A}</b> 平方公分，半徑變 ${k} 倍後，面積是多少？`, ans: Math.round(A * k * k * 100) / 100, unit: "平方公分", hint: `${A} × ${k * k}`, pic: P(k) }; },
+  ] });
+</script>
+</body>
+</html>

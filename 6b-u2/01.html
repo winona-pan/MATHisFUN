@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>圓面積公式</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6b-u2" data-page="6b-u2/01">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-formula">公式怎麼來</span>
+  <h1>圓面積公式</h1>
+  <p class="lead">把圓切成很多片披薩，拼成一個「長方形」！</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>切開、拼起來</h2>
+    <div class="controls" style="margin-top:0">
+      <span style="font-weight:700">切成</span>
+      <button class="btn" data-n="8">8 片</button>
+      <button class="btn" data-n="16" aria-pressed="true">16 片</button>
+      <button class="btn" data-n="32">32 片</button>
+    </div>
+    <div class="stage" style="margin-top:12px"><svg id="g" viewBox="0 0 400 230"></svg></div>
+    <div class="controls">
+      <label>圓 ⇄ 拼起來 <input type="range" id="t" min="0" max="100" value="0"></label>
+      <button class="btn primary" id="play">▶ 拼拼看</button>
+    </div>
+    <p class="hint">👉 切得越多片，拼起來就越像一個長方形。</p>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>公式怎麼來</h2>
+    <div class="steps">
+      <div class="step"><p>① 把圓切成很多片，上下交錯排好，變成一個<b>差不多是長方形</b>的形狀。</p></div>
+      <div class="step"><p>② 長方形的<b>寬</b>（高）是一片披薩的長度 = <b style="color:var(--red)">半徑</b>。</p></div>
+      <div class="step"><p>③ 長方形的<b>長</b>：上面一排是一半的弧、下面一排是另一半的弧 → 長 = 圓周長 ÷ 2 = 半徑 × 2 × 3.14 ÷ 2 = <b style="color:var(--blue)">半徑 × 3.14</b>。</p></div>
+      <div class="step"><p>④ 長方形面積 = 長 × 寬 = <span style="color:var(--blue)">半徑 × 3.14</span> × <span style="color:var(--red)">半徑</span> → <b>圓面積 = 半徑 × 半徑 × 3.14</b>。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula">
+    <div class="label">公式</div>
+    <div class="big">圓面積 = 半徑 × 半徑 × 3.14</div>
+    <div class="sub">給直徑的話，先 ÷ 2 變半徑</div>
+  </div>
+
+  <div class="warn"><span class="ic">⚠️</span><p>不要跟圓周長搞混！<br>圓周長 = 半徑 × <b>2</b> × 3.14（長度，單位：公分）<br>圓面積 = 半徑 × <b>半徑</b> × 3.14（面積，單位：平方公分）</p></div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中寫成 <code>πr²</code>（r² 就是 r × r）。圓周長寫成 <code>2πr</code>。一個是「2 乘 r」、一個是「r 乘 r」，國中最容易搞混的就是這兩個！</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  const R = 70, CX = 110, CY = 100, svg = document.getElementById("g"), tIn = document.getElementById("t");
+  let N = 16;
+  // 一片：尖端在 (0,0)，往下（+y）張開
+  function wedgePath(a) {
+    const h = a / 2, x1 = R * Math.sin(-h), y1 = R * Math.cos(-h), x2 = R * Math.sin(h), y2 = R * Math.cos(h);
+    return `M0 0 L${x1.toFixed(2)} ${y1.toFixed(2)} A${R} ${R} 0 0 0 ${x2.toFixed(2)} ${y2.toFixed(2)} Z`;
+  }
+  function draw() {
+    const t = +tIn.value / 100, a = 2 * Math.PI / N, chord = 2 * R * Math.sin(a / 2), d = wedgePath(a);
+    const L = Math.PI * R, X0 = 200 - L / 2 + chord / 4, Y0 = 60;
+    let s = "";
+    for (let i = 0; i < N; i++) {
+      // 在圓裡：繞圓心轉
+      const ang0 = i * 360 / N, x0 = CX, y0 = CY;
+      // 拼起來：偶數尖端朝上（往下張開），奇數尖端朝下
+      const up = i % 2 === 0, k = Math.floor(i / 2);
+      // 前半圈放上排、後半圈放下排，尖端交錯
+      const x1 = X0 + i * chord / 2, y1 = up ? Y0 : Y0 + R * Math.cos(a / 2), ang1 = up ? 0 : 180;
+      const x = x0 + (x1 - x0) * t, y = y0 + (y1 - y0) * t;
+      let ang = ang0 + ((ang1 - ang0 + 540) % 360 - 180) * t;
+      s += `<path d="${d}" transform="translate(${x.toFixed(2)} ${y.toFixed(2)}) rotate(${ang.toFixed(2)})" fill="${i % 2 ? "var(--yellow)" : "var(--blue)"}" stroke="var(--ink)" stroke-width="1"/>`;
+    }
+    if (t > 0.95) {
+      const top = Y0, bot = Y0 + R * Math.cos(a / 2);
+      s += `<line x1="${X0 - chord / 4}" y1="${bot + 22}" x2="${X0 - chord / 4 + L}" y2="${bot + 22}" stroke="var(--blue)" stroke-width="3"/><text x="${200 - 60}" y="${bot + 44}" font-size="14" style="fill:var(--blue)">長 = 圓周長的一半 = 半徑 × 3.14</text>`;
+      s += `<line x1="${X0 - chord / 4 - 12}" y1="${top}" x2="${X0 - chord / 4 - 12}" y2="${bot}" stroke="var(--red)" stroke-width="3"/><text x="${X0 - chord / 4 - 44}" y="${(top + bot) / 2 + 5}" font-size="14" style="fill:var(--red)">半徑</text>`;
+    } else if (t < 0.05) {
+      s += `<line x1="${CX}" y1="${CY}" x2="${CX + R}" y2="${CY}" stroke="var(--red)" stroke-width="3"/><text x="${CX + 14}" y="${CY - 6}" font-size="14" style="fill:var(--red)">半徑</text>`;
+      s += `<text x="220" y="90" font-size="15">切成 ${N} 片</text><text x="220" y="116" font-size="15">拉動滑桿 →</text>`;
+    }
+    svg.innerHTML = s;
+  }
+  tIn.addEventListener("input", draw);
+  document.querySelectorAll("[data-n]").forEach(b => b.addEventListener("click", () => {
+    N = +b.dataset.n; document.querySelectorAll("[data-n]").forEach(x => x.setAttribute("aria-pressed", x === b)); draw();
+  }));
+  document.getElementById("play").addEventListener("click", () => {
+    const from = +tIn.value > 50 ? 100 : 0, to = 100 - from, st = performance.now();
+    const step = now => { const k = Math.min(1, (now - st) / 1800); tIn.value = from + (to - from) * k; draw(); if (k < 1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  });
+  draw();
+
+  const circ = (r, lab, col) => `<circle cx="110" cy="75" r="62" fill="var(--yellow)" fill-opacity=".5" stroke="var(--ink)" stroke-width="2.5"/><circle cx="110" cy="75" r="3.5" fill="var(--ink)"/>
+    ${lab === "r" ? `<line x1="110" y1="75" x2="172" y2="75" stroke="var(--red)" stroke-width="4"/><text x="128" y="68" font-size="16" style="fill:var(--red)">${r}</text>` : `<line x1="48" y1="75" x2="172" y2="75" stroke="var(--blue)" stroke-width="4"/><text x="100" y="98" font-size="16" style="fill:var(--blue)">${r}</text>`}
+    <text x="80" y="148" font-size="13">面積 = ?</text>`;
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { const r = W.rand(1, 10); return { q: `半徑 <b>${r}</b> 公分的圓，面積是幾平方公分？`, ans: Math.round(r * r * 314) / 100, unit: "平方公分", hint: `半徑 × 半徑 × 3.14 = ${r} × ${r} × 3.14`, pic: circ(r, "r") }; },
+    () => { const d = W.rand(1, 10) * 2; return { q: `直徑 <b>${d}</b> 公分的圓，面積是幾平方公分？`, ans: Math.round((d / 2) ** 2 * 314) / 100, unit: "平方公分", hint: `先變半徑：${d} ÷ 2 = ${d / 2}，再 ${d / 2} × ${d / 2} × 3.14`, pic: circ(d, "d") }; },
+    () => { const r = W.rand(1, 10), askA = Math.random() < 0.5;
+      return { q: `半徑 <b>${r}</b> 公分的圓，<b>${askA ? "面積" : "圓周長"}</b>是多少？`, ans: askA ? Math.round(r * r * 314) / 100 : Math.round(r * 2 * 314) / 100, unit: askA ? "平方公分" : "公分",
+        hint: askA ? "面積：半徑 × 半徑 × 3.14" : "圓周長：半徑 × 2 × 3.14", pic: circ(r, "r").replace("面積 = ?", askA ? "面積 = ?" : "圓周長 = ?") }; },
+  ] });
+</script>
+</body>
+</html>

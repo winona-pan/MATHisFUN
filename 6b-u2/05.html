@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>知道面積，求半徑</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+<style>
+  .sq { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; margin-top: 10px; }
+  .sq div { border: 2px solid var(--line); border-radius: 10px; text-align: center; padding: 4px; font-weight: 700; background: var(--card); }
+  .sq div.hit { border-color: var(--green); background: #e2f5ea; color: #1f5e3d; }
+</style>
+</head>
+<body data-seq="6b-u2" data-page="6b-u2/05">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-formula">公式怎麼來</span>
+  <h1>知道面積，求半徑（公式翻過來）</h1>
+  <p class="lead">面積 = 半徑 × 半徑 × 3.14。反過來，知道面積怎麼找半徑？</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>換算機：半徑 ⇄ 半徑×半徑 ⇄ 面積</h2>
+    <div id="chain"></div>
+    <p class="hint">👉 往右用乘的；往左用除的。最左邊那一步要「找一個數，自己乘自己」。</p>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>倒推回去</h2>
+    <div class="steps">
+      <div class="step"><p>① 例：圓面積 78.5 平方公分，半徑是多少？</p></div>
+      <div class="step"><p>② 倒推第一步：× 3.14 的相反是 ÷ 3.14 → 78.5 ÷ 3.14 = <b>25</b>，這是「半徑 × 半徑」。</p></div>
+      <div class="step"><p>③ 倒推第二步：<b>哪個數自己乘自己 = 25？</b> 5 × 5 = 25 → 半徑 = <b style="color:var(--red)">5 公分</b>。</p></div>
+      <div class="step"><p>④ 驗算：5 × 5 × 3.14 = 78.5 ✓</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <section class="box">
+    <h2><span class="n">3</span>「自己乘自己」表（背起來很好用）</h2>
+    <div class="sq" id="sq"></div>
+  </section>
+
+  <div class="formula">
+    <div class="label">反過來的方法</div>
+    <div class="big">半徑 × 半徑 = 面積 ÷ 3.14</div>
+    <div class="big" style="font-size:1.3rem">再找「哪個數自己乘自己」= 它</div>
+  </div>
+
+  <div class="warn"><span class="ic">⚠️</span><p>面積 ÷ 3.14 得到的是「半徑 × 半徑」，<b>不是半徑</b>！還要再找一次。</p></div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中八年級會學「<b>平方根</b>」：<code>√25 = 5</code>（唸「根號 25」），就是「哪個數自己乘自己 = 25」。今天其實已經在學了！</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">4</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  W.chain(document.getElementById("chain"), {
+    nodes: [{ k: "r", label: "半徑", color: "var(--red)" }, { k: "rr", label: "半徑×半徑" }, { k: "a", label: "面積", color: "var(--orange)" }],
+    links: [{ f: "×自己", b: "找自己×自己", go: v => v * v, back: v => Math.sqrt(v) }, { f: "×3.14", b: "÷3.14", go: v => v * 3.14, back: v => v / 3.14 }],
+    start: { k: "a", v: 78.5 },
+  });
+  document.getElementById("sq").innerHTML = Array.from({ length: 15 }, (_, i) => `<div data-v="${(i + 1) ** 2}">${i + 1} × ${i + 1}<br>= ${(i + 1) ** 2}</div>`).join("");
+
+  const pic = (A) => `<circle cx="80" cy="75" r="56" fill="var(--orange)" fill-opacity=".4" stroke="var(--ink)" stroke-width="2"/><line x1="80" y1="75" x2="136" y2="75" stroke="var(--red)" stroke-width="4" stroke-dasharray="6 4"/><text x="100" y="68" font-size="16" style="fill:var(--red)">?</text><text x="148" y="80" font-size="13">面積</text><text x="148" y="100" font-size="13">${A}</text>`;
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { const r = W.rand(1, 12), A = Math.round(r * r * 314) / 100; return { q: `圓面積 <b>${A}</b> 平方公分，<b>半徑</b>是幾公分？`, ans: r, unit: "公分", hint: `${A} ÷ 3.14 = ${r * r}，哪個數自己乘自己 = ${r * r}？`, pic: pic(A) }; },
+    () => { const r = W.rand(1, 10), A = Math.round(r * r * 314) / 100; return { q: `圓面積 <b>${A}</b> 平方公分，<b>直徑</b>是幾公分？`, ans: 2 * r, unit: "公分", hint: `先求半徑（${A} ÷ 3.14 = ${r * r} → ${r}），再 × 2`, pic: pic(A) }; },
+    () => { const r = W.rand(1, 10), C = Math.round(r * 628) / 100; return { q: `圓周長 <b>${C}</b> 公分，<b>面積</b>是幾平方公分？`, ans: Math.round(r * r * 314) / 100, unit: "平方公分", hint: `先倒推半徑：${C} ÷ 3.14 ÷ 2 = ${r}，再 ${r} × ${r} × 3.14`, pic: `<circle cx="80" cy="75" r="56" fill="var(--orange)" fill-opacity=".4" stroke="var(--blue)" stroke-width="5"/><text x="148" y="60" font-size="13" style="fill:var(--blue)">周長 ${C}</text><text x="148" y="90" font-size="13">面積 ?</text>` }; },
+  ] });
+</script>
+</body>
+</html>

@@ -171,5 +171,21 @@
     return { set: (k, v) => { const i = n.findIndex(x => x.k === k); inputs[i].value = v; set(i, v); } };
   };
 
+  /* ---------- 名詞卡 ----------
+     W.cards(el, [{ t, pic(160x100 SVG 內容), def, how, link }]) */
+  W.cards = function (el, list) {
+    el.innerHTML = `<div class="controls" style="margin-top:0"><button class="btn" data-mode aria-pressed="false">🙈 遮住答案考自己</button>
+      <span class="hint" style="margin:0">打開後，點模糊的地方就會出現答案。</span></div>
+      <div class="cards">${list.map(c => `<div class="card"><div class="pic"><svg viewBox="0 0 160 100">${c.pic}</svg></div><h3>${c.t}</h3>
+        <p class="def ans">${c.def}</p>${c.how ? `<div class="how ans"><small>怎麼求</small>${c.how}</div>` : ""}
+        ${c.link ? `<a href="${c.link}">看這一課 →</a>` : ""}</div>`).join("")}</div>`;
+    el.querySelector("[data-mode]").addEventListener("click", e => {
+      const on = el.classList.toggle("quizmode");
+      e.currentTarget.setAttribute("aria-pressed", on);
+      el.querySelectorAll(".ans").forEach(a => a.classList.remove("peek"));
+    });
+    el.addEventListener("click", e => { const a = e.target.closest(".ans"); if (a && el.classList.contains("quizmode")) a.classList.toggle("peek"); });
+  };
+
   window.W = W;
 })();

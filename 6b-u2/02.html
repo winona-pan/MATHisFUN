@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>扇形面積</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6b-u2" data-page="6b-u2/02">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-formula">公式怎麼來</span>
+  <h1>扇形面積</h1>
+  <p class="lead">扇形是圓的幾分之幾，面積就是圓面積的幾分之幾。跟弧長的想法一樣！</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>切一塊披薩</h2>
+    <div class="stage"><svg id="g" viewBox="0 0 400 230"></svg></div>
+    <div class="controls">
+      <label>半徑 <input type="range" id="r" min="2" max="10" value="10"> <b id="rv"></b></label>
+      <label>圓心角 <input type="range" id="a" min="30" max="360" step="30" value="90"> <b id="av"></b>°</label>
+    </div>
+    <div class="readout">
+      <div class="r"><small>整個圓面積</small><span id="c1"></span></div>
+      <div class="r" style="color:var(--purple)"><small>是圓的</small><span id="c2"></span></div>
+      <div class="r" style="color:var(--red)"><small>扇形面積</small><span id="c3"></span></div>
+    </div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>公式怎麼來</h2>
+    <div class="steps">
+      <div class="step"><p>① 圓心角 360° 的扇形 = <b>整個圓</b>。</p></div>
+      <div class="step"><p>② 90° 是 90/360 = <b>¼</b> 圈 → 面積是圓面積的 <b>¼</b>（切成 4 片的其中一片）。</p></div>
+      <div class="step"><p>③ 所以：<b>扇形面積 = 圓面積 × 圓心角/360</b>。</p></div>
+      <div class="step"><p>④ 對照：弧長 = 圓周長 × 圓心角/360。<b>一樣是「× 圓心角/360」</b>，只是前面換成圓面積。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula">
+    <div class="label">公式</div>
+    <div class="big">扇形面積 = 圓面積 × 圓心角/360</div>
+    <div class="big" style="font-size:1.25rem">= 半徑 × 半徑 × 3.14 × 圓心角/360</div>
+  </div>
+
+  <div class="warn"><span class="ic">⚠️</span><p>扇形「面積」和扇形「周長」不一樣：周長要加兩條半徑，面積不用！</p></div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中寫成：扇形面積 = <code>πr² × θ/360</code>。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  const rIn = document.getElementById("r"), aIn = document.getElementById("a");
+  function draw() {
+    const r = +rIn.value, a = +aIn.value, g = W.gcd(a, 360), A = r * r * 3.14, S = A * a / 360;
+    const pr = 9 * r, cx = 120, cy = 115, parts = 360 / g;
+    let s = `<circle cx="${cx}" cy="${cy}" r="${pr}" fill="var(--card)" stroke="var(--ink)" stroke-width="2"/>`;
+    if (parts <= 12) for (let i = 0; i < parts; i++) { const [x, y] = L.pol(cx, cy, pr, i * g); s += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="var(--line)" stroke-width="2"/>`; }
+    s += `<path d="${L.sectorPath(cx, cy, pr, a)}" fill="var(--red)" fill-opacity=".6" stroke="var(--ink)" stroke-width="2"/>`;
+    s += `<text x="240" y="80" font-size="15">切成 ${parts} 片一樣大的</text><text x="240" y="108" font-size="15" style="fill:var(--red)">拿 ${a / g} 片</text><text x="240" y="140" font-size="15">→ 圓的 ${W.frac(a, 360)}</text>`;
+    document.getElementById("g").innerHTML = s;
+    document.getElementById("rv").textContent = r; document.getElementById("av").textContent = a;
+    document.getElementById("c1").textContent = `${r} × ${r} × 3.14 = ${W.num(A)}`;
+    document.getElementById("c2").textContent = `${a}/360 = ${W.frac(a, 360)}`;
+    document.getElementById("c3").textContent = `${W.num(A)} × ${W.frac(a, 360)} = ${W.num(S)}`;
+  }
+  rIn.addEventListener("input", draw); aIn.addEventListener("input", draw); draw();
+
+  const ANG = [{ a: 90, rs: [2, 4, 6, 8, 10] }, { a: 180, rs: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] }, { a: 60, rs: [3, 6, 9] }, { a: 120, rs: [3, 6, 9] }, { a: 45, rs: [4, 8] }, { a: 270, rs: [2, 4, 6] }, { a: 30, rs: [6] }, { a: 72, rs: [5, 10] }];
+  const pic = (r, a, ask) => `<circle cx="80" cy="80" r="56" fill="none" stroke="var(--line)" stroke-width="2" stroke-dasharray="5 4"/><path d="${L.sectorPath(80, 80, 56, a)}" fill="var(--red)" fill-opacity=".55" stroke="var(--ink)" stroke-width="2"/>
+    <text x="150" y="60" font-size="14">半徑 ${r}</text><text x="150" y="86" font-size="14">${a}°</text><text x="150" y="112" font-size="14" style="fill:var(--red)">${ask}</text>`;
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { const A = W.pick(ANG), r = W.pick(A.rs); return { q: `半徑 <b>${r}</b> 公分、圓心角 <b>${A.a}°</b> 的扇形，<b>面積</b>是幾平方公分？`, ans: Math.round(r * r * 3.14 * A.a / 360 * 100) / 100, unit: "平方公分", hint: `${r} × ${r} × 3.14 × ${W.frac(A.a, 360)}`, pic: pic(r, A.a, "面積 ?") }; },
+    () => { const A = W.pick(ANG), r = W.pick(A.rs), askA = Math.random() < 0.5;
+      const area = r * r * 3.14 * A.a / 360, per = r * 2 * 3.14 * A.a / 360 + 2 * r;
+      return { q: `半徑 <b>${r}</b> 公分、圓心角 <b>${A.a}°</b> 的扇形，<b>${askA ? "面積" : "周長"}</b>是多少？`, ans: Math.round((askA ? area : per) * 100) / 100, unit: askA ? "平方公分" : "公分",
+        hint: askA ? "面積：半徑 × 半徑 × 3.14 × 圓心角/360" : "周長：弧長（半徑 × 2 × 3.14 × 圓心角/360）+ 兩條半徑", pic: pic(r, A.a, askA ? "面積 ?" : "周長 ?") }; },
+  ] });
+</script>
+</body>
+</html>

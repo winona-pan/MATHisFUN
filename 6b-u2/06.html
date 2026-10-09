@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>圓面積總整理</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6b-u2" data-page="6b-u2/06">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-learn">總整理</span>
+  <h1>名詞公式總整理</h1>
+  <p class="lead">圓面積與扇形面積：連同六上的圓周長一起複習，不要搞混！</p>
+
+  <section class="box" id="gloss">
+    <h2><span class="n">1</span>名詞卡</h2>
+    <div id="cards"></div>
+  </section>
+
+  <div class="formula">
+    <div class="label">長度 vs 面積（最容易搞混）</div>
+    <div class="big" style="font-size:1.2rem;line-height:2">
+      圓周長 = 半徑 × <span style="color:var(--red)">2</span> × 3.14（公分）<br>
+      圓面積 = 半徑 × <span style="color:var(--red)">半徑</span> × 3.14（平方公分）<br>
+      弧長 = 圓周長 × 圓心角/360　扇形面積 = 圓面積 × 圓心角/360
+    </div>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">2</span>綜合練習：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  const C = (inner) => `<circle cx="80" cy="50" r="38" fill="var(--yellow)" fill-opacity=".45" stroke="var(--ink)" stroke-width="2"/>${inner}<circle cx="80" cy="50" r="3" fill="var(--ink)"/>`;
+  W.cards(document.getElementById("cards"), [
+    { t: "圓面積", pic: C(`<line x1="80" y1="50" x2="118" y2="50" stroke="var(--red)" stroke-width="4"/>`), def: "圓裡面的大小（切開拼成長方形算出來）。", how: "半徑 × 半徑 × 3.14", link: "01.html" },
+    { t: "扇形面積", pic: `<circle cx="80" cy="50" r="38" fill="none" stroke="var(--line)" stroke-width="2"/><path d="M80 50 L80 12 A38 38 0 0 1 118 50 Z" fill="var(--red)" fill-opacity=".55" stroke="var(--ink)" stroke-width="2"/>`, def: "扇形裡面的大小。", how: "圓面積 × 圓心角/360", link: "02.html" },
+    { t: "陰影面積", pic: `<rect x="40" y="10" width="80" height="80" fill="var(--yellow)" stroke="var(--ink)" stroke-width="2"/><path d="M40 90 L40 10 A80 80 0 0 1 120 90 Z" fill="var(--card)" stroke="var(--ink)" stroke-width="2"/>`, def: "形狀很怪的面積。", how: "大的 − 小的（或拼一拼）", link: "03.html" },
+    { t: "半徑變 k 倍", pic: `<circle cx="40" cy="70" r="14" fill="var(--yellow)" stroke="var(--ink)"/><circle cx="105" cy="50" r="42" fill="var(--yellow)" stroke="var(--ink)"/>`, def: "圓變大，周長和面積變的倍數不一樣。", how: "周長 × k，面積 × k × k", link: "04.html" },
+    { t: "知道面積求半徑", pic: C(`<line x1="80" y1="50" x2="118" y2="50" stroke="var(--red)" stroke-width="4" stroke-dasharray="5 4"/><text x="92" y="44" font-size="13" style="fill:var(--red)">?</text>`), def: "公式翻過來用。", how: "面積 ÷ 3.14 = 半徑 × 半徑<br>再找自己乘自己的數", link: "05.html" },
+    { t: "圓周長", pic: C("").replace('stroke="var(--ink)" stroke-width="2"', 'stroke="var(--blue)" stroke-width="5"'), def: "繞圓一圈的長度（六上學過）。", how: "半徑 × 2 × 3.14", link: "../6a-u7/03.html" },
+    { t: "平方公分", pic: `<rect x="60" y="25" width="40" height="40" fill="var(--red)" fill-opacity=".6" stroke="var(--ink)" stroke-width="2"/><text x="56" y="88" font-size="12">1 cm × 1 cm</text>`, def: "面積的單位。長度乘長度，所以叫「平方」。", how: "1 平方公尺 = 10000 平方公分", link: "../review/area-units.html" },
+  ]);
+
+  const r2 = x => Math.round(x * 100) / 100;
+  const ANG = [{ a: 90, rs: [2, 4, 6, 8, 10] }, { a: 180, rs: [1, 2, 3, 4, 5, 6] }, { a: 60, rs: [3, 6] }, { a: 120, rs: [3, 6] }, { a: 270, rs: [2, 4] }];
+  const pc = (t) => `<circle cx="70" cy="75" r="55" fill="var(--yellow)" fill-opacity=".45" stroke="var(--ink)" stroke-width="2"/><text x="135" y="80" font-size="14">${t}</text>`;
+  W.practice(document.getElementById("prac"), { groups: [
+    { label: "圓面積", gens: [
+      () => { const r = W.rand(1, 10); return { q: `半徑 ${r} 公分，圓面積？`, ans: r2(r * r * 3.14), unit: "平方公分", hint: "半徑 × 半徑 × 3.14", pic: pc(`r = ${r}`) }; },
+      () => { const d = W.rand(1, 8) * 2; return { q: `直徑 ${d} 公分，圓面積？`, ans: r2((d / 2) ** 2 * 3.14), unit: "平方公分", hint: `半徑 = ${d / 2}`, pic: pc(`d = ${d}`) }; },
+      () => { const r = W.rand(1, 10); return { q: `圓面積 ${r2(r * r * 3.14)} 平方公分，半徑？`, ans: r, unit: "公分", hint: `÷ 3.14 = ${r * r}，再找自己乘自己`, pic: pc("r = ?") }; },
+    ] },
+    { label: "扇形・陰影", gens: [
+      () => { const A = W.pick(ANG), r = W.pick(A.rs); return { q: `半徑 ${r}、圓心角 ${A.a}° 的扇形面積？`, ans: r2(r * r * 3.14 * A.a / 360), unit: "平方公分", hint: `圓面積 × ${W.frac(A.a, 360)}`, pic: `<path d="${L.sectorPath(70, 75, 55, A.a)}" fill="var(--red)" fill-opacity=".55" stroke="var(--ink)" stroke-width="2"/><text x="135" y="80" font-size="14">${A.a}°</text>` }; },
+      () => { const a = W.pick([2, 4, 6, 8, 10]); return { q: `邊長 ${a} 的正方形挖掉半徑 ${a} 的四分之一圓，剩下多少？`, ans: r2(a * a * (1 - 0.785)), unit: "平方公分", hint: `${a * a} − ${r2(a * a * 0.785)}`, pic: `<rect x="40" y="20" width="110" height="110" fill="var(--yellow)" stroke="var(--ink)" stroke-width="2"/><path d="M40 130 L40 20 A110 110 0 0 1 150 130 Z" fill="var(--card)" stroke="var(--ink)" stroke-width="2"/>` }; },
+    ] },
+    { label: "周長 vs 面積", gens: [
+      () => { const r = W.rand(1, 10), askA = Math.random() < 0.5; return { q: `半徑 ${r} 公分的圓，<b>${askA ? "面積" : "圓周長"}</b>？`, ans: r2(askA ? r * r * 3.14 : r * 2 * 3.14), unit: askA ? "平方公分" : "公分", hint: askA ? "面積：半徑 × 半徑 × 3.14" : "圓周長：半徑 × 2 × 3.14", pic: pc(`r = ${r}`) }; },
+      () => { const k = W.rand(2, 4); return { q: `半徑變 ${k} 倍，面積變幾倍？`, ans: k * k, unit: "倍", hint: `× ${k} × ${k}`, pic: pc(`× ${k}`) }; },
+    ] },
+  ] });
+</script>
+</body>
+</html>
