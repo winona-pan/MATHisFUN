@@ -171,6 +171,12 @@ input[type="range"] { width: 180px; accent-color: var(--red); }
 .q.done { border-color: var(--green); }
 .score { margin-top: 10px; font-weight: 900; font-size: 1.1rem; }
 
+/* 我學會了 */
+.mark-done { margin-top: 28px; text-align: center; }
+.mark-done .btn { font-size: 1.15rem; padding: 12px 26px; border: 3px solid var(--green); color: var(--green); background: var(--card); }
+.mark-done .btn.on { background: var(--green); color: #fff; }
+.mark-done small { display: block; margin-top: 6px; color: var(--muted); font-weight: 700; }
+
 /* 下方導覽 */
 .pager { display: flex; justify-content: space-between; gap: 10px; margin-top: 28px; flex-wrap: wrap; }
 .pager a {

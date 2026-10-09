@@ -63,18 +63,7 @@
   }
   .tab[aria-selected="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
 
-  /* 學習地圖 */
-  .map { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 4px; margin: 18px 0 6px; }
-  .map a {
-    width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center;
-    font-weight: 900; font-size: 1.15rem; text-decoration: none; color: var(--ink);
-    border: 3px solid var(--line); background: var(--card); position: relative;
-  }
-  .map a.done { background: var(--green); border-color: var(--green); color: #fff; }
-  .map a.now { background: var(--yellow); border-color: var(--ink); color: #2b2a33; transform: scale(1.15); }
-  .map a.next { border-color: var(--yellow); border-style: dashed; }
-  .map a.review { width: auto; padding: 0 14px; border-radius: 999px; font-size: .95rem; }
-  .map .link { width: 14px; height: 4px; background: var(--line); border-radius: 2px; }
+  /* 狀態圖例 */
   .map-legend { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; color: var(--muted); font-size: .9rem; }
   .map-legend span { display: inline-flex; align-items: center; gap: 6px; }
   .dotk { width: 14px; height: 14px; border-radius: 50%; display: inline-block; border: 2px solid var(--line); background: var(--card); }
@@ -137,6 +126,43 @@
   .k-formula { --kc: var(--k-formula); --ks: var(--k-formula-soft); }
   .k-learn { --kc: var(--k-learn); --ks: var(--k-learn-soft); }
   .hidden { display: none !important; }
+
+  /* 目錄清單 */
+  .toc { margin: 18px auto 6px; max-width: 760px; background: var(--card); border: 3px solid var(--line); border-radius: 20px; padding: 10px 12px; }
+  .toc h2 { margin: 2px 6px 6px; font-size: 1.2rem; font-weight: 900; }
+  .toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+  .toc a { display: flex; align-items: center; gap: 10px; padding: 7px 8px; border-radius: 12px; text-decoration: none; color: var(--ink); }
+  .toc a:hover, .toc a:focus-visible { background: var(--bg); outline: none; }
+  .toc .num { flex: none; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-weight: 900; border: 3px solid var(--line); background: var(--card); }
+  .toc .num.review { width: auto; padding: 0 8px; border-radius: 999px; font-size: .8rem; }
+  .toc .done .num { background: var(--green); border-color: var(--green); color: #fff; }
+  .toc .now .num { background: var(--yellow); border-color: var(--ink); color: #2b2a33; }
+  .toc .next .num { border-color: var(--yellow); border-style: dashed; }
+  .toc .now { background: rgba(242,182,50,.14); }
+  .toc .tt { flex: 1; min-width: 0; font-weight: 900; line-height: 1.3; }
+  .toc .tt small { display: block; font-weight: 700; color: var(--muted); font-size: .8rem; }
+  .bar { flex: none; width: 70px; text-align: right; font-size: .8rem; font-weight: 700; color: var(--muted); }
+  .bar i { display: block; height: 6px; border-radius: 3px; background: var(--line); margin-top: 3px; overflow: hidden; }
+  .bar i b { display: block; height: 100%; background: var(--green); }
+
+  /* 自己打勾 */
+  .tw { position: relative; }
+  .tw .tile { height: 100%; }
+  .tick {
+    position: absolute; top: 8px; right: 8px; width: 34px; height: 34px; border-radius: 50%;
+    border: 3px solid var(--line); background: var(--card); cursor: pointer; font-weight: 900; font-size: 1.1rem;
+    display: grid; place-items: center; color: transparent; padding: 0; z-index: 1;
+  }
+  .tick:hover { border-color: var(--green); color: var(--green); }
+  .tw.done .tick { background: var(--green); border-color: var(--green); color: #fff; }
+  .tw.done .tile { border-color: var(--green); background: linear-gradient(var(--card), var(--card)) padding-box; box-shadow: inset 0 0 0 2px rgba(58,167,109,.25); }
+  .tw.done .tile .state { color: var(--green); }
+  button.status { cursor: pointer; font-family: inherit; }
+  button.status::after { content: " ▾"; font-size: .7rem; }
+  .unit-head .prog { margin-top: 8px; font-size: .9rem; font-weight: 700; color: var(--muted); }
+  .unit-head .prog i { display: block; height: 8px; max-width: 260px; border-radius: 4px; background: var(--line); overflow: hidden; margin-top: 4px; }
+  .unit-head .prog i b { display: block; height: 100%; background: var(--green); }
+  .reset { display: block; margin: 40px auto 0; background: none; border: 2px solid var(--line); border-radius: 999px; padding: 6px 16px; color: var(--muted); font-weight: 700; cursor: pointer; }
   .unit.dim { display: none; }
 
   .toast {
@@ -152,8 +178,8 @@
     .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
     .tile { padding: 8px 9px; border-left-width: 6px; }
     .tile b { font-size: 1rem; }
-    .map a { width: 40px; height: 40px; font-size: 1rem; }
-    .map .link { width: 8px; }
+    .toc ol { grid-template-columns: 1fr; }
+    .unit-head .prog i { margin: 4px auto 0; }
   }
 
   /* SVG 共用 */
@@ -189,13 +215,14 @@
     <button class="tab" role="tab" data-sem="6b">六下</button>
   </div>
 
-  <nav class="map" id="map" aria-label="單元地圖"></nav>
+  <nav class="toc" id="toc" aria-label="目錄"></nav>
   <div class="map-legend">
     <span><i class="dotk done"></i>學過了</span>
     <span><i class="dotk now"></i>現在學</span>
     <span><i class="dotk next"></i>下一個</span>
     <span><i class="dotk"></i>還沒學</span>
   </div>
+  <p class="map-legend" style="margin-top:6px">單元的狀態可以按一下換；每張卡片右上角的 ○ 按一下就打勾 ✓</p>
 
   <div class="filters" id="filters">
     <button class="chip" data-k="all" aria-pressed="true">全部</button>
@@ -206,6 +233,7 @@
   </div>
 
   <main id="units"></main>
+  <button class="reset" id="reset">清除我的進度</button>
 </div>
 <div class="toast" id="toast">這一課還在準備中 🛠️</div>
 
@@ -712,14 +740,28 @@ if (!SEMESTERS[currentSem]) currentSem = "6a";
 const hashSem = location.hash.slice(1).split("-")[0];
 if (SEMESTERS[hashSem]) currentSem = hashSem;
 
+/* ---------- 進度（存在這台裝置） ---------- */
+const P_KEY = "mif-progress", S_KEY = "mif-status";
+const loadJ = k => { try { return JSON.parse(localStorage.getItem(k)) || {}; } catch (e) { return {}; } };
+const saveJ = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+let progress = loadJ(P_KEY), statusOv = loadJ(S_KEY);
+const ORDER = ["later", "next", "now", "done"];
+const unitStatus = u => statusOv[`${currentSem}-u${u.no}`] || u.status;
+const hrefOf = (item, unit, num) => item.href || (item.k === "pre"
+  ? `review/${item.id}.html?u=${currentSem}-u${unit.no}`
+  : `${currentSem}-u${unit.no}/${String(num).padStart(2, "0")}.html`);
+const pageOf = href => href.replace(/\.html.*$/, "");
+// 每一張卡片和它的頁面編號（跟課程頁 data-page 一樣）
+const cardsOf = u => { let n = 0; return u.items.map(it => { const h = hrefOf(it, u, it.k === "pre" ? 0 : ++n); return { it, h, page: pageOf(h) }; }); };
+const countOf = u => { const c = cardsOf(u).filter(c => c.it.ready); return [c.filter(c => progress[c.page]).length, c.length]; };
+
 const svg = name => `<svg viewBox="0 0 160 120" aria-hidden="true">${PICS[name] || ""}</svg>`;
 
-function tile(item, unit, num) {
-  const href = item.href || (item.k === "pre"
-    ? `review/${item.id}.html?u=${currentSem}-u${unit.no}`
-    : `${currentSem}-u${unit.no}/${String(num).padStart(2, "0")}.html`);
-  const ready = !!item.ready;
+function tile({ it: item, h: href, page }) {
+  const ready = !!item.ready, done = ready && !!progress[page];
   return `
+   <div class="tw ${done ? "done" : ""}" data-k="${item.k}">
+    ${ready ? `<button class="tick" data-page="${page}" aria-pressed="${done}" title="${done ? "取消打勾" : "學會了就打勾"}">✓</button>` : ""}
     <a class="tile k-${item.k} ${ready ? "ready" : "soon"}" data-k="${item.k}" href="${ready ? href : "#"}" ${ready ? "" : 'data-soon="1"'}>
       ${item.pic ? `<div class="pic">${svg(item.pic)}</div>` : ""}
       <span class="kind">${KIND_LABEL[item.k]}</span>
@@ -727,41 +769,47 @@ function tile(item, unit, num) {
       <small>${item.h}</small>
       <span class="foot">
         ${item.g ? `<span class="grade">${item.g}</span>` : ""}
-        <span class="state">${ready ? "開始玩 →" : "準備中"}</span>
+        <span class="state">${done ? "學會了 ✓" : ready ? "開始玩 →" : "準備中"}</span>
       </span>
-    </a>`;
+    </a>
+   </div>`;
 }
 
 function render() {
   const sem = SEMESTERS[currentSem];
   document.querySelectorAll(".tab").forEach(t => t.setAttribute("aria-selected", t.dataset.sem === currentSem));
 
-  $("#map").innerHTML = sem.units.map((u, i) => `
-    ${i ? '<span class="link"></span>' : ""}
-    <a href="#${currentSem}-u${u.no}" class="${u.status} ${u.review ? "review" : ""}" title="${u.title}（${STATUS_LABEL[u.status]}）">${u.review ? "總複習" : u.no}</a>`).join("");
+  $("#toc").innerHTML = `<h2>📖 ${sem.name} 目錄</h2><ol>${sem.units.map(u => {
+    const st = unitStatus(u), [d, n] = countOf(u);
+    return `<li><a href="#${currentSem}-u${u.no}" class="${st}">
+      <span class="num ${u.review ? "review" : ""}">${u.review ? "複習" : u.no}</span>
+      <span class="tt">${u.title}<small>${STATUS_LABEL[st]}</small></span>
+      <span class="bar">${d === n && n ? "全部 ✓" : `${d} / ${n}`}<i><b style="width:${n ? d / n * 100 : 0}%"></b></i></span>
+    </a></li>`; }).join("")}</ol>`;
 
   $("#units").innerHTML = sem.units.map(u => {
-    const indexed = u.items.map((it, i) => [it, i]);
-    const pre = indexed.filter(([it]) => it.k === "pre");
-    const main = indexed.filter(([it]) => it.k !== "pre");
+    const cards = cardsOf(u), st = unitStatus(u), [d, n] = countOf(u);
+    const pre = cards.filter(c => c.it.k === "pre");
+    const main = cards.filter(c => c.it.k !== "pre");
     return `
-    <section class="unit ${u.status}" id="${currentSem}-u${u.no}">
+    <section class="unit ${st}" id="${currentSem}-u${u.no}">
       <div class="unit-head">
         <div class="pic">${svg(u.pic)}</div>
         <div>
           <div class="no">${sem.name}${u.review ? "" : ` 第 ${u.no} 單元`}</div>
           <h2>${u.title}</h2>
-          <span class="status ${u.status}">${STATUS_LABEL[u.status]}</span>
+          <button class="status ${st}" data-unit="${currentSem}-u${u.no}" data-st="${st}" title="按一下換狀態">${STATUS_LABEL[st]}</button>
+          <div class="prog">學會了 ${d} / ${n} 課${d === n && n ? " 🎉" : ""}<i><b style="width:${n ? d / n * 100 : 0}%"></b></i></div>
         </div>
       </div>
       ${pre.length ? `
         <div data-group>
           <div class="group-title" style="color:var(--k-pre)">先複習 <small>以前學過的，忘了就點進去看</small></div>
-          <div class="tiles">${pre.map(([it]) => tile(it, u)).join("")}</div>
+          <div class="tiles">${pre.map(tile).join("")}</div>
         </div>` : ""}
       <div data-group>
         <div class="group-title">這個單元 <small>照順序一張一張學</small></div>
-        <div class="tiles">${main.map(([it], j) => tile(it, u, j + 1)).join("")}</div>
+        <div class="tiles">${main.map(tile).join("")}</div>
       </div>
     </section>`;
   }).join("");
@@ -770,9 +818,9 @@ function render() {
 
 function applyFilter() {
   document.querySelectorAll("#filters .chip").forEach(c => c.setAttribute("aria-pressed", c.dataset.k === currentKind));
-  document.querySelectorAll(".tile").forEach(t => t.classList.toggle("hidden", currentKind !== "all" && t.dataset.k !== currentKind));
-  document.querySelectorAll("[data-group]").forEach(g => g.classList.toggle("hidden", !g.querySelector(".tile:not(.hidden)")));
-  document.querySelectorAll(".unit").forEach(u => u.classList.toggle("dim", !u.querySelector(".tile:not(.hidden)")));
+  document.querySelectorAll(".tw").forEach(t => t.classList.toggle("hidden", currentKind !== "all" && t.dataset.k !== currentKind));
+  document.querySelectorAll("[data-group]").forEach(g => g.classList.toggle("hidden", !g.querySelector(".tw:not(.hidden)")));
+  document.querySelectorAll(".unit").forEach(u => u.classList.toggle("dim", !u.querySelector(".tw:not(.hidden)")));
 }
 
 document.querySelectorAll(".tab").forEach(t => t.addEventListener("click", () => {
@@ -789,13 +837,40 @@ $("#filters").addEventListener("click", e => {
 
 const toast = $("#toast");
 let timer;
+// 重畫但保持畫面位置
+function rerender(anchor) {
+  const top = anchor.getBoundingClientRect().top, sel = anchor.dataset.page ? `[data-page="${anchor.dataset.page}"]` : `[data-unit="${anchor.dataset.unit}"]`;
+  render();
+  const again = document.querySelector(sel);
+  if (again) window.scrollBy(0, again.getBoundingClientRect().top - top);
+}
 $("#units").addEventListener("click", e => {
+  const tick = e.target.closest(".tick");
+  if (tick) {
+    const p = tick.dataset.page;
+    if (progress[p]) delete progress[p]; else progress[p] = 1;
+    saveJ(P_KEY, progress); rerender(tick); return;
+  }
+  const st = e.target.closest("button.status");
+  if (st) {
+    const next = ORDER[(ORDER.indexOf(st.dataset.st) + 1) % ORDER.length];
+    statusOv[st.dataset.unit] = next;
+    saveJ(S_KEY, statusOv); rerender(st); return;
+  }
   if (!e.target.closest("[data-soon]")) return;
   e.preventDefault();
   toast.classList.add("show");
   clearTimeout(timer);
   timer = setTimeout(() => toast.classList.remove("show"), 1600);
 });
+
+$("#reset").addEventListener("click", () => {
+  if (!confirm("要清除所有打勾和單元狀態嗎？")) return;
+  progress = {}; statusOv = {}; saveJ(P_KEY, progress); saveJ(S_KEY, statusOv); render();
+});
+// 從課程頁回來（或另一個分頁打勾）時更新
+window.addEventListener("pageshow", () => { progress = loadJ(P_KEY); statusOv = loadJ(S_KEY); render(); });
+window.addEventListener("storage", () => { progress = loadJ(P_KEY); statusOv = loadJ(S_KEY); render(); });
 
 render();
 if (location.hash) { const el = document.getElementById(location.hash.slice(1)); if (el) el.scrollIntoView(); }

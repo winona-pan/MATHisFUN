@@ -227,6 +227,26 @@
           `<a href="${root}${p.path}.html${q}" title="${p.t}" class="${p.pre ? "pre" : ""} ${i === idx ? "on" : ""}"></a>`).join("")}</span>`;
     }
     const pager = document.getElementById("pager");
+    // 「我學會了」：記在這台裝置上，目錄會顯示打勾
+    if (pager && page) {
+      const KEY = "mif-progress";
+      const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } };
+      const mark = document.createElement("div");
+      mark.className = "mark-done";
+      pager.before(mark);
+      const paint = () => {
+        const on = !!load()[page];
+        mark.innerHTML = `<button class="btn ${on ? "on" : ""}" aria-pressed="${on}">${on ? "✓ 這一課學會了！" : "☐ 這一課我學會了"}</button><small>${on ? "再按一次可以取消" : "按下去，目錄上會打勾"}</small>`;
+      };
+      mark.addEventListener("click", e => {
+        if (!e.target.closest("button")) return;
+        const d = load();
+        if (d[page]) delete d[page]; else d[page] = 1;
+        try { localStorage.setItem(KEY, JSON.stringify(d)); } catch (e) {}
+        paint();
+      });
+      paint();
+    }
     if (pager) {
       const prev = seq.pages[idx - 1], next = seq.pages[idx + 1];
       pager.innerHTML = `
