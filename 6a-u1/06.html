@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>生活應用：公因數還是公倍數？</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u1" data-page="6a-u1/06">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-learn">學會方法</span>
+  <h1>生活應用：公因數還是公倍數？</h1>
+  <p class="lead">「切開、平分」→ 公因數；「再一次碰在一起」→ 公倍數。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>剪成最大的正方形（公因數）</h2>
+    <p style="margin:0 0 8px">一張長 24 公分、寬 18 公分的紙，要剪成<b>一樣大</b>的正方形，<b>不能有剩</b>。正方形最大邊長多少？</p>
+    <div class="stage"><svg id="g1" viewBox="0 0 400 220"></svg></div>
+    <div class="controls"><label>正方形邊長 <input type="range" id="s" min="1" max="12" value="4"> <b id="sv"></b> 公分</label></div>
+    <div class="work" id="w1"></div>
+  </section>
+
+  <section class="box">
+    <h2><span class="n">2</span>公車再一起出發（公倍數）</h2>
+    <p style="margin:0 0 8px">紅色公車每 <b>6</b> 分鐘一班，藍色公車每 <b>8</b> 分鐘一班。早上 7:00 一起出發，下一次一起出發是幾點？</p>
+    <div class="stage"><svg id="g2" viewBox="0 0 400 150"></svg></div>
+    <div class="work">紅色在 6、12、18、<b>24</b>…；藍色在 8、16、<b>24</b>…　→ 最小公倍數 <b>24</b> 分鐘後 → <b>7:24</b></div>
+  </section>
+
+  <div class="formula word">
+    <div class="label">怎麼判斷</div>
+    <div class="big" style="font-size:1.25rem;line-height:1.9">切開、平分、分組、最大的…… → 最大公因數<br>再相遇、一起、最少要多久…… → 最小公倍數</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中的應用題也一樣：先判斷是「分」（因數）還是「合」（倍數），再列式計算。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  const sIn = document.getElementById("s"), L = 24, H = 18, U = 8;
+  function d1() {
+    const s = +sIn.value, okW = L % s === 0, okH = H % s === 0, ok = okW && okH;
+    let o = `<rect x="20" y="20" width="${L * U}" height="${H * U}" fill="var(--card)" stroke="var(--ink)" stroke-width="2"/>`;
+    for (let i = 0; i * s < L; i++) for (let j = 0; j * s < H; j++) {
+      const w = Math.min(s, L - i * s), h = Math.min(s, H - j * s), full = w === s && h === s;
+      o += `<rect x="${20 + i * s * U}" y="${20 + j * s * U}" width="${w * U}" height="${h * U}" fill="${full ? ((i + j) % 2 ? "var(--yellow)" : "var(--blue)") : "var(--red)"}" fill-opacity="${full ? .6 : .35}" stroke="var(--ink)" stroke-width="1"/>`;
+    }
+    o += `<text x="${30 + L * U}" y="40" font-size="13">24 公分</text><text x="${30 + L * U}" y="60" font-size="13">× 18 公分</text>`;
+    o += `<text x="${30 + L * U}" y="100" font-size="13" style="fill:${ok ? "var(--green)" : "var(--red)"}">${ok ? "剛剛好 ✓" : "有剩（紅色）✗"}</text>`;
+    document.getElementById("g1").innerHTML = o;
+    document.getElementById("sv").textContent = s;
+    document.getElementById("w1").innerHTML = ok ? `${s} 是 24 和 18 的<b>公因數</b>，剛好剪完。${s === 6 ? "🎉 6 是最大的公因數 → 正方形最大 6 公分！" : "還能更大嗎？"}` : `${s} 不能同時整除 24 和 18，會剩下紅色的部分。`;
+  }
+  sIn.addEventListener("input", d1); d1();
+  (function d2() {
+    let o = `<line x1="20" y1="60" x2="380" y2="60" stroke="var(--red)" stroke-width="2"/><line x1="20" y1="110" x2="380" y2="110" stroke="var(--blue)" stroke-width="2"/>`;
+    const u = 7.2;
+    for (let t = 0; t <= 48; t += 6) o += `<circle cx="${20 + t * u}" cy="60" r="7" fill="var(--red)"/><text x="${14 + t * u}" y="44" font-size="11">${t}</text>`;
+    for (let t = 0; t <= 48; t += 8) o += `<circle cx="${20 + t * u}" cy="110" r="7" fill="var(--blue)"/><text x="${14 + t * u}" y="134" font-size="11">${t}</text>`;
+    [24, 48].forEach(t => o += `<line x1="${20 + t * u}" y1="40" x2="${20 + t * u}" y2="125" stroke="var(--green)" stroke-width="3" stroke-dasharray="5 4"/>`);
+    o += `<text x="4" y="22" font-size="12">分鐘 →</text>`;
+    document.getElementById("g2").innerHTML = o;
+  })();
+
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { const g = W.rand(2, 9), a = g * W.rand(2, 6), b = g * W.rand(2, 6); return { q: `有 ${a} 顆蘋果、${b} 顆橘子，要<b>平分</b>給小朋友，每人分到的蘋果一樣多、橘子也一樣多，都不能有剩。最多可以分給幾人？`, ans: W.gcd(a, b), unit: "人", hint: "平分、最多 → 最大公因數", pic: `<text x="10" y="60" font-size="15">平分、最多</text><text x="10" y="96" font-size="15" style="fill:var(--red)">→ 最大公因數</text>` }; },
+    () => { const a = W.rand(2, 9), b = W.rand(2, 9); return { q: `小明每 ${a} 天游泳一次，小華每 ${b} 天游泳一次。今天兩人一起游泳，最少再過幾天會再一起游？`, ans: a * b / W.gcd(a, b), unit: "天", hint: "再一起 → 最小公倍數", pic: `<text x="10" y="60" font-size="15">再一起、最少</text><text x="10" y="96" font-size="15" style="fill:var(--red)">→ 最小公倍數</text>` }; },
+    () => { const g = W.rand(2, 8), a = g * W.rand(2, 6), b = g * W.rand(2, 6); return { q: `長 ${a}、寬 ${b} 公分的長方形，剪成一樣大的正方形不能剩，正方形邊長最大是幾公分？`, ans: W.gcd(a, b), unit: "公分", hint: "剪開 → 最大公因數", pic: `<rect x="20" y="30" width="150" height="90" fill="var(--yellow)" fill-opacity=".5" stroke="var(--ink)"/>` }; },
+  ] });
+</script>
+</body>
+</html>

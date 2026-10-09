@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>用短除法找最小公倍數</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u1" data-page="6a-u1/04">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-learn">學會方法</span>
+  <h1>用短除法找最小公倍數</h1>
+  <p class="lead">最小公倍數要「兩個數的質數全部都包含」：共同的拿一次，各自剩下的也要乘進去。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>外圍全部乘起來</h2>
+    <div class="controls" style="margin-top:0" id="pairs"></div>
+    <div class="stage" style="margin-top:12px"><svg id="g" viewBox="0 0 400 250"></svg></div>
+    <div class="work" id="w"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>為什麼？</h2>
+    <div class="steps">
+      <div class="step"><p>① 公倍數要能被<b>兩個數都整除</b>，所以要包含 24 的所有質數，<b>也</b>包含 36 的所有質數。</p></div>
+      <div class="step"><p>② 看圈圈：左邊（只有 24 有的）+ 中間（共同的）+ 右邊（只有 36 有的），<b>全部</b>乘起來。</p></div>
+      <div class="step"><p>③ 在短除法裡：左邊的數 = 中間（共同的），最下面一排 = 左右兩邊各自剩下的。</p></div>
+      <div class="step"><p>④ 所以 <b>最小公倍數 = 左邊 × 最下面一排</b>，像寫一個「L」形把外圍都乘起來。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula">
+    <div class="label">方法</div>
+    <div class="big" style="font-size:1.35rem">最小公倍數 = 左邊 × 最下面一排（L 形）</div>
+    <div class="sub">最大公因數只乘左邊；最小公倍數連下面也乘</div>
+  </div>
+
+  <div class="warn"><span class="ic">💡</span><p>好用的關係：<b>兩數相乘 = 最大公因數 × 最小公倍數</b>。24 × 36 = 864 = 12 × 72。</p></div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中算<b>分數通分</b>（例如 5/24 + 7/36），分母要找最小公倍數 72，一定會用到！</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script src="../assets/gens.js"></script>
+<script>
+  const PAIRS = [[24, 36], [12, 18], [8, 12], [15, 20]];
+  let pair = PAIRS[0];
+  const fact = n => { const f = []; let p = 2; while (n > 1) { while (n % p === 0) { f.push(p); n /= p; } p++; } return f; };
+  function rows([a, b]) { const R = []; for (;;) { let p = 2; while (p <= Math.min(a, b) && (a % p || b % p)) p++; if (p > Math.min(a, b)) break; R.push([p, a, b]); a /= p; b /= p; } R.push([null, a, b]); return R; }
+  function draw() {
+    const R = rows(pair);
+    let s = "";
+    R.forEach(([p, a, b], i) => {
+      const y = 40 + i * 40, last = i === R.length - 1;
+      if (p) s += `<text x="20" y="${y}" font-size="20" style="fill:var(--red)">${p}</text><line x1="40" y1="${y - 22}" x2="40" y2="${y + 8}" stroke="var(--ink)" stroke-width="2"/><line x1="40" y1="${y + 8}" x2="160" y2="${y + 8}" stroke="var(--ink)" stroke-width="2"/>`;
+      s += `<text x="58" y="${y}" font-size="20" style="fill:${last ? "var(--blue)" : "var(--ink)"}">${a}</text><text x="112" y="${y}" font-size="20" style="fill:${last ? "var(--blue)" : "var(--ink)"}">${b}</text>`;
+    });
+    const yl = 40 + (R.length - 1) * 40;
+    s += `<path d="M12 18 L12 ${yl + 14} L150 ${yl + 14}" fill="none" stroke="var(--green)" stroke-width="4" stroke-linecap="round" opacity=".7"/>`;
+    const fa = fact(pair[0]), fb = fact(pair[1]), com = [], fb2 = [...fb];
+    fa.forEach(x => { const i = fb2.indexOf(x); if (i >= 0) { com.push(x); fb2.splice(i, 1); } });
+    const onlyA = [...fa]; com.forEach(x => onlyA.splice(onlyA.indexOf(x), 1));
+    s += `<circle cx="245" cy="125" r="74" fill="var(--green)" fill-opacity=".12" stroke="var(--blue)" stroke-width="2.5"/><circle cx="315" cy="125" r="74" fill="var(--green)" fill-opacity=".12" stroke="var(--orange)" stroke-width="2.5"/>`;
+    s += `<text x="195" y="38" font-size="15" style="fill:var(--blue)">${pair[0]}</text><text x="335" y="38" font-size="15" style="fill:var(--orange)">${pair[1]}</text>`;
+    onlyA.forEach((x, i) => s += `<text x="${195 + (i % 2) * 18}" y="${110 + Math.floor(i / 2) * 26}" font-size="16" style="fill:var(--blue)">${x}</text>`);
+    fb2.forEach((x, i) => s += `<text x="${340 + (i % 2) * 18}" y="${110 + Math.floor(i / 2) * 26}" font-size="16" style="fill:var(--blue)">${x}</text>`);
+    com.forEach((x, i) => s += `<text x="${270 + (i % 2) * 18}" y="${100 + Math.floor(i / 2) * 26}" font-size="18" style="fill:var(--red)">${x}</text>`);
+    s += `<text x="232" y="232" font-size="13">全部圈起來的都要乘</text>`;
+    document.getElementById("g").innerHTML = s;
+    const ps = R.filter(r => r[0]).map(r => r[0]), last = R[R.length - 1], g = ps.reduce((x, y) => x * y, 1);
+    document.getElementById("w").innerHTML = `最小公倍數 = <span style="color:var(--red)">${ps.join(" × ")}</span> × <span style="color:var(--blue)">${last[1]} × ${last[2]}</span> = <b>${g * last[1] * last[2]}</b>`;
+    document.querySelectorAll("[data-pr]").forEach(b => b.setAttribute("aria-pressed", +b.dataset.pr === PAIRS.indexOf(pair)));
+  }
+  document.getElementById("pairs").innerHTML = PAIRS.map((p, i) => `<button class="btn" data-pr="${i}">${p[0]} 和 ${p[1]}</button>`).join("");
+  document.querySelectorAll("[data-pr]").forEach(b => b.addEventListener("click", () => { pair = PAIRS[+b.dataset.pr]; draw(); }));
+  draw();
+
+  W.practice(document.getElementById("prac"), { gens: [G.number.lcm, () => { const g = W.rand(2, 6), a = g * W.rand(2, 5), b = g * W.rand(2, 5); const askG = Math.random() < 0.5; return { q: `${a} 和 ${b} 的<b>${askG ? "最大公因數" : "最小公倍數"}</b>？`, ans: askG ? W.gcd(a, b) : a * b / W.gcd(a, b), hint: askG ? "只乘左邊" : "左邊 × 最下面一排", pic: `<text x="10" y="60" font-size="15">公因數：只乘左邊</text><text x="10" y="96" font-size="15" style="fill:var(--red)">公倍數：L 形外圍</text>` }; }] });
+</script>
+</body>
+</html>

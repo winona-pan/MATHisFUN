@@ -127,6 +127,20 @@
         { path: "6b-u7/04", t: "統計圖表與解題" },
       ],
     },
+    "6a-u1": {
+      name: "六上 第 1 單元・最大公因數與最小公倍數",
+      pages: [
+        { path: "review/factors", t: "因數", pre: true },
+        { path: "review/multiples", t: "倍數", pre: true },
+        { path: "review/common-factors", t: "公因數、公倍數", pre: true },
+        { path: "6a-u1/01", t: "質數與合數" },
+        { path: "6a-u1/02", t: "質因數分解" },
+        { path: "6a-u1/03", t: "短除法找最大公因數" },
+        { path: "6a-u1/04", t: "用短除法找最小公倍數" },
+        { path: "6a-u1/05", t: "互質" },
+        { path: "6a-u1/06", t: "生活應用" },
+      ],
+    },
   };
 
   const body = document.body;

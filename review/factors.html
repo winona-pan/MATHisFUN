@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>因數</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u1" data-page="review/factors">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-pre">先備知識・4 年級學過</span>
+  <h1>因數</h1>
+  <p class="lead">把方塊排成整整齊齊的長方形，每一排放幾個，就是因數。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>排排看</h2>
+    <div class="stage"><svg id="g" viewBox="0 0 400 260"></svg></div>
+    <div class="controls"><label>方塊有 <input type="range" id="n" min="1" max="36" value="12"> <b id="nv"></b> 個</label></div>
+    <div class="work" id="w"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>想一想</h2>
+    <div class="steps">
+      <div class="step"><p>① 12 個方塊可以排成：1 × 12、2 × 6、3 × 4（反過來也一樣）。</p></div>
+      <div class="step"><p>② 出現的數 1、2、3、4、6、12，都可以<b>整除</b> 12（除了沒有餘數），叫做 12 的<b>因數</b>。</p></div>
+      <div class="step"><p>③ 找因數要<b>一對一對找</b>：1 和 12、2 和 6、3 和 4，就不會漏掉。</p></div>
+      <div class="step"><p>④ 1 是每個數的因數；每個數也都是自己的因數。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula pre">
+    <div class="label">記起來</div>
+    <div class="big" style="font-size:1.35rem">能整除 n 的數，叫做 n 的因數</div>
+    <div class="sub">一對一對找：1 × 12、2 × 6、3 × 4</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中七年級第一章就有「<b>因數與倍數</b>」，還會用到「<b>標準分解式</b>」，例如 <code>12 = 2² × 3</code>。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>練習一下</h2>
+    <div class="quiz">
+      <div class="q" data-hint="18 ÷ 4 有餘數">
+        <p class="qt">下面哪一個<b>不是</b> 18 的因數？</p>
+        <div class="choices"><button class="choice">2</button><button class="choice">3</button><button class="choice" data-right>4</button><button class="choice">6</button></div>
+      </div>
+      <div class="q" data-answer="6" data-hint="1、2、4、5、10、20">
+        <p class="qt">20 有幾個因數？</p>
+        <div class="row"><input type="text" inputmode="decimal"> 個 <button class="btn">對答案</button></div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script>
+  const nIn = document.getElementById("n");
+  function draw() {
+    const n = +nIn.value, pairs = [];
+    for (let a = 1; a * a <= n; a++) if (n % a === 0) pairs.push([a, n / a]);
+    let s = "", y = 12;
+    pairs.forEach(([a, b]) => {
+      const c = Math.min(10, 360 / b);
+      s += `<text x="4" y="${y + a * c / 2 + 5}" font-size="12">${a} × ${b}</text>`;
+      for (let r = 0; r < a; r++) for (let k = 0; k < b; k++) s += `<rect x="${44 + k * c}" y="${y + r * c}" width="${c - 1}" height="${c - 1}" fill="${r % 2 ? "var(--blue)" : "var(--yellow)"}" stroke="var(--ink)" stroke-width=".5"/>`;
+      y += a * c + 12;
+    });
+    document.getElementById("g").setAttribute("viewBox", `0 0 400 ${Math.max(120, y)}`);
+    document.getElementById("g").innerHTML = s;
+    const f = []; for (let a = 1; a <= n; a++) if (n % a === 0) f.push(a);
+    document.getElementById("nv").textContent = n;
+    document.getElementById("w").innerHTML = `${n} 的因數：<b>${f.join("、")}</b>（共 ${f.length} 個）${f.length === 2 ? "　← 只能排成一排！" : ""}`;
+  }
+  nIn.addEventListener("input", draw); draw();
+</script>
+</body>
+</html>

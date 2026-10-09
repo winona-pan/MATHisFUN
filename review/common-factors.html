@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>公因數、公倍數</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+<style>
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 12px; }
+  .chips span { min-width: 36px; text-align: center; padding: 4px 8px; border-radius: 10px; border: 2px solid var(--line); font-weight: 900; background: var(--card); }
+  .chips span.both { background: var(--yellow); border-color: var(--ink); color: #2b2a33; }
+  .chips span.big { background: var(--red); color: #fff; border-color: var(--red); }
+</style>
+</head>
+<body data-seq="6a-u1" data-page="review/common-factors">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-pre">先備知識・5 年級學過</span>
+  <h1>公因數、公倍數</h1>
+  <p class="lead">兩個數<b>共同</b>的因數叫公因數；<b>共同</b>的倍數叫公倍數。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>找共同的</h2>
+    <div class="controls" style="margin-top:0">
+      <label>A <input type="range" id="a" min="2" max="36" value="12"> <b id="av"></b></label>
+      <label>B <input type="range" id="b" min="2" max="36" value="18"> <b id="bv"></b></label>
+    </div>
+    <h3 style="margin:12px 0 0">因數</h3>
+    <div><b id="la"></b><div class="chips" id="fa"></div><b id="lb"></b><div class="chips" id="fb"></div></div>
+    <div class="work" id="w1"></div>
+    <h3 style="margin:12px 0 0">倍數（前 12 個）</h3>
+    <div><b id="ma-l"></b><div class="chips" id="ma"></div><b id="mb-l"></b><div class="chips" id="mb"></div></div>
+    <div class="work" id="w2"></div>
+  </section>
+
+  <div class="formula pre">
+    <div class="label">記起來</div>
+    <div class="big" style="font-size:1.3rem">公因數裡最大的 → 最大公因數</div>
+    <div class="big" style="font-size:1.3rem">公倍數裡最小的 → 最小公倍數</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中寫成 <code>(12, 18) = 6</code>（最大公因數）、<code>[12, 18] = 36</code>（最小公倍數）。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">2</span>練習一下</h2>
+    <div class="quiz">
+      <div class="q" data-answer="4" data-hint="8 的因數：1,2,4,8；12 的因數：1,2,3,4,6,12">
+        <p class="qt">8 和 12 的最大公因數？</p>
+        <div class="row"><input type="text" inputmode="decimal"> <button class="btn">對答案</button></div>
+      </div>
+      <div class="q" data-answer="24" data-hint="8 的倍數：8,16,24…；6 的倍數：6,12,18,24…">
+        <p class="qt">6 和 8 的最小公倍數？</p>
+        <div class="row"><input type="text" inputmode="decimal"> <button class="btn">對答案</button></div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script>
+  const A = document.getElementById("a"), B = document.getElementById("b");
+  const fac = n => { const f = []; for (let i = 1; i <= n; i++) if (n % i === 0) f.push(i); return f; };
+  function draw() {
+    const a = +A.value, b = +B.value, fa = fac(a), fb = fac(b), com = fa.filter(x => fb.includes(x)), g = Math.max(...com);
+    const chips = (list, other, big) => list.map(x => `<span class="${x === big ? "big" : other(x) ? "both" : ""}">${x}</span>`).join("");
+    document.getElementById("av").textContent = a; document.getElementById("bv").textContent = b;
+    document.getElementById("la").textContent = `${a} 的因數`; document.getElementById("lb").textContent = `${b} 的因數`;
+    document.getElementById("fa").innerHTML = chips(fa, x => fb.includes(x), g);
+    document.getElementById("fb").innerHTML = chips(fb, x => fa.includes(x), g);
+    document.getElementById("w1").innerHTML = `公因數（黃色）：${com.join("、")}　最大公因數（紅色）：<b>${g}</b>`;
+    const ma = Array.from({ length: 12 }, (_, i) => a * (i + 1)), mb = Array.from({ length: 12 }, (_, i) => b * (i + 1));
+    const cm = ma.filter(x => mb.includes(x)), l = a * b / (function gg(x, y) { return y ? gg(y, x % y) : x; })(a, b);
+    document.getElementById("ma-l").textContent = `${a} 的倍數`; document.getElementById("mb-l").textContent = `${b} 的倍數`;
+    document.getElementById("ma").innerHTML = chips(ma, x => mb.includes(x), l);
+    document.getElementById("mb").innerHTML = chips(mb, x => ma.includes(x), l);
+    document.getElementById("w2").innerHTML = `公倍數（黃色）：${cm.length ? cm.join("、") + "、……" : "要再往後找"}　最小公倍數（紅色）：<b>${l}</b>`;
+  }
+  A.addEventListener("input", draw); B.addEventListener("input", draw); draw();
+</script>
+</body>
+</html>

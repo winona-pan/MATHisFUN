@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>短除法找最大公因數</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u1" data-page="6a-u1/03">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-formula">公式怎麼來</span>
+  <h1>短除法為什麼能找最大公因數？</h1>
+  <p class="lead">兩個數一起拿出「共同的質數」，拿出來的乘起來就是最大公因數。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>短除法 + 質因數圈圈</h2>
+    <div class="controls" style="margin-top:0" id="pairs"></div>
+    <div class="stage" style="margin-top:12px"><svg id="g" viewBox="0 0 400 250"></svg></div>
+    <div class="controls"><button class="btn primary" id="step">下一步 →</button><button class="btn" id="again">重來</button></div>
+    <div class="work" id="w"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>為什麼？</h2>
+    <div class="steps">
+      <div class="step"><p>① 24 = 2 × 2 × 2 × 3，36 = 2 × 2 × 3 × 3。</p></div>
+      <div class="step"><p>② <b>兩個都有的</b>質數：2、2、3（右邊圖的中間重疊區）。</p></div>
+      <div class="step"><p>③ 短除法每一次除，就是把一個<b>共同的質數</b>拿出來寫在左邊。</p></div>
+      <div class="step"><p>④ 左邊全部乘起來 = 2 × 2 × 3 = 12，就是兩個數共同擁有的最大部分 → <b>最大公因數</b>。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula">
+    <div class="label">方法</div>
+    <div class="big" style="font-size:1.35rem">最大公因數 = 短除法左邊的數全部相乘</div>
+    <div class="sub">一直除到兩個數沒有共同的因數（只剩 1）為止</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中還會學「<b>輾轉相除法</b>」，大數字也能很快找到最大公因數。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script src="../assets/gens.js"></script>
+<script>
+  const PAIRS = [[24, 36], [18, 30], [12, 40], [48, 60]];
+  let pair = PAIRS[0], k = 0;
+  const fact = n => { const f = []; let p = 2; while (n > 1) { while (n % p === 0) { f.push(p); n /= p; } p++; } return f; };
+  function rows([a, b]) { const R = []; for (;;) { let p = 2; while (p <= Math.min(a, b) && (a % p || b % p)) p++; if (p > Math.min(a, b)) break; R.push([p, a, b]); a /= p; b /= p; } R.push([null, a, b]); return R; }
+  function draw() {
+    const R = rows(pair), shown = R.slice(0, k + 1);
+    let s = "";
+    shown.forEach(([p, a, b], i) => {
+      const y = 40 + i * 40;
+      if (p) s += `<text x="20" y="${y}" font-size="20" style="fill:var(--red)">${p}</text><line x1="40" y1="${y - 22}" x2="40" y2="${y + 8}" stroke="var(--ink)" stroke-width="2"/><line x1="40" y1="${y + 8}" x2="160" y2="${y + 8}" stroke="var(--ink)" stroke-width="2"/>`;
+      s += `<text x="58" y="${y}" font-size="20">${a}</text><text x="112" y="${y}" font-size="20">${b}</text>`;
+    });
+    // 質因數圈圈
+    const fa = fact(pair[0]), fb = fact(pair[1]), com = [];
+    const fb2 = [...fb]; fa.forEach(x => { const i = fb2.indexOf(x); if (i >= 0) { com.push(x); fb2.splice(i, 1); } });
+    const onlyA = [...fa]; com.forEach(x => onlyA.splice(onlyA.indexOf(x), 1));
+    s += `<circle cx="245" cy="125" r="74" fill="var(--blue)" fill-opacity=".15" stroke="var(--blue)" stroke-width="2.5"/><circle cx="315" cy="125" r="74" fill="var(--orange)" fill-opacity=".15" stroke="var(--orange)" stroke-width="2.5"/>`;
+    s += `<text x="195" y="38" font-size="15" style="fill:var(--blue)">${pair[0]}</text><text x="335" y="38" font-size="15" style="fill:var(--orange)">${pair[1]}</text>`;
+    onlyA.forEach((x, i) => s += `<text x="${195 + (i % 2) * 18}" y="${110 + Math.floor(i / 2) * 26}" font-size="16">${x}</text>`);
+    fb2.forEach((x, i) => s += `<text x="${340 + (i % 2) * 18}" y="${110 + Math.floor(i / 2) * 26}" font-size="16">${x}</text>`);
+    com.forEach((x, i) => { const on = i < k; s += `<text x="${270 + (i % 2) * 18}" y="${100 + Math.floor(i / 2) * 26}" font-size="18" style="fill:${on ? "var(--red)" : "var(--ink)"}">${x}</text>`; });
+    s += `<text x="270" y="232" font-size="13">中間 = 共同的</text>`;
+    document.getElementById("g").innerHTML = s;
+    const done = k >= R.length - 1, ps = R.filter(r => r[0]).map(r => r[0]);
+    document.getElementById("w").innerHTML = done
+      ? `${R[R.length - 1][1]} 和 ${R[R.length - 1][2]} 沒有共同的因數了（互質）→ 停！<br>最大公因數 = ${ps.join(" × ")} = <b>${ps.reduce((x, y) => x * y, 1)}</b>`
+      : k === 0 ? "找一個兩個數都能除的質數（從 2 開始試）" : `用 ${ps[k - 1]} 一起除，紅色的 ${ps[k - 1]} 被拿出來了`;
+    document.getElementById("step").disabled = done;
+    document.querySelectorAll("[data-pr]").forEach(b => b.setAttribute("aria-pressed", +b.dataset.pr === PAIRS.indexOf(pair)));
+  }
+  document.getElementById("pairs").innerHTML = PAIRS.map((p, i) => `<button class="btn" data-pr="${i}">${p[0]} 和 ${p[1]}</button>`).join("");
+  document.querySelectorAll("[data-pr]").forEach(b => b.addEventListener("click", () => { pair = PAIRS[+b.dataset.pr]; k = 0; draw(); }));
+  document.getElementById("step").addEventListener("click", () => { k++; draw(); });
+  document.getElementById("again").addEventListener("click", () => { k = 0; draw(); });
+  draw();
+
+  W.practice(document.getElementById("prac"), { gens: [G.number.gcd] });
+</script>
+</body>
+</html>

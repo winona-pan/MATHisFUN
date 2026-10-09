@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>互質</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u1" data-page="6a-u1/05">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-word">名詞</span>
+  <h1>互質</h1>
+  <p class="lead">兩個數「沒有共同的質數」，就叫做互質。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>有沒有共同的？</h2>
+    <div class="controls" style="margin-top:0">
+      <label>A <input type="range" id="a" min="2" max="30" value="8"> <b id="av"></b></label>
+      <label>B <input type="range" id="b" min="2" max="30" value="15"> <b id="bv"></b></label>
+    </div>
+    <div class="stage" style="margin-top:12px"><svg id="g" viewBox="0 0 400 200"></svg></div>
+    <div class="work" id="w"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>認識互質</h2>
+    <div class="steps">
+      <div class="step"><p>① 8 = 2 × 2 × 2，15 = 3 × 5，中間<b>沒有共同的</b>質數 → 最大公因數是 <b>1</b> → <b>互質</b>。</p></div>
+      <div class="step"><p>② 互質<b>不一定</b>都是質數！8 和 15 都是合數，但它們互質。</p></div>
+      <div class="step"><p>③ 兩個互質的數，最小公倍數 = <b>兩數直接相乘</b>（8 × 15 = 120）。</p></div>
+      <div class="step"><p>④ 分數約到最簡，分子和分母就互質，例如 8/15。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula word">
+    <div class="label">名詞</div>
+    <div class="big" style="font-size:1.3rem">互質：最大公因數只有 1</div>
+    <div class="sub">互質的兩數：最小公倍數 = 兩數相乘</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中寫成 <code>(8, 15) = 1</code>，表示 8 和 15 互質。「最簡分數」的分子分母一定互質。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  const A = document.getElementById("a"), B = document.getElementById("b");
+  const fact = n => { const f = []; let p = 2; while (n > 1) { while (n % p === 0) { f.push(p); n /= p; } p++; } return f; };
+  function draw() {
+    const a = +A.value, b = +B.value, fa = fact(a), fb = fact(b), com = [], fb2 = [...fb];
+    fa.forEach(x => { const i = fb2.indexOf(x); if (i >= 0) { com.push(x); fb2.splice(i, 1); } });
+    const onlyA = [...fa]; com.forEach(x => onlyA.splice(onlyA.indexOf(x), 1));
+    let s = `<circle cx="160" cy="105" r="80" fill="var(--blue)" fill-opacity=".15" stroke="var(--blue)" stroke-width="2.5"/><circle cx="240" cy="105" r="80" fill="var(--orange)" fill-opacity=".15" stroke="var(--orange)" stroke-width="2.5"/>`;
+    s += `<text x="100" y="20" font-size="16" style="fill:var(--blue)">${a}</text><text x="285" y="20" font-size="16" style="fill:var(--orange)">${b}</text>`;
+    onlyA.forEach((x, i) => s += `<text x="${100 + (i % 2) * 20}" y="${95 + Math.floor(i / 2) * 26}" font-size="17">${x}</text>`);
+    fb2.forEach((x, i) => s += `<text x="${265 + (i % 2) * 20}" y="${95 + Math.floor(i / 2) * 26}" font-size="17">${x}</text>`);
+    if (com.length) com.forEach((x, i) => s += `<text x="${188 + (i % 2) * 18}" y="${95 + Math.floor(i / 2) * 26}" font-size="18" style="fill:var(--red)">${x}</text>`);
+    else s += `<text x="183" y="110" font-size="22" style="fill:var(--green)">空</text>`;
+    document.getElementById("g").innerHTML = s;
+    document.getElementById("av").textContent = a; document.getElementById("bv").textContent = b;
+    const g = W.gcd(a, b);
+    document.getElementById("w").innerHTML = g === 1 ? `中間是空的 → 最大公因數 = 1 → <b style="color:var(--green)">${a} 和 ${b} 互質</b> ✓` : `中間有共同的 ${com.join("、")} → 最大公因數 = ${g} → <b style="color:var(--red)">不互質</b>`;
+  }
+  A.addEventListener("input", draw); B.addEventListener("input", draw); draw();
+
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { const a = W.rand(2, 30), b = W.rand(2, 30); return { q: `<b>${a}</b> 和 <b>${b}</b> 互質嗎？`, choices: ["互質", "不互質"], ans: W.gcd(a, b) === 1 ? 0 : 1, hint: `最大公因數是 ${W.gcd(a, b)}`, pic: `<text x="40" y="90" font-size="36">${a} 和 ${b}</text>` }; },
+    () => { let a, b; do { a = W.rand(2, 12); b = W.rand(2, 12); } while (W.gcd(a, b) !== 1 || a === b); return { q: `${a} 和 ${b} 互質，最小公倍數是多少？`, ans: a * b, hint: "互質 → 直接相乘", pic: `<text x="40" y="90" font-size="36">${a} × ${b}</text>` }; },
+  ] });
+</script>
+</body>
+</html>
