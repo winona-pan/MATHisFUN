@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>比</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u4" data-page="6a-u4/01">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-word">名詞</span>
+  <h1>比</h1>
+  <p class="lead">調果汁：2 杯果汁配 3 杯水，寫成「果汁 : 水 = 2 : 3」。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>調果汁</h2>
+    <div class="stage"><svg id="g" viewBox="0 0 400 190"></svg></div>
+    <div class="controls">
+      <label>🍊 果汁 <input type="range" id="a" min="1" max="6" value="2"> <b id="av"></b> 杯</label>
+      <label>💧 水 <input type="range" id="b" min="1" max="6" value="3"> <b id="bv"></b> 杯</label>
+    </div>
+    <div class="readout">
+      <div class="r" style="color:var(--orange)"><small>果汁 : 水</small><span id="c1"></span></div>
+      <div class="r" style="color:var(--blue)"><small>水 : 果汁</small><span id="c2"></span></div>
+    </div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>認識名字</h2>
+    <div class="steps">
+      <div class="step"><p>① <b>比</b>：比較兩個量的關係，寫成 a : b，唸「a 比 b」。</p></div>
+      <div class="step"><p>② 前面的 a 叫<b>前項</b>，後面的 b 叫<b>後項</b>。</p></div>
+      <div class="step"><p>③ <b>順序很重要</b>！果汁 : 水 = 2 : 3，水 : 果汁 = 3 : 2，意思不一樣。</p></div>
+      <div class="step"><p>④ 比的後項不能是 0。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula word">
+    <div class="label">名詞</div>
+    <div class="big">a : b　前項 : 後項</div>
+    <div class="sub">誰在前、誰在後，要跟著題目的順序寫</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中會學「<b>連比</b>」：三個量一起比，例如 <code>2 : 3 : 5</code>。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  const A = document.getElementById("a"), B = document.getElementById("b");
+  function cup(x, y, col) { return `<path d="M${x} ${y} l6 44 l24 0 l6 -44 Z" fill="${col}" fill-opacity=".8" stroke="var(--ink)" stroke-width="1.5"/>`; }
+  function draw() {
+    const a = +A.value, b = +B.value;
+    let s = "";
+    for (let i = 0; i < a; i++) s += cup(20 + i * 42, 30, "var(--orange)");
+    for (let i = 0; i < b; i++) s += cup(20 + i * 42, 110, "var(--blue)");
+    s += `<text x="290" y="60" font-size="14">果汁 ${a} 杯</text><text x="290" y="140" font-size="14">水 ${b} 杯</text>`;
+    document.getElementById("g").innerHTML = s;
+    document.getElementById("av").textContent = a; document.getElementById("bv").textContent = b;
+    document.getElementById("c1").textContent = `${a} : ${b}`; document.getElementById("c2").textContent = `${b} : ${a}`;
+  }
+  A.addEventListener("input", draw); B.addEventListener("input", draw); draw();
+
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { const a = W.rand(2, 9), b = W.rand(2, 9), [x, y] = W.pick([["男生", "女生"], ["紅球", "藍球"], ["糖", "麵粉"]]), rev = Math.random() < 0.5;
+      const right = rev ? `${b} : ${a}` : `${a} : ${b}`, wrong = rev ? `${a} : ${b}` : `${b} : ${a}`;
+      if (a === b) return { q: `${x} ${a} 個、${y} ${b} 個，${x} : ${y} = ?`, choices: [`${a} : ${b}`, `${a + b} : ${b}`], ans: 0, hint: "照題目順序", pic: "" };
+      const opts = [right, wrong, `${a} : ${a + b}`].sort(() => Math.random() - .5);
+      return { q: `${x}有 ${a} 個、${y}有 ${b} 個。<b>${rev ? y : x} : ${rev ? x : y}</b> = ?`, choices: opts, ans: opts.indexOf(right), hint: "照題目的順序寫：先寫前面那個", pic: `<text x="20" y="80" font-size="16">${x} ${a}、${y} ${b}</text>` }; },
+    () => { const a = W.rand(2, 9), b = W.rand(2, 9); return { q: `全班 ${a + b} 人，男生 ${a} 人。<b>女生 : 全班</b> = □ : ${a + b}，□ = ?`, ans: b, hint: `女生 = ${a + b} − ${a}`, pic: "" }; },
+  ] });
+</script>
+</body>
+</html>

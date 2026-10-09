@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>分數與除法</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u4" data-page="review/fraction-and-division">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-pre">先備知識・5 年級學過</span>
+  <h1>分數與除法</h1>
+  <p class="lead">3 個披薩平分給 4 個人，每人拿多少？3 ÷ 4 = ¾！</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>平分披薩</h2>
+    <div class="stage"><svg id="g" viewBox="0 0 400 200"></svg></div>
+    <div class="controls">
+      <label>披薩 <input type="range" id="a" min="1" max="4" value="3"> <b id="av"></b> 個</label>
+      <label>人數 <input type="range" id="b" min="2" max="6" value="4"> <b id="bv"></b> 人</label>
+    </div>
+    <div class="work" id="w"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>想一想</h2>
+    <div class="steps">
+      <div class="step"><p>① 每個披薩都切成 4 片，每人從<b>每個</b>披薩拿 1 片。</p></div>
+      <div class="step"><p>② 3 個披薩 → 每人拿到 3 片 ¼ = <b>¾ 個</b>。</p></div>
+      <div class="step"><p>③ 所以 <b>3 ÷ 4 = ¾</b>：被除數變分子、除數變分母。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula pre">
+    <div class="label">記起來</div>
+    <div class="big">a ÷ b = a/b</div>
+    <div class="sub">分數線就是除號</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中幾乎不寫「÷」，都寫成分數：<code>x ÷ 3</code> 寫成 <code>x/3</code>。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>練習一下</h2>
+    <div class="quiz">
+      <div class="q" data-hint="被除數當分子、除數當分母">
+        <p class="qt">2 ÷ 5 = ?</p>
+        <div class="choices"><button class="choice" data-right>2/5</button><button class="choice">5/2</button><button class="choice">2.5</button></div>
+      </div>
+      <div class="q" data-answer="7" data-hint="分子 ÷ 分母：□ ÷ 9">
+        <p class="qt">7/9 = □ ÷ 9，□ = ?</p>
+        <div class="row"><input type="text" inputmode="decimal"> <button class="btn">對答案</button></div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  const A = document.getElementById("a"), B = document.getElementById("b");
+  const COL = ["#7cb8f0", "#f6cd6a", "#8fd4ab", "#f5a3a3", "#c3b1ee", "#f7b98a"];
+  function draw() {
+    const a = +A.value, b = +B.value;
+    let s = "";
+    for (let p = 0; p < a; p++) { const cx = 55 + p * 95, cy = 80;
+      for (let i = 0; i < b; i++) s += `<path d="${W.slice(cx, cy, 42, i * 360 / b, (i + 1) * 360 / b)}" fill="${COL[i]}" stroke="var(--ink)" stroke-width="1.5"/>`; }
+    s += `<text x="20" y="160" font-size="14">每一種顏色是一個人：每人從每個披薩拿 1 片（1/${b}）</text>`;
+    s += `<text x="20" y="186" font-size="14">→ 每人拿 ${a} 片 1/${b} = ${a}/${b} 個</text>`;
+    document.getElementById("g").innerHTML = s;
+    document.getElementById("av").textContent = a; document.getElementById("bv").textContent = b;
+    document.getElementById("w").innerHTML = `${a} ÷ ${b} = <b>${a}/${b}</b>`;
+  }
+  A.addEventListener("input", draw); B.addEventListener("input", draw); draw();
+</script>
+</body>
+</html>

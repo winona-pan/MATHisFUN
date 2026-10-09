@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>小數、分數的比</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u4" data-page="6a-u4/05">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-learn">學會方法</span>
+  <h1>小數、分數的比</h1>
+  <p class="lead">0.6 : 0.8 或 ½ : ⅓？先同乘一個數，變成整數比，再化簡。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>一步一步化簡</h2>
+    <div class="controls" style="margin-top:0" id="exs"></div>
+    <div class="calc" id="calc" style="margin-top:10px"></div>
+    <div class="controls"><button class="btn primary" id="step">下一步 →</button><button class="btn" id="again">重來</button></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>方法</h2>
+    <div class="steps">
+      <div class="step"><p>① <b>小數</b>：看小數最多有幾位，同乘 10、100……變整數。0.6 : 0.8 → ×10 → 6 : 8。</p></div>
+      <div class="step"><p>② <b>分數</b>：同乘分母的<b>最小公倍數</b>。½ : ⅓ → ×6 → 3 : 2。</p></div>
+      <div class="step"><p>③ <b>小數和分數混在一起</b>：先把小數變分數（或分數變小數）。</p></div>
+      <div class="step"><p>④ 最後別忘了<b>約到最簡</b>：6 : 8 → 3 : 4。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula word">
+    <div class="label">方法</div>
+    <div class="big" style="font-size:1.3rem">先同乘變整數 → 再同除到最簡</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中解有分數的方程式，第一步也常是「同乘分母的最小公倍數」去分母，一模一樣的想法！</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  const EX = [
+    { name: "0.6 : 0.8", rows: ["0.6 : 0.8", "= [[6 : 8]]　← 同乘 10", "= [[3 : 4]]　← 同除以 2"] },
+    { name: "1.2 : 0.36", rows: ["1.2 : 0.36", "= [[120 : 36]]　← 最多 2 位小數，同乘 100", "= [[10 : 3]]　← 同除以 12"] },
+    { name: "½ : ⅓", rows: ["½ : ⅓", "= [[3 : 2]]　← 同乘 6（2 和 3 的最小公倍數）"] },
+    { name: "¾ : 0.5", rows: ["¾ : 0.5", "= [[¾ : ½]]　← 0.5 變成分數", "= [[3 : 2]]　← 同乘 4"] },
+  ];
+  let ex = 0, k = 0;
+  const show = r => r.replace(/\[\[(.+?)\]\]/g, '<span class="hl">$1</span>');
+  function draw() {
+    const E = EX[ex];
+    document.getElementById("calc").innerHTML = E.rows.slice(0, k + 1).map((r, i) => `<span class="row">${i === k ? show(r) : r.replace(/\[\[|\]\]/g, "")}</span>`).join("");
+    document.getElementById("step").disabled = k >= E.rows.length - 1;
+    document.querySelectorAll("[data-ex]").forEach(b => b.setAttribute("aria-pressed", +b.dataset.ex === ex));
+  }
+  document.getElementById("exs").innerHTML = EX.map((e, i) => `<button class="btn" data-ex="${i}">${e.name}</button>`).join("");
+  document.querySelectorAll("[data-ex]").forEach(b => b.addEventListener("click", () => { ex = +b.dataset.ex; k = 0; draw(); }));
+  document.getElementById("step").addEventListener("click", () => { k++; draw(); });
+  document.getElementById("again").addEventListener("click", () => { k = 0; draw(); });
+  draw();
+
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { let a, b; do { a = W.rand(1, 9); b = W.rand(1, 9); } while (W.gcd(a, b) !== 1 || a === b); const k = W.pick([1, 2, 3]); return { q: `${(a * k / 10).toFixed(1)} : ${(b * k / 10).toFixed(1)} 化成最簡整數比 = ${a} : □，□ = ?`, ans: b, hint: `同乘 10 → ${a * k} : ${b * k}，再約分`, pic: "" }; },
+    () => { const [p, q] = W.pick([[2, 3], [3, 4], [2, 5], [4, 5], [3, 5], [2, 7]]); const L = p * q / W.gcd(p, q); return { q: `1/${p} : 1/${q} 化成最簡整數比 = ${L / p} : □，□ = ?`, ans: L / q, hint: `同乘 ${L}`, pic: "" }; },
+  ] });
+</script>
+</body>
+</html>

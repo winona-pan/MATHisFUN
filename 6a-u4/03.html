@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>相等的比</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u4" data-page="6a-u4/03">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-formula">公式怎麼來</span>
+  <h1>相等的比</h1>
+  <p class="lead">做 2 份、3 份一樣口味的果汁：前項後項同乘，味道不變。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>做更多份</h2>
+    <div class="stage"><svg id="g" viewBox="0 0 400 220"></svg></div>
+    <div class="controls"><label>做 <input type="range" id="k" min="1" max="4" value="2"> <b id="kv"></b> 份（原本 2 : 3）</label></div>
+    <div class="work" id="w"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>公式怎麼來</h2>
+    <div class="steps">
+      <div class="step"><p>① 一份是 2 杯果汁 : 3 杯水。做 2 份 → 4 : 6，口味一樣。</p></div>
+      <div class="step"><p>② 比值：2 ÷ 3 = ⅔，4 ÷ 6 = ⅔ → <b>比值一樣</b>，所以 2 : 3 = 4 : 6。</p></div>
+      <div class="step"><p>③ 就像擴分：前項、後項<b>同乘</b>（或同除）一個不是 0 的數，比值不變。</p></div>
+      <div class="step"><p>④ 用來求 □：2 : 3 = □ : 12 → 3 變 12 是 × 4 → □ = 2 × 4 = <b>8</b>。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula">
+    <div class="label">公式</div>
+    <div class="big">a : b = (a × k) : (b × k)</div>
+    <div class="sub">比值相等的兩個比，叫做相等的比</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中用「<b>交叉相乘</b>」求 □：<code>2 : 3 = x : 12</code> → <code>3x = 24</code> → <code>x = 8</code>。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script src="../assets/gens.js"></script>
+<script>
+  const kIn = document.getElementById("k");
+  function cup(x, y, col) { return `<path d="M${x} ${y} l4 32 l18 0 l4 -32 Z" fill="${col}" fill-opacity=".8" stroke="var(--ink)" stroke-width="1.2"/>`; }
+  function draw() {
+    const k = +kIn.value;
+    let s = "";
+    for (let g = 0; g < k; g++) {
+      const x0 = 14 + g * 96;
+      s += `<rect x="${x0 - 4}" y="10" width="90" height="190" rx="10" fill="none" stroke="var(--line)" stroke-width="2" stroke-dasharray="5 4"/><text x="${x0 + 20}" y="212" font-size="12">第 ${g + 1} 份</text>`;
+      for (let i = 0; i < 2; i++) s += cup(x0 + i * 30, 24, "var(--orange)");
+      for (let i = 0; i < 3; i++) s += cup(x0 + (i % 2) * 30, 92 + Math.floor(i / 2) * 44, "var(--blue)");
+    }
+    document.getElementById("g").innerHTML = s;
+    document.getElementById("kv").textContent = k;
+    document.getElementById("w").innerHTML = `2 : 3 = (2 × ${k}) : (3 × ${k}) = <b>${2 * k} : ${3 * k}</b>　比值都是 ⅔`;
+  }
+  kIn.addEventListener("input", draw); draw();
+
+  W.practice(document.getElementById("prac"), { gens: [G.ratio.equal, () => { const a = W.rand(1, 9), b = W.rand(2, 9), k = W.rand(2, 6); return { q: `${a * k} : ${b * k} = ${a} : □，□ = ?`, ans: b, hint: `前項 ÷ ${k}，後項也 ÷ ${k}`, pic: "" }; },
+    () => { const a = W.rand(1, 6), b = W.rand(2, 7), k = W.rand(2, 4); const ok = Math.random() < 0.5, c = a * k + (ok ? 0 : 1); return { q: `${a} : ${b} 和 ${c} : ${b * k} 是相等的比嗎？`, choices: ["是", "不是"], ans: ok ? 0 : 1, hint: `看比值：${a}/${b} 和 ${c}/${b * k}`, pic: "" }; }] });
+</script>
+</body>
+</html>

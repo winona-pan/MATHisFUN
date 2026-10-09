@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>最簡整數比</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u4" data-page="6a-u4/04">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-word">名詞</span>
+  <h1>最簡整數比</h1>
+  <p class="lead">12 : 18 太大了？分成一樣的小組，看「一組」長怎樣。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>分小組</h2>
+    <div class="stage"><svg id="g" viewBox="0 0 400 220"></svg></div>
+    <div class="controls">
+      <label>紅 <input type="range" id="a" min="2" max="18" value="12"> <b id="av"></b></label>
+      <label>藍 <input type="range" id="b" min="2" max="18" value="18"> <b id="bv"></b></label>
+    </div>
+    <div class="work" id="w"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>方法</h2>
+    <div class="steps">
+      <div class="step"><p>① 12 個紅、18 個藍，最多可以分成<b>幾組一樣的</b>？就是 12 和 18 的<b>最大公因數 6</b>。</p></div>
+      <div class="step"><p>② 每一組有 2 紅、3 藍 → 12 : 18 = <b>2 : 3</b>。</p></div>
+      <div class="step"><p>③ 前項、後項都是整數，而且<b>互質</b>（不能再約）→ 叫做<b>最簡整數比</b>。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula word">
+    <div class="label">方法</div>
+    <div class="big" style="font-size:1.35rem">前後項同除以最大公因數</div>
+    <div class="sub">12 : 18 → 同除以 6 → 2 : 3</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中的比例題答案通常都要寫成最簡整數比，跟分數要約到最簡一樣。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script>
+  const A = document.getElementById("a"), B = document.getElementById("b");
+  function draw() {
+    const a = +A.value, b = +B.value, g = W.gcd(a, b), pa = a / g, pb = b / g;
+    let s = "";
+    const per = Math.min(g, 6), rows = Math.ceil(g / per), gw = 380 / per;
+    for (let k = 0; k < g; k++) {
+      const gx = 10 + (k % per) * gw, gy = 10 + Math.floor(k / per) * (200 / rows);
+      s += `<rect x="${gx}" y="${gy}" width="${gw - 6}" height="${200 / rows - 8}" rx="8" fill="none" stroke="var(--green)" stroke-width="2" stroke-dasharray="4 3"/>`;
+      const cells = pa + pb, cols = Math.max(2, Math.ceil(Math.sqrt(cells))), r = Math.min(8, (gw - 14) / cols / 2.4);
+      for (let i = 0; i < cells; i++) s += `<circle cx="${gx + 10 + (i % cols) * r * 2.4}" cy="${gy + 12 + Math.floor(i / cols) * r * 2.4}" r="${r}" fill="${i < pa ? "var(--red)" : "var(--blue)"}"/>`;
+    }
+    document.getElementById("g").innerHTML = s;
+    document.getElementById("av").textContent = a; document.getElementById("bv").textContent = b;
+    document.getElementById("w").innerHTML = `分成 <b>${g}</b> 組（最大公因數），每組 ${pa} 紅、${pb} 藍 → ${a} : ${b} = <b>${pa} : ${pb}</b>`;
+  }
+  A.addEventListener("input", draw); B.addEventListener("input", draw); draw();
+
+  W.practice(document.getElementById("prac"), { gens: [
+    () => { let a, b; do { a = W.rand(1, 7); b = W.rand(1, 7); } while (W.gcd(a, b) !== 1 || a === b); const k = W.rand(2, 9);
+      const right = `${a} : ${b}`, opts = [right, `${a * k / (k % 2 ? 1 : 2)} : ${b * k / (k % 2 ? 1 : 2)}`, `${b} : ${a}`].filter((v, i, arr) => arr.indexOf(v) === i).sort(() => Math.random() - .5);
+      return { q: `${a * k} : ${b * k} 的最簡整數比是？`, choices: opts, ans: opts.indexOf(right), hint: `同除以 ${k}`, pic: "" }; },
+    () => { let a, b; do { a = W.rand(1, 9); b = W.rand(1, 9); } while (W.gcd(a, b) !== 1); const k = W.rand(2, 8); return { q: `${a * k} : ${b * k} 化成最簡整數比 = ${a} : □，□ = ?`, ans: b, hint: `最大公因數 ${k}`, pic: "" }; },
+  ] });
+</script>
+</body>
+</html>

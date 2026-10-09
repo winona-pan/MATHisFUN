@@ -168,6 +168,18 @@
         { path: "6a-u3/05", t: "圍成一圈" },
       ],
     },
+    "6a-u4": {
+      name: "六上 第 4 單元・比與比值",
+      pages: [
+        { path: "review/fraction-and-division", t: "分數與除法", pre: true },
+        { path: "review/equivalent-fractions", t: "約分", pre: true },
+        { path: "6a-u4/01", t: "比" },
+        { path: "6a-u4/02", t: "比值" },
+        { path: "6a-u4/03", t: "相等的比" },
+        { path: "6a-u4/04", t: "最簡整數比" },
+        { path: "6a-u4/05", t: "小數、分數的比" },
+      ],
+    },
   };
 
   const body = document.body;

@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>比值</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body data-seq="6a-u4" data-page="6a-u4/02">
+<div class="wrap">
+  <div class="topbar" id="topbar"></div>
+
+  <span class="kind k-word">名詞</span>
+  <h1>比值</h1>
+  <p class="lead">哪一杯果汁比較濃？把「比」變成一個數來比較：比值 = 前項 ÷ 後項。</p>
+
+  <section class="box">
+    <h2><span class="n">1</span>哪一杯比較濃？</h2>
+    <div class="stage"><svg id="g" viewBox="0 0 400 220"></svg></div>
+    <div class="controls">
+      <label>A 杯 果汁 <input type="range" id="a1" min="1" max="6" value="2"> : 水 <input type="range" id="b1" min="1" max="6" value="3"></label>
+    </div>
+    <div class="controls">
+      <label>B 杯 果汁 <input type="range" id="a2" min="1" max="6" value="3"> : 水 <input type="range" id="b2" min="1" max="6" value="5"></label>
+    </div>
+    <div class="work" id="w"></div>
+  </section>
+
+  <section class="box" data-steps>
+    <h2><span class="n">2</span>認識比值</h2>
+    <div class="steps">
+      <div class="step"><p>① <b>比值 = 前項 ÷ 後項</b>。2 : 3 的比值 = 2 ÷ 3 = ⅔。</p></div>
+      <div class="step"><p>② 比值可以寫成分數、小數或整數：4 : 2 的比值 = 2。</p></div>
+      <div class="step"><p>③ 果汁 : 水 的比值越大 → 每 1 杯水配的果汁越多 → <b>越濃</b>。</p></div>
+    </div>
+    <div class="controls"><button class="btn primary" data-next-step></button></div>
+  </section>
+
+  <div class="formula word">
+    <div class="label">名詞</div>
+    <div class="big">a : b 的比值 = a ÷ b = a/b</div>
+  </div>
+
+  <div class="jh">
+    <h2>🎒 國中預告</h2>
+    <p>國中的「<b>斜率</b>」也是一種比值：上升多少 ÷ 前進多少，代表線有多陡。</p>
+  </div>
+
+  <section class="box">
+    <h2><span class="n">3</span>一直練：隨機出題</h2>
+    <div id="prac"></div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script src="../assets/gens.js"></script>
+<script>
+  const ids = ["a1", "b1", "a2", "b2"].map(i => document.getElementById(i));
+  function glass(x, a, b, label) {
+    const H = 150, top = 30, f = a / (a + b), col = `hsl(30, ${40 + 55 * f}%, ${75 - 30 * f}%)`;
+    return `<path d="M${x} ${top} l10 ${H} l80 0 l10 ${-H}" fill="${col}" stroke="var(--ink)" stroke-width="2.5"/><text x="${x + 30}" y="${top + H + 26}" font-size="15">${label}</text><text x="${x + 18}" y="${top + 70}" font-size="15">${a} : ${b}</text>`;
+  }
+  function draw() {
+    const [a1, b1, a2, b2] = ids.map(i => +i.value), v1 = a1 / b1, v2 = a2 / b2;
+    document.getElementById("g").innerHTML = glass(60, a1, b1, "A 杯") + glass(240, a2, b2, "B 杯");
+    const f1 = W.F(a1, b1), f2 = W.F(a2, b2);
+    document.getElementById("w").innerHTML = `A：${a1} ÷ ${b1} = ${W.Fstr(f1)} ≈ ${v1.toFixed(2)}　B：${a2} ÷ ${b2} = ${W.Fstr(f2)} ≈ ${v2.toFixed(2)}<br>→ ${Math.abs(v1 - v2) < 1e-9 ? "<b>一樣濃！</b>" : `<b>${v1 > v2 ? "A" : "B"} 杯比較濃</b>`}`;
+  }
+  ids.forEach(i => i.addEventListener("input", draw)); draw();
+
+  W.practice(document.getElementById("prac"), { gens: [G.ratio.value, () => { const a = W.rand(1, 9), b = W.rand(2, 9), r = W.F(a, b); return { q: `${a} : ${b} 的比值（寫成最簡分數或整數）？`, ans: W.Fval(r), show: W.Fstr(r), hint: `${a} ÷ ${b}`, pic: "" }; }] });
+</script>
+</body>
+</html>
