@@ -166,7 +166,8 @@
       </div>
       <div class="score"></div>`;
     const $ = s => el.querySelector(s);
-    let cur, right = 0, tried = 0, wrongOnce = false;
+    let cur, right = 0, tried = 0, wrongOnce = false, streak = 0;
+    const fun = n => window.FUN && FUN.play(n);
     function next() {
       const pool = [];
       groups.forEach((g, i) => {
@@ -198,19 +199,24 @@
       const fb = $(".fb");
       const ok = cur.choices ? v === cur.ans : (!isNaN(v) && Math.abs(v - cur.ans) < 0.0005 + Math.abs(cur.ans) * 1e-9);
       if (ok) {
-        if (!wrongOnce) { right++; tried++; }
+        if (fb.classList.contains("ok")) return;
+        if (!wrongOnce) { right++; tried++; streak++; }
         if (btn) btn.classList.add("right");
         fb.className = "fb ok";
         fb.textContent = "答對了！👏" + (cur.choices ? "" : ` ${cur.show || W.num(cur.ans)} ${cur.unit || ""}`);
+        // 連續一次就答對 5、10、15… 題：特別的聲音和彩帶
+        if (!wrongOnce && streak % 5 === 0) { fb.textContent += `　🔥 連續答對 ${streak} 題！`; fun("streak"); window.FUN && FUN.confetti(); }
+        else fun("ok");
         if (!window.__noAuto) setTimeout(next, 1300);
       } else {
         if (!wrongOnce) tried++;
-        wrongOnce = true;
+        wrongOnce = true; streak = 0;
+        fun("no");
         if (btn) btn.classList.add("wrong");
         fb.className = "fb no";
         fb.textContent = "再想想 🤔 " + (cur.hint || "");
       }
-      $(".score").textContent = `一次就答對：${right} / ${tried} 題`;
+      $(".score").textContent = `一次就答對：${right} / ${tried} 題` + (streak >= 2 ? `　🔥 連續 ${streak} 題` : "");
     }
     el.querySelectorAll("[data-g]").forEach(b => b.addEventListener("change", next));
     next();

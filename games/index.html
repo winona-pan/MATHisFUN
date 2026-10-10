@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>小遊戲</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+<link rel="stylesheet" href="game.css">
+<style>
+  .games { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); margin-top: 16px; }
+  .gcard { display: flex; flex-direction: column; text-decoration: none; color: var(--ink); background: var(--card); border: 3px solid var(--line); border-radius: 22px; overflow: hidden;
+    box-shadow: 0 6px 0 var(--line); transition: transform .12s; }
+  .gcard:hover { transform: translateY(-3px); }
+  .gcard:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--line); }
+  .gcard .art { aspect-ratio: 16 / 9; display: grid; place-items: center; }
+  .gcard .art svg { width: 100%; height: 100%; display: block; }
+  .gcard .txt { padding: 10px 14px 14px; }
+  .gcard h2 { margin: 0; font-size: 1.4rem; font-weight: 900; }
+  .gcard p { margin: 2px 0 0; color: var(--muted); font-weight: 700; font-size: .95rem; }
+  .gcard .rec { margin-top: 8px; font-weight: 900; color: var(--orange); font-size: .95rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="gtop"><a href="../index.html">← 目錄</a></div>
+  <h1>🎮 小遊戲</h1>
+  <p class="lead">玩遊戲也在練數學！選一個開始吧。右下角 🔊 可以調音效。</p>
+  <div class="games">
+    <a class="gcard" href="blitz.html">
+      <div class="art" style="background:#fff3d1"><svg viewBox="0 0 320 180">
+        <circle cx="160" cy="92" r="62" fill="#fff" stroke="#2b2a33" stroke-width="5"/><path d="M160 92 L160 44" stroke="#2b2a33" stroke-width="6" stroke-linecap="round"/><path d="M160 92 L196 108" stroke="#e4572e" stroke-width="6" stroke-linecap="round"/>
+        <rect x="146" y="16" width="28" height="14" rx="4" fill="#2b2a33"/><path d="M262 30 l-26 50 h20 l-16 46 l40 -60 h-22 l16 -36 Z" fill="#f2b632" stroke="#2b2a33" stroke-width="3" stroke-linejoin="round"/>
+        <text x="40" y="70" font-size="34" font-weight="900" fill="#e4572e">60</text><text x="40" y="100" font-size="18" font-weight="900" fill="#2b2a33">秒</text></svg></div>
+      <div class="txt"><h2>⚡ 60 秒閃電挑戰</h2><p>四選一，越快答越多分，連擊加倍！</p><div class="rec" id="r-blitz"></div></div>
+    </a>
+    <a class="gcard" href="balloon.html">
+      <div class="art" style="background:linear-gradient(#bfe3ff,#eaf6ff)"><svg viewBox="0 0 320 180">
+        <g><path d="M80 120 q-4 20 2 40" stroke="#777" fill="none" stroke-width="2"/><ellipse cx="80" cy="80" rx="34" ry="40" fill="#e4572e"/><text x="80" y="88" text-anchor="middle" font-size="22" font-weight="900" fill="#fff">31.4</text></g>
+        <g><path d="M165 100 q-4 20 2 40" stroke="#777" fill="none" stroke-width="2"/><ellipse cx="165" cy="60" rx="34" ry="40" fill="#2e86de"/><text x="165" y="68" text-anchor="middle" font-size="22" font-weight="900" fill="#fff">62.8</text></g>
+        <g><path d="M250 130 q-4 20 2 40" stroke="#777" fill="none" stroke-width="2"/><ellipse cx="250" cy="90" rx="34" ry="40" fill="#3aa76d"/><text x="250" y="98" text-anchor="middle" font-size="22" font-weight="900" fill="#fff">10</text></g>
+        <text x="200" y="40" font-size="30">💥</text></svg></div>
+      <div class="txt"><h2>🎈 射氣球</h2><p>戳破寫著正確答案的氣球，有 3 顆愛心</p><div class="rec" id="r-balloon"></div></div>
+    </a>
+    <a class="gcard" href="match.html">
+      <div class="art" style="background:#efe8fc"><svg viewBox="0 0 320 180">
+        <rect x="40" y="30" width="70" height="96" rx="10" fill="#8e6bd8" stroke="#6a4cb0" stroke-width="4" transform="rotate(-8 75 78)"/><text x="66" y="92" font-size="34" font-weight="900" fill="#fff" transform="rotate(-8 75 78)">?</text>
+        <rect x="125" y="40" width="70" height="96" rx="10" fill="#fff" stroke="#3aa76d" stroke-width="4"/><circle cx="160" cy="80" r="24" fill="none" stroke="#2b2a33" stroke-width="3"/><line x1="160" y1="80" x2="184" y2="80" stroke="#e4572e" stroke-width="5"/><text x="140" y="124" font-size="15" font-weight="900" fill="#2b2a33">半徑</text>
+        <rect x="210" y="30" width="70" height="96" rx="10" fill="#fff" stroke="#3aa76d" stroke-width="4" transform="rotate(8 245 78)"/><text x="222" y="84" font-size="13" font-weight="900" fill="#e4572e" transform="rotate(8 245 78)">直徑 ÷ 2</text></svg></div>
+      <div class="txt"><h2>🃏 翻牌配對</h2><p>把圖和名詞、公式配成一對</p><div class="rec" id="r-match"></div></div>
+    </a>
+  </div>
+</div>
+<script src="../assets/fun.js"></script>
+<script>
+  let d = {};
+  try { d = JSON.parse(localStorage.getItem("mif-games")) || {}; } catch (e) {}
+  const max = o => o ? Math.max(...Object.values(o)) : undefined;
+  const min = o => o ? Math.min(...Object.values(o)) : undefined;
+  if (max(d.blitz) !== undefined) document.getElementById("r-blitz").textContent = `🏆 最高 ${max(d.blitz)} 分`;
+  if (max(d.balloon) !== undefined) document.getElementById("r-balloon").textContent = `🏆 最多戳破 ${max(d.balloon)} 顆`;
+  if (min(d.match) !== undefined) document.getElementById("r-match").textContent = `🏆 最少 ${min(d.match)} 步完成`;
+</script>
+</body>
+</html>

@@ -54,6 +54,11 @@
   header h1 { font-size: clamp(2rem, 6vw, 3.2rem); font-weight: 900; margin: 0; letter-spacing: .06em; }
   header h1 .dot { color: var(--red); }
   header p { color: var(--muted); margin: 4px 0 0; font-size: 1.05rem; }
+  .games-link { display: inline-flex; flex-direction: column; align-items: center; margin-top: 14px; padding: 10px 26px; border-radius: 20px;
+    background: var(--purple); color: #fff; text-decoration: none; font-weight: 900; font-size: 1.3rem; box-shadow: 0 5px 0 #6a4cb0; transition: transform .1s; }
+  .games-link small { font-size: .8rem; font-weight: 700; opacity: .9; }
+  .games-link:hover { transform: translateY(-2px); }
+  .games-link:active { transform: translateY(3px); box-shadow: 0 2px 0 #6a4cb0; }
 
   /* 學期分頁 */
   .tabs { display: flex; justify-content: center; gap: 10px; margin: 20px 0 8px; }
@@ -208,6 +213,7 @@
   <header>
     <h1>數學好好玩<span class="dot">!</span></h1>
     <p>翰林版・六年級　看圖、動手玩，一步一步學</p>
+    <a class="games-link" href="games/index.html">🎮 小遊戲<small>閃電挑戰・射氣球・翻牌配對</small></a>
   </header>
 
   <div class="tabs" role="tablist">
@@ -235,6 +241,7 @@
   <main id="units"></main>
   <button class="reset" id="reset">清除我的進度</button>
 </div>
+<script src="assets/fun.js"></script>
 <div class="toast" id="toast">這一課還在準備中 🛠️</div>
 
 <script>
@@ -848,7 +855,14 @@ $("#units").addEventListener("click", e => {
   const tick = e.target.closest(".tick");
   if (tick) {
     const p = tick.dataset.page;
-    if (progress[p]) delete progress[p]; else progress[p] = 1;
+    if (progress[p]) delete progress[p];
+    else {
+      progress[p] = 1;
+      // 這個單元全部打勾了 → 彩帶
+      const unit = SEMESTERS[currentSem].units.find(u => cardsOf(u).some(c => c.page === p));
+      const [d, n] = unit ? countOf(unit) : [0, 1];
+      if (window.FUN) { if (d === n) { FUN.play("done"); FUN.confetti(); } else FUN.play("ok"); }
+    }
     saveJ(P_KEY, progress); rerender(tick); return;
   }
   const st = e.target.closest("button.status");

@@ -208,6 +208,9 @@
   };
 
   const body = document.body;
+  // 音效和彩帶（assets/fun.js）
+  if (!window.FUN) { const sc = document.createElement("script"); sc.src = "../assets/fun.js"; document.head.appendChild(sc); }
+  const fun = (n, a) => window.FUN && FUN.play(n, a);
   // 從目錄點進來時會帶 ?u=單元（先備知識頁可能屬於好幾個單元）
   const urlSeq = new URLSearchParams(location.search).get("u");
   const page = body.dataset.page;
@@ -241,7 +244,7 @@
       mark.addEventListener("click", e => {
         if (!e.target.closest("button")) return;
         const d = load();
-        if (d[page]) delete d[page]; else d[page] = 1;
+        if (d[page]) delete d[page]; else { d[page] = 1; fun("done"); window.FUN && FUN.confetti(); }
         try { localStorage.setItem(KEY, JSON.stringify(d)); } catch (e) {}
         paint();
       });
@@ -293,8 +296,12 @@
       const fb = document.createElement("div");
       fb.className = "fb";
       q.appendChild(fb);
-      const ok = () => { q.classList.add("done"); fb.className = "fb ok"; fb.textContent = q.dataset.ok || "答對了！👏"; updateScore(); };
-      const no = () => { fb.className = "fb no"; fb.textContent = "再想想 🤔 " + (q.dataset.hint || ""); };
+      const ok = () => {
+        const all = qs.every(x => x === q || x.classList.contains("done"));
+        q.classList.add("done"); fb.className = "fb ok"; fb.textContent = q.dataset.ok || "答對了！👏"; updateScore();
+        if (all && qs.length > 1) { fun("done"); window.FUN && FUN.confetti(); } else fun("ok");
+      };
+      const no = () => { fun("no"); fb.className = "fb no"; fb.textContent = "再想想 🤔 " + (q.dataset.hint || ""); };
 
       if (q.dataset.answer !== undefined) {
         const input = q.querySelector("input");

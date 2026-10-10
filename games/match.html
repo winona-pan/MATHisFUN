@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>翻牌配對</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+<link rel="stylesheet" href="game.css">
+<style>
+  .sets { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; }
+  .sets .topic { padding: 12px; }
+  .board { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; max-width: 640px; margin-left: auto; margin-right: auto; perspective: 900px; margin-top: 10px; }
+  .card { position: relative; aspect-ratio: 3 / 4; border: 0; padding: 0; background: none; cursor: pointer; font: inherit; }
+  .card .in { position: absolute; inset: 0; transition: transform .4s; transform-style: preserve-3d; }
+  .card.open .in, .card.got .in { transform: rotateY(180deg); }
+  .card .f, .card .b { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 14px; border: 3px solid var(--line);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 4px; overflow: hidden; }
+  .card .b { background: var(--purple); border-color: #6a4cb0; color: #fff; font-size: 2rem; font-weight: 900;
+    background-image: radial-gradient(circle at 30% 30%, rgba(255,255,255,.25) 0 12%, transparent 13%), radial-gradient(circle at 75% 70%, rgba(255,255,255,.2) 0 9%, transparent 10%); }
+  .card .f { background: var(--card); transform: rotateY(180deg); color: var(--ink); }
+  .card .f svg { width: 92%; height: auto; max-height: 64%; }
+  .card .f .w { font-weight: 900; font-size: clamp(.85rem, 3.8vw, 1.2rem); line-height: 1.2; text-align: center; word-break: keep-all; }
+  .card .f .w.fx { color: var(--red); }
+  .card .f .e { font-size: clamp(1.6rem, 8vw, 2.6rem); line-height: 1; }
+  .card.got .f { border-color: var(--green); background: #e2f5ea; color: #1f5e3d; }
+  .card.no .f { border-color: var(--red); animation: shake .35s; }
+  .learned { margin-top: 12px; min-height: 2.4em; text-align: center; font-weight: 900; font-size: 1.15rem; }
+  .learned b { color: var(--red); }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .card.got .f { background: #1e3a2b; color: #bfe8cf; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="gtop"><a href="index.html">← 小遊戲</a><a href="../index.html">目錄</a></div>
+
+  <section class="screen" id="s-start">
+    <h1>🃏 翻牌配對</h1>
+    <p class="lead">一次翻兩張，<b>圖</b>和它的<b>名稱或公式</b>配成一對就留下來。用越少步越厲害！</p>
+    <div class="box"><h2>選一組卡片</h2><div class="sets" id="sets"></div></div>
+    <button class="go" id="go">開始！</button>
+  </section>
+
+  <section class="screen" id="s-play" hidden>
+    <div class="hud"><span id="setname"></span><span class="grow"></span><span>👆 <span id="moves">0</span> 步</span><span>⏱️ <span id="time">0</span></span></div>
+    <div class="board" id="board"></div>
+    <div class="learned" id="learned"></div>
+  </section>
+
+  <section class="screen result" id="s-end" hidden>
+    <h1>全部配對完成！</h1>
+    <div class="stars" id="stars"></div>
+    <div class="big" id="final"></div>
+    <div id="rec"></div>
+    <button class="go" id="again">再玩一次</button>
+    <button class="go alt" id="change">換一組</button>
+    <div class="box" style="margin-top:20px"><h3 style="margin-top:0">這次配對的</h3><div id="sum"></div></div>
+  </section>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script src="../assets/gens.js"></script>
+<script src="../assets/fun.js"></script>
+<script src="game.js"></script>
+<script>
+  const $ = id => document.getElementById(id);
+  /* ---------- 圖 ---------- */
+  const R = "var(--red)", INK = "var(--ink)";
+  const base = (extra, fill = "none") => `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="${fill}" stroke="${INK}" stroke-width="2.5"/>${extra}</svg>`;
+  const P = (deg, r = 40) => { const a = (deg - 90) * Math.PI / 180; return [50 + r * Math.cos(a), 50 + r * Math.sin(a)]; };
+  const sector = (deg, r = 40) => { const [x, y] = P(deg, r); return `M50 50 L50 ${50 - r} A${r} ${r} 0 ${deg > 180 ? 1 : 0} 1 ${x.toFixed(1)} ${y.toFixed(1)} Z`; };
+  const arc = (deg, r = 40) => { const [x, y] = P(deg, r); return `M50 ${50 - r} A${r} ${r} 0 ${deg > 180 ? 1 : 0} 1 ${x.toFixed(1)} ${y.toFixed(1)}`; };
+  const dot = `<circle cx="50" cy="50" r="3" fill="${INK}"/>`;
+  const PIC = {
+    center: base(`<circle cx="50" cy="50" r="6" fill="${R}"/>`),
+    radius: base(`${dot}<line x1="50" y1="50" x2="90" y2="50" stroke="${R}" stroke-width="5" stroke-linecap="round"/>`),
+    diameter: base(`${dot}<line x1="10" y1="50" x2="90" y2="50" stroke="${R}" stroke-width="5" stroke-linecap="round"/>`),
+    circum: base(`<circle cx="50" cy="50" r="40" fill="none" stroke="${R}" stroke-width="6"/>`),
+    angle: base(`${dot}<path d="M50 10 L50 50 L${P(100).join(" ")}" fill="none" stroke="${INK}" stroke-width="2.5"/><path d="${arc(100, 14)}" fill="none" stroke="${R}" stroke-width="5"/>`),
+    sector: base(`<path d="${sector(100)}" fill="${R}" fill-opacity=".6" stroke="${INK}" stroke-width="2"/>`),
+    arc: base(`${dot}<path d="${arc(100)}" fill="none" stroke="${R}" stroke-width="7" stroke-linecap="round"/>`),
+    full: base(`${dot}<line x1="50" y1="50" x2="50" y2="10" stroke="${INK}" stroke-width="2.5"/><circle cx="50" cy="50" r="14" fill="none" stroke="${R}" stroke-width="5"/>`),
+    area: base("", "var(--yellow)"),
+    sarea: base(`<path d="${sector(90)}" fill="var(--yellow)" stroke="${INK}" stroke-width="2"/>`),
+    sperim: base(`<path d="${sector(90)}" fill="none" stroke="${R}" stroke-width="6" stroke-linejoin="round"/>`, "none"),
+    pi: base(`<line x1="10" y1="50" x2="90" y2="50" stroke="var(--blue)" stroke-width="4"/><circle cx="50" cy="50" r="40" fill="none" stroke="${R}" stroke-width="4"/><text x="50" y="44" text-anchor="middle" font-size="16" font-weight="900" fill="${INK}">÷</text>`),
+    rect: `<svg viewBox="0 0 100 100"><rect x="12" y="25" width="76" height="50" fill="var(--yellow)" stroke="${INK}" stroke-width="2.5"/></svg>`,
+    para: `<svg viewBox="0 0 100 100"><path d="M28 25 H92 L72 75 H8 Z" fill="var(--yellow)" stroke="${INK}" stroke-width="2.5"/><line x1="28" y1="25" x2="28" y2="75" stroke="${R}" stroke-width="2" stroke-dasharray="4 3"/></svg>`,
+    tri: `<svg viewBox="0 0 100 100"><path d="M10 80 H90 L40 18 Z" fill="var(--yellow)" stroke="${INK}" stroke-width="2.5"/><line x1="40" y1="18" x2="40" y2="80" stroke="${R}" stroke-width="2" stroke-dasharray="4 3"/></svg>`,
+    trap: `<svg viewBox="0 0 100 100"><path d="M30 25 H70 L92 78 H8 Z" fill="var(--yellow)" stroke="${INK}" stroke-width="2.5"/></svg>`,
+    prism: `<svg viewBox="45 0 130 150">${W.solid({ n: 3, cx: 110, cy: 75, r: 52, h: 70, ry: 24 })}</svg>`,
+    cyl: `<svg viewBox="45 0 130 150">${W.solid({ cyl: true, cx: 110, cy: 75, r: 48, h: 70, ry: 20 })}</svg>`,
+    box: `<svg viewBox="45 0 130 150">${W.solid({ n: 4, cx: 110, cy: 75, r: 56, h: 64, ry: 24 })}</svg>`,
+  };
+  const em = e => `<div class="e">${e}</div>`;
+  /* ---------- 卡片組：[圖那一張, 字那一張, 配好時的說明] ---------- */
+  const SETS = [
+    { id: "circleWords", t: "⭕ 圓的名詞", g: "六上 7", pairs: [
+      [PIC.center, "圓心", "圓心：圓正中間的點"], [PIC.radius, "半徑", "半徑：圓心到圓周"], [PIC.diameter, "直徑", "直徑：穿過圓心 = 半徑 × 2"],
+      [PIC.circum, "圓周", "圓周：圓外面那一圈"], [PIC.angle, "圓心角", "圓心角：兩條半徑夾的角"], [PIC.sector, "扇形", "扇形：兩條半徑 + 一段弧"],
+      [PIC.arc, "弧", "弧：圓周上的一段"], [PIC.full, "周角 360°", "周角：轉一整圈 = 360°"] ] },
+    { id: "circleF", t: "📐 圓的公式", g: "六上 7、六下 2", pairs: [
+      [PIC.circum, "直徑 × 3.14", "圓周長 = 直徑 × 3.14"], [PIC.diameter, "圓周長 ÷ 3.14", "直徑 = 圓周長 ÷ 3.14（反過來算）"], [PIC.radius, "直徑 ÷ 2", "半徑 = 直徑 ÷ 2"],
+      [PIC.pi, "≈ 3.14", "圓周率 = 圓周長 ÷ 直徑 ≈ 3.14"], [PIC.area, "半徑 × 半徑 × 3.14", "圓面積 = 半徑 × 半徑 × 3.14"],
+      [PIC.arc, "圓周長 × 圓心角/360", "弧長 = 圓周長 × 圓心角/360"], [PIC.sperim, "弧長 + 2 個半徑", "扇形周長 = 弧長 + 2 × 半徑"],
+      [PIC.sarea, "圓面積 × 圓心角/360", "扇形面積 = 圓面積 × 圓心角/360"] ] },
+    { id: "speedScale", t: "🚗 速率・比例尺", g: "六上 8、六下 3", pairs: [
+      [em("🚗💨") + `<div class="w">距離</div>`, "速率 × 時間", "距離 = 速率 × 時間"], [em("⏱️") + `<div class="w">時間</div>`, "距離 ÷ 速率", "時間 = 距離 ÷ 速率"],
+      [em("🏎️") + `<div class="w">速率</div>`, "距離 ÷ 時間", "速率 = 距離 ÷ 時間"], [em("🕐→⏱️") + `<div class="w">時速→分速</div>`, "÷ 60", "時速 ÷ 60 = 分速"],
+      [em("🗺️") + `<div class="w">實際距離</div>`, "圖上 × 比例尺分母", "實際距離 = 圖上距離 × 分母"], [em("📏") + `<div class="w">圖上距離</div>`, "實際 ÷ 比例尺分母", "圖上距離 = 實際距離 ÷ 分母"],
+      [em("🔍") + `<div class="w">放大圖的邊</div>`, "原來的邊 × 倍數", "對應邊 × 倍數"], [em("🟨🟨<br>🟨🟨") + `<div class="w">放大圖面積</div>`, "原面積 × 倍數 × 倍數", "2 倍放大 → 面積 4 倍"] ] },
+    { id: "shapes", t: "🔷 面積・體積", g: "五年級、六下 6", pairs: [
+      [PIC.rect, "長 × 寬", "長方形面積 = 長 × 寬"], [PIC.para, "底 × 高", "平行四邊形面積 = 底 × 高"], [PIC.tri, "底 × 高 ÷ 2", "三角形面積 = 底 × 高 ÷ 2"],
+      [PIC.trap, "(上底 + 下底) × 高 ÷ 2", "梯形面積 = (上底 + 下底) × 高 ÷ 2"], [PIC.area, "半徑 × 半徑 × 3.14", "圓面積 = 半徑 × 半徑 × 3.14"],
+      [PIC.prism, "底面積 × 高", "角柱體積 = 底面積 × 高"], [PIC.cyl, "半徑 × 半徑 × 3.14 × 高", "圓柱體積 = 圓面積 × 高"], [PIC.box, "長 × 寬 × 高", "長方體體積 = 長 × 寬 × 高"] ] },
+  ];
+
+  let set = SETS[0], cards, open = [], moves, got, t0, tick, busy;
+  try { set = SETS.find(s => s.id === localStorage.getItem("mif-match-set")) || set; } catch (e) {}
+  const show = id => document.querySelectorAll(".screen").forEach(s => s.hidden = s.id !== id);
+  function paintSets() {
+    $("sets").innerHTML = SETS.map(s => { const b = GAME.best("match", s.id);
+      return `<button class="topic" data-set="${s.id}" aria-pressed="${s === set}">${s.t}<small>${s.g}${b !== undefined ? `・🏆 最少 ${b} 步` : ""}</small></button>`; }).join("");
+  }
+  $("sets").addEventListener("click", e => { const b = e.target.closest("[data-set]"); if (!b) return; set = SETS.find(s => s.id === b.dataset.set); try { localStorage.setItem("mif-match-set", set.id); } catch (e) {} paintSets(); });
+  paintSets();
+
+  function start() {
+    moves = 0; got = 0; open = []; busy = false;
+    cards = set.pairs.flatMap((p, i) => [{ pair: i, html: p[0] }, { pair: i, html: `<div class="w ${set.id === "circleWords" ? "" : "fx"}">${p[1]}</div>` }]);
+    for (let i = cards.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [cards[i], cards[j]] = [cards[j], cards[i]]; }
+    $("board").innerHTML = cards.map((c, i) => `<button class="card" data-i="${i}" aria-label="翻牌"><div class="in"><div class="b">?</div><div class="f">${c.html}</div></div></button>`).join("");
+    $("setname").textContent = set.t; $("moves").textContent = 0; $("time").textContent = 0; $("learned").innerHTML = "&nbsp;";
+    show("s-play");
+    t0 = Date.now(); clearInterval(tick);
+    tick = setInterval(() => { $("time").textContent = Math.floor((Date.now() - t0) / 1000); }, 500);
+  }
+  $("board").addEventListener("click", e => {
+    const el = e.target.closest(".card"); if (!el || busy) return;
+    if (el.classList.contains("open") || el.classList.contains("got")) return;
+    el.classList.add("open"); GAME.fun("flip");
+    open.push(el);
+    if (open.length < 2) return;
+    moves++; $("moves").textContent = moves;
+    const [a, b] = open, ca = cards[a.dataset.i], cb = cards[b.dataset.i];
+    if (ca.pair === cb.pair) {
+      open = [];
+      setTimeout(() => {
+        a.classList.add("got"); b.classList.add("got"); got++;
+        $("learned").innerHTML = `✓ <b>${set.pairs[ca.pair][2]}</b>`;
+        if (got === set.pairs.length) setTimeout(end, 600); else GAME.fun("ok");
+      }, 350);
+    } else {
+      busy = true;
+      setTimeout(() => { a.classList.add("no"); b.classList.add("no"); GAME.fun("no"); }, 420);
+      setTimeout(() => { a.classList.remove("open", "no"); b.classList.remove("open", "no"); open = []; busy = false; }, 1200);
+    }
+  });
+  function end() {
+    clearInterval(tick);
+    const secs = Math.floor((Date.now() - t0) / 1000), n = set.pairs.length;
+    show("s-end");
+    const stars = moves <= n + 4 ? 3 : moves <= n * 2 ? 2 : 1;
+    $("stars").textContent = "★".repeat(stars) + "☆".repeat(3 - stars);
+    $("final").textContent = `${moves} 步・${secs} 秒`;
+    const r = GAME.record("match", set.id, moves, (a, b) => a < b);
+    $("rec").innerHTML = r.isNew ? `<span class="newrec">🏆 新紀錄！</span>` : `<p class="bestline">最少：${r.old} 步</p>`;
+    GAME.fun("done"); FUN.confetti();
+    $("sum").innerHTML = set.pairs.map(p => `<div class="miss"><div style="width:90px">${p[0].startsWith("<svg") ? p[0] : `<div style="text-align:center">${p[0]}</div>`}</div><p>${p[2]}</p></div>`).join("");
+    paintSets(); scrollTo(0, 0);
+  }
+  $("go").addEventListener("click", start);
+  $("again").addEventListener("click", start);
+  $("change").addEventListener("click", () => show("s-start"));
+  window.__game = { get cards() { return cards; }, start };
+</script>
+</body>
+</html>

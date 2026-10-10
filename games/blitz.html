@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>60 秒閃電挑戰</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/lesson.css">
+<link rel="stylesheet" href="game.css">
+</head>
+<body>
+<div class="wrap">
+  <div class="gtop"><a href="index.html">← 小遊戲</a><a href="../index.html">目錄</a></div>
+
+  <section class="screen" id="s-start">
+    <h1>⚡ 60 秒閃電挑戰</h1>
+    <p class="lead">60 秒內答越多越好！連續答對有 🔥 連擊加分。先選要練的主題（可以選好幾個）：</p>
+    <div class="box"><div id="topics"></div></div>
+    <button class="go" id="go">開始！</button>
+    <p class="bestline" id="best"></p>
+  </section>
+
+  <section class="screen" id="s-play" hidden>
+    <div class="hud"><span>⭐ <span id="score">0</span></span><span class="combo" id="combo"></span><span class="grow"></span><span>⏱️ <span id="time">60</span></span></div>
+    <div class="timebar"><b id="bar" style="width:100%"></b></div>
+    <div class="qcard" id="card"><div class="pic" id="pic"><svg viewBox="0 0 220 150"></svg></div><p class="q" id="q"></p></div>
+    <div class="opts" id="opts"></div>
+  </section>
+
+  <section class="screen result" id="s-end" hidden>
+    <h1>時間到！</h1>
+    <div class="stars" id="stars"></div>
+    <div class="big" id="final"></div>
+    <p id="detail" style="font-weight:700"></p>
+    <div id="rec"></div>
+    <button class="go" id="again">再玩一次</button>
+    <button class="go alt" id="change">換主題</button>
+    <div class="box" style="margin-top:20px" id="review"></div>
+  </section>
+</div>
+<script src="../assets/lesson.js"></script>
+<script src="../assets/widgets.js"></script>
+<script src="../assets/gens.js"></script>
+<script src="../assets/fun.js"></script>
+<script src="game.js"></script>
+<script>
+  const $ = id => document.getElementById(id);
+  const SECS = 60;
+  let topics = [], score = 0, combo = 0, right = 0, tried = 0, cur, misses = [], left = SECS, timer, lock = false;
+  const show = id => document.querySelectorAll(".screen").forEach(s => s.hidden = s.id !== id);
+  const picker = GAME.topicPicker($("topics"), ids => {
+    topics = ids;
+    const b = GAME.best("blitz", GAME.topicKey(ids));
+    $("best").textContent = b !== undefined ? `🏆 這組主題最高分：${b}` : "這組主題還沒有紀錄";
+  });
+
+  function next() {
+    cur = GAME.question(topics);
+    $("q").innerHTML = cur.q;
+    $("pic").style.display = cur.pic ? "" : "none";
+    $("pic").firstElementChild.setAttribute("viewBox", cur.viewBox || "0 0 220 150");
+    $("pic").firstElementChild.innerHTML = cur.pic || "";
+    $("opts").innerHTML = cur.opts.map((o, i) => `<button class="opt" data-i="${i}">${o} <small>${cur.unit}</small></button>`).join("");
+    lock = false;
+  }
+  $("opts").addEventListener("click", e => {
+    const b = e.target.closest(".opt"); if (!b || lock) return;
+    lock = true; tried++;
+    const i = +b.dataset.i;
+    if (i === cur.ans) {
+      right++; combo++;
+      const add = 10 * (1 + Math.floor(combo / 3));
+      score += add;
+      b.classList.add("right");
+      $("card").classList.remove("flash-ok"); void $("card").offsetWidth; $("card").classList.add("flash-ok");
+      GAME.fun(combo % 5 === 0 ? "streak" : "ok");
+      setTimeout(next, 280);
+    } else {
+      combo = 0;
+      b.classList.add("wrong");
+      $("opts").children[cur.ans].classList.add("right");
+      misses.push(cur);
+      GAME.fun("no");
+      setTimeout(next, 1100);
+    }
+    hud();
+  });
+  function hud() {
+    $("score").textContent = score;
+    $("combo").textContent = combo >= 2 ? `🔥 ${combo} 連擊${combo >= 3 ? `（×${1 + Math.floor(combo / 3)}）` : ""}` : "";
+    $("time").textContent = left;
+    $("bar").style.width = left / SECS * 100 + "%";
+    $("bar").style.background = left <= 10 ? "var(--red)" : left <= 25 ? "var(--yellow)" : "var(--green)";
+  }
+  function start() {
+    score = combo = right = tried = 0; misses = []; left = SECS;
+    show("s-play"); next(); hud();
+    clearInterval(timer);
+    timer = setInterval(() => { left--; hud(); if (left <= 5 && left > 0) GAME.fun("tap"); if (left <= 0) end(); }, 1000);
+  }
+  function end() {
+    clearInterval(timer);
+    show("s-end");
+    const stars = right >= 15 ? 3 : right >= 8 ? 2 : right >= 3 ? 1 : 0;
+    $("stars").textContent = "★".repeat(stars) + "☆".repeat(3 - stars);
+    $("final").textContent = `${score} 分`;
+    $("detail").textContent = `答對 ${right} 題、答錯 ${tried - right} 題（${GAME.topicName(topics)}）`;
+    const r = GAME.record("blitz", GAME.topicKey(topics), score);
+    $("rec").innerHTML = r.isNew && score > 0 ? `<span class="newrec">🏆 新紀錄！</span>` : r.old !== undefined ? `<p class="bestline">最高分：${Math.max(r.old, score)}</p>` : "";
+    if (r.isNew && score > 0) { GAME.fun("done"); FUN.confetti(); } else GAME.fun("ok");
+    $("review").innerHTML = GAME.review(misses);
+    scrollTo(0, 0);
+  }
+  $("go").addEventListener("click", start);
+  $("again").addEventListener("click", start);
+  $("change").addEventListener("click", () => { show("s-start"); topics = picker.get(); const b = GAME.best("blitz", GAME.topicKey(topics)); $("best").textContent = b !== undefined ? `🏆 這組主題最高分：${b}` : "這組主題還沒有紀錄"; });
+  window.__game = { get cur() { return cur; }, start, end, answer: i => $("opts").children[i].click() };
+</script>
+</body>
+</html>
