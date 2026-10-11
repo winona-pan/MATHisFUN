@@ -97,6 +97,7 @@
   function start() {
     score = combo = right = tried = 0; misses = []; left = SECS;
     show("s-play"); next(); hud();
+    window.FUN && FUN.hold(true);
     clearInterval(timer);
     timer = setInterval(() => { left--; hud(); if (left <= 5 && left > 0) GAME.fun("tap"); if (left <= 0) end(); }, 1000);
   }
@@ -111,6 +112,8 @@
     $("rec").innerHTML = r.isNew && score > 0 ? `<span class="newrec">🏆 新紀錄！</span>` : r.old !== undefined ? `<p class="bestline">最高分：${Math.max(r.old, score)}</p>` : "";
     if (r.isNew && score > 0) { GAME.fun("done"); FUN.confetti(); } else GAME.fun("ok");
     $("review").innerHTML = GAME.review(misses);
+    window.FUN && FUN.hold(false);
+    window.FUN && FUN.gain(right * 2 + (r.isNew && score > 0 ? 10 : 0), "game", `閃電挑戰 答對 ${right} 題`);
     scrollTo(0, 0);
   }
   $("go").addEventListener("click", start);

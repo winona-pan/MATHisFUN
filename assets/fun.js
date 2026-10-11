@@ -110,6 +110,86 @@
     play("slide", Math.min(1, Math.max(0, 1 - (e.clientY - b.top) / b.height * 0.5 - (b.right - e.clientX) / b.width * 0.5)));
   }, true);
 
+  /* ---------- 經驗值與等級 ----------
+     整個網站共用：上課、練習、遊戲都會加經驗值（XP）
+     FUN.gain(n, "learn" | "game", "原因")、FUN.level() */
+  const ROOT = (document.currentScript && document.currentScript.src || "").replace(/assets\/fun\.js.*$/, "");
+  const XKEY = "mif-xp", GKEY = "mif-gifts";
+  const loadX = () => { let x; try { x = JSON.parse(localStorage.getItem(XKEY)); } catch (e) {} return Object.assign({ xp: 0, learn: 0, game: 0, log: [], seen: 1 }, x || {}); };
+  const saveX = x => { try { localStorage.setItem(XKEY, JSON.stringify(x)); } catch (e) {} };
+  // 下一級要多少：40、60、80、100…
+  const need = lv => 40 + 20 * (lv - 1);
+  function levelOf(xp) {
+    let lv = 1, rest = xp;
+    while (rest >= need(lv)) { rest -= need(lv); lv++; }
+    return { lv, into: rest, need: need(lv), xp };
+  }
+  const TITLES = [
+    ["🥚", "數學蛋"], ["🐣", "破殼小雞"], ["🐥", "計算小雞"], ["🐢", "努力烏龜"], ["🐇", "心算兔"],
+    ["🦊", "機靈狐狸"], ["🐼", "熊貓學者"], ["🦉", "智慧貓頭鷹"], ["🐬", "聰明海豚"], ["🦁", "數學獅王"],
+    ["🐯", "勇敢老虎"], ["🦄", "神奇獨角獸"], ["🐉", "數學小龍"], ["🚀", "火箭腦袋"], ["🌟", "數學之星"],
+    ["🧙", "數學魔法師"], ["🤖", "計算機器人"], ["🏆", "數學冠軍"], ["👑", "數學國王"], ["🌌", "宇宙數學家"],
+  ];
+  const title = lv => TITLES[Math.min(lv, TITLES.length) - 1];
+  const DEFAULT_GIFTS = [
+    { lv: 3, t: "🌟 一張貼紙" }, { lv: 5, t: "🍬 一個小點心" }, { lv: 8, t: "🎲 自己選一個小遊戲時間" },
+    { lv: 10, t: "🎁 小禮物" }, { lv: 15, t: "🍦 冰淇淋" }, { lv: 20, t: "🏆 大禮物" },
+  ];
+  function gifts() { try { const g = JSON.parse(localStorage.getItem(GKEY)); if (Array.isArray(g)) return g; } catch (e) {} return DEFAULT_GIFTS.map(g => Object.assign({ claimed: false }, g)); }
+  function saveGifts(g) { try { localStorage.setItem(GKEY, JSON.stringify(g)); } catch (e) {} }
+
+  let chip, holding = false, pend = null;
+  function flush() { if (!pend) return; const p = pend; pend = null; const old = document.querySelector(".lvup"); if (old) old.remove(); levelUp(p.from, p.to); }
+  // 遊戲進行中：先不跳升級視窗，也把角落的按鈕藏起來（不要擋到按鍵）
+  function hold(on) { holding = on; document.body.classList.toggle("fun-playing", on); if (!on) setTimeout(flush, 600); }
+  function gain(n, src = "learn", why = "") {
+    n = Math.round(n);
+    if (!(n > 0)) return;
+    const x = loadX(), before = levelOf(x.xp).lv;
+    x.xp += n; x[src] = (x[src] || 0) + n;
+    x.log.unshift([Date.now(), n, src, why]); x.log = x.log.slice(0, 60);
+    saveX(x);
+    floatXP(n);
+    paintChip();
+    const after = levelOf(x.xp).lv;
+    if (after > before) {
+      // 遊戲進行中先不跳視窗，等遊戲結束再一起顯示
+      pend = { from: pend ? pend.from : before, to: after };
+      if (!holding) setTimeout(flush, 500);
+    }
+  }
+  function floatXP(n) {
+    if (!chip) return;
+    const f = document.createElement("div");
+    f.className = "xp-float"; f.textContent = `+${n} XP`;
+    const b = chip.getBoundingClientRect();
+    f.style.left = b.left + 10 + "px"; f.style.top = b.top - 6 + "px";
+    document.body.appendChild(f);
+    setTimeout(() => f.remove(), 1100);
+  }
+  function paintChip() {
+    if (!chip) return;
+    const L = levelOf(loadX().xp), [e] = title(L.lv);
+    chip.innerHTML = `<span class="av">${e}</span><span><b>Lv ${L.lv}</b><i><u style="width:${L.into / L.need * 100}%"></u></i></span>`;
+    chip.title = `等級 ${L.lv}：再 ${L.need - L.into} XP 升級`;
+  }
+  function levelUp(from, to) {
+    const [e, t] = title(to);
+    const got = gifts().filter(g => g.lv > from && g.lv <= to);
+    const m = document.createElement("div");
+    m.className = "lvup";
+    m.innerHTML = `<div class="card">
+      <div class="big">${e}</div>
+      <h2>升級了！Lv ${to}</h2>
+      <p>你現在是「<b>${t}</b>」</p>
+      ${got.map(g => `<div class="gift">🎁 <b>得到禮物：</b>${g.t}<small>拿給老師看這個畫面！</small></div>`).join("")}
+      <div class="btns"><a href="${ROOT}level.html">看我的等級</a><button>繼續加油 💪</button></div></div>`;
+    document.body.appendChild(m);
+    play(got.length ? "done" : "streak"); setTimeout(() => play("done"), got.length ? 900 : 0);
+    confetti(got.length ? 160 : 90);
+    m.querySelector("button").addEventListener("click", () => m.remove());
+  }
+
   /* ---------- 設定按鈕 ---------- */
   const css = `
   .fun-fab { position: fixed; right: 14px; bottom: 14px; z-index: 40; width: 48px; height: 48px; border-radius: 50%;
@@ -125,7 +205,30 @@
   .fun-panel .sub.off { opacity: .4; pointer-events: none; }
   .fun-panel .row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
   .fun-panel .row button { flex: 1; border: 2px solid var(--line, #e8e1d3); background: var(--bg, #fdf8ef); color: inherit; border-radius: 999px; padding: 6px 8px; font: inherit; font-weight: 700; cursor: pointer; font-size: .9rem; }
-  .fun-panel small { color: var(--muted, #6b6878); font-size: .8rem; }`;
+  .fun-panel small { color: var(--muted, #6b6878); font-size: .8rem; }
+  body { padding-bottom: 70px; }
+  body.fun-playing .xp-chip, body.fun-playing .fun-fab, body.fun-playing .fun-panel { display: none; }
+  .xp-chip { position: fixed; left: 14px; bottom: 14px; z-index: 40; display: flex; align-items: center; gap: 6px; height: 48px; padding: 0 14px 0 6px; border-radius: 999px;
+    border: 3px solid var(--line, #e8e1d3); background: var(--card, #fff); color: var(--ink, #2b2a33); text-decoration: none; box-shadow: 0 4px 14px rgba(0,0,0,.12); font-family: "Noto Sans TC", system-ui, sans-serif; }
+  .xp-chip .av { font-size: 1.6rem; line-height: 1; }
+  .xp-chip b { display: block; font-size: .85rem; line-height: 1.1; font-weight: 900; }
+  .xp-chip i { display: block; width: 54px; height: 6px; border-radius: 3px; background: var(--line, #e8e1d3); overflow: hidden; margin-top: 3px; }
+  .xp-chip u { display: block; height: 100%; background: #f2b632; }
+  .xp-float { position: fixed; z-index: 60; font-weight: 900; color: #f08a24; font-size: 1.1rem; pointer-events: none; font-family: "Noto Sans TC", system-ui, sans-serif;
+    text-shadow: 0 1px 0 #fff; animation: xpup 1.1s ease-out forwards; }
+  @keyframes xpup { to { transform: translateY(-46px); opacity: 0; } }
+  .lvup { position: fixed; inset: 0; z-index: 55; background: rgba(0,0,0,.45); display: grid; place-items: center; padding: 16px; font-family: "Noto Sans TC", system-ui, sans-serif; }
+  .lvup .card { background: var(--card, #fff); color: var(--ink, #2b2a33); border-radius: 24px; padding: 22px; max-width: 360px; width: 100%; text-align: center; border: 4px solid #f2b632; animation: lvpop .4s; }
+  @keyframes lvpop { from { transform: scale(.6); opacity: 0; } }
+  .lvup .big { font-size: 4.5rem; line-height: 1.1; }
+  .lvup h2 { margin: 6px 0 2px; font-size: 1.8rem; font-weight: 900; }
+  .lvup p { margin: 0; font-weight: 700; }
+  .lvup .gift { margin-top: 12px; background: #fff3d1; color: #2b2a33; border: 3px dashed #f08a24; border-radius: 16px; padding: 10px; font-size: 1.1rem; }
+  .lvup .gift small { display: block; color: #8a5a10; font-weight: 700; margin-top: 2px; }
+  .lvup .btns { display: flex; gap: 8px; margin-top: 16px; }
+  .lvup .btns > * { flex: 1; border-radius: 999px; padding: 10px; font: inherit; font-weight: 900; cursor: pointer; text-decoration: none; }
+  .lvup .btns a { border: 3px solid var(--line, #e8e1d3); color: inherit; }
+  .lvup .btns button { border: 0; background: #3aa76d; color: #fff; }`;
   function ui() {
     const st = document.createElement("style"); st.textContent = css; document.head.appendChild(st);
     const fab = document.createElement("button");
@@ -143,6 +246,11 @@
       <div class="row"><button data-try="ok">試聽 答對</button><button data-try="no">試聽 答錯</button><button data-try="slide">試聽 拉桿</button></div>
       <small>設定會記在這台裝置上</small>`;
     document.body.append(pan, fab);
+    if (!document.body.dataset.noChip) {
+      chip = document.createElement("a");
+      chip.className = "xp-chip"; chip.href = ROOT + "level.html"; chip.setAttribute("aria-label", "我的等級");
+      document.body.appendChild(chip); paintChip();
+    }
     const paint = () => {
       fab.textContent = cfg.on ? "🔊" : "🔇";
       pan.querySelectorAll("[data-c]").forEach(i => { if (i.type === "checkbox") i.checked = cfg[i.dataset.c]; else i.value = cfg[i.dataset.c]; });
@@ -161,5 +269,8 @@
   }
   if (document.body) ui(); else document.addEventListener("DOMContentLoaded", ui);
 
-  window.FUN = { play, confetti, get cfg() { return cfg; } };
+  // 這一頁答對了幾題（「我學會了」要先答對才給 XP）
+  let pageRight = 0;
+  window.FUN = { play, confetti, gain, hold, levelOf, title, TITLES, need, gifts, saveGifts, loadX, saveX, ROOT,
+    get cfg() { return cfg; }, get pageRight() { return pageRight; }, right() { pageRight++; } };
 })();

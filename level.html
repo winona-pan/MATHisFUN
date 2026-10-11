@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>我的等級</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/lesson.css">
+<link rel="stylesheet" href="games/game.css">
+<style>
+  .hero { text-align: center; background: var(--card); border: 4px solid var(--yellow); border-radius: 26px; padding: 18px 16px; margin-top: 10px; }
+  .hero .av { font-size: 5rem; line-height: 1.1; }
+  .hero h1 { margin: 4px 0 0; }
+  .hero .t { font-weight: 900; font-size: 1.2rem; color: var(--muted); }
+  .bigbar { height: 22px; border-radius: 11px; background: var(--line); overflow: hidden; margin: 14px auto 4px; max-width: 420px; }
+  .bigbar b { display: block; height: 100%; background: linear-gradient(90deg, var(--yellow), var(--orange)); border-radius: 11px; }
+  .split { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 10px; font-weight: 900; }
+  .split span { background: var(--bg); border-radius: 999px; padding: 4px 14px; }
+  .road { display: grid; grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); gap: 8px; }
+  .road div { text-align: center; border: 3px solid var(--line); border-radius: 16px; padding: 6px 2px; background: var(--card); font-size: .78rem; font-weight: 700; position: relative; }
+  .road div .e { font-size: 1.8rem; display: block; }
+  .road div.lock { filter: grayscale(1); opacity: .45; }
+  .road div.me { border-color: var(--yellow); box-shadow: 0 0 0 4px rgba(242,182,50,.3); }
+  .road div .g { position: absolute; top: -8px; right: -6px; font-size: 1.1rem; filter: none; }
+  .gifts { display: grid; gap: 8px; }
+  .gift { display: flex; align-items: center; gap: 12px; border: 3px solid var(--line); border-radius: 16px; padding: 10px 12px; background: var(--card); }
+  .gift .lv { flex: none; width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center; font-weight: 900; background: var(--bg); border: 3px solid var(--line); line-height: 1.1; text-align: center; font-size: .9rem; }
+  .gift .txt { flex: 1; font-weight: 900; font-size: 1.1rem; }
+  .gift .txt small { display: block; font-size: .85rem; color: var(--muted); }
+  .gift.open { border-color: var(--orange); background: #fff3d1; color: #2b2a33; }
+  .gift.open .lv { background: var(--orange); border-color: var(--orange); color: #fff; }
+  .gift.open .txt small { color: #8a5a10; }
+  .gift.done { opacity: .7; }
+  .gift.done .lv { background: var(--green); border-color: var(--green); color: #fff; }
+  .gift.locked .txt { color: var(--muted); }
+  .how td { padding: 4px 8px; font-weight: 700; } .how td:last-child { color: var(--orange); font-weight: 900; white-space: nowrap; }
+  .log { font-size: .92rem; } .log div { display: flex; gap: 10px; padding: 4px 0; border-bottom: 1px dashed var(--line); }
+  .log b { color: var(--orange); min-width: 52px; } .log span { flex: 1; } .log time { color: var(--muted); font-size: .8rem; }
+  .teacher { margin-top: 24px; }
+  .teacher summary { cursor: pointer; font-weight: 900; color: var(--muted); }
+  .ed { display: grid; grid-template-columns: 70px 1fr auto auto; gap: 6px; align-items: center; margin-top: 6px; }
+  .ed input { font: inherit; padding: 6px 8px; border-radius: 10px; border: 2px solid var(--line); background: var(--bg); color: var(--ink); min-width: 0; }
+  .tbtn { border: 2px solid var(--line); background: var(--card); color: var(--ink); border-radius: 999px; padding: 6px 12px; font: inherit; font-weight: 700; cursor: pointer; white-space: nowrap; }
+  .tbtn.pri { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .gift.open { background: #3a2a17; color: var(--ink); } :root:not([data-theme="light"]) .gift.open .txt small { color: #f0c27a; } }
+</style>
+</head>
+<body data-no-chip="1">
+<div class="wrap">
+  <div class="gtop"><a href="index.html">← 目錄</a><a href="games/index.html">🎮 小遊戲</a></div>
+
+  <div class="hero">
+    <div class="av" id="av"></div>
+    <h1 id="lv"></h1>
+    <div class="t" id="title"></div>
+    <div class="bigbar"><b id="bar"></b></div>
+    <div style="font-weight:700" id="next"></div>
+    <div class="split" id="split"></div>
+  </div>
+
+  <section class="box">
+    <h2>🎁 禮物</h2>
+    <div class="gifts" id="gifts"></div>
+  </section>
+
+  <section class="box">
+    <h2>🗺️ 等級之路</h2>
+    <div class="road" id="road"></div>
+  </section>
+
+  <section class="box">
+    <h2>⭐ 怎麼拿經驗值（XP）</h2>
+    <table class="how">
+      <tr><td>練習題一次就答對</td><td>+2</td></tr>
+      <tr><td>練習連續答對 5 題</td><td>+7</td></tr>
+      <tr><td>答錯後再想一次答對</td><td>+1</td></tr>
+      <tr><td>學會一課（先答對 3 題，再按「這一課我學會了」）</td><td>+20</td></tr>
+      <tr><td>心算練功房：每答對一題（3 秒內 +1）</td><td>+1～2</td></tr>
+      <tr><td>其他小遊戲：看答對幾題，破紀錄 +10</td><td>+10～50</td></tr>
+    </table>
+  </section>
+
+  <section class="box">
+    <h2>📜 最近拿到的 XP</h2>
+    <div class="log" id="log"></div>
+  </section>
+
+  <details class="teacher" id="teacher">
+    <summary>🔒 老師設定（禮物、加分）</summary>
+    <div class="box" id="tbox"></div>
+  </details>
+</div>
+<script src="assets/fun.js"></script>
+<script>
+  const $ = id => document.getElementById(id);
+  const PKEY = "mif-pin";
+  let unlocked = false;
+  function render() {
+    const x = FUN.loadX(), L = FUN.levelOf(x.xp), [e, t] = FUN.title(L.lv);
+    $("av").textContent = e; $("lv").textContent = `Lv ${L.lv}`; $("title").textContent = t;
+    $("bar").style.width = L.into / L.need * 100 + "%";
+    $("next").textContent = `${L.into} / ${L.need} XP，再 ${L.need - L.into} XP 升到 Lv ${L.lv + 1}`;
+    $("split").innerHTML = `<span>📘 上課 ${x.learn || 0}</span><span>🎮 遊戲 ${x.game || 0}</span><span>⭐ 全部 ${x.xp}</span>`;
+    const gs = FUN.gifts().slice().sort((a, b) => a.lv - b.lv);
+    $("gifts").innerHTML = gs.length ? gs.map(g => {
+      const st = g.claimed ? "done" : L.lv >= g.lv ? "open" : "locked";
+      return `<div class="gift ${st}"><div class="lv">${st === "done" ? "✓" : st === "open" ? "🎁" : "🔒"}<br>Lv ${g.lv}</div>
+        <div class="txt">${st === "locked" ? "？？？" : g.t}<small>${st === "done" ? "已經領過了" : st === "open" ? "可以領了！拿給老師看 👀" : `到 Lv ${g.lv} 就打開（還差 ${xpTo(g.lv) - x.xp} XP）`}</small></div></div>`;
+    }).join("") : `<p>老師還沒有設定禮物。</p>`;
+    const maxLv = Math.max(20, L.lv + 1, ...gs.map(g => g.lv));
+    $("road").innerHTML = Array.from({ length: maxLv }, (_, i) => {
+      const lv = i + 1, [e2, t2] = FUN.title(lv), g = gs.find(g => g.lv === lv);
+      return `<div class="${lv > L.lv ? "lock" : ""} ${lv === L.lv ? "me" : ""}">${g ? `<span class="g">🎁</span>` : ""}<span class="e">${e2}</span>Lv ${lv}<br>${t2}</div>`;
+    }).join("");
+    const ago = ts => { const m = Math.round((Date.now() - ts) / 60000); return m < 1 ? "剛剛" : m < 60 ? `${m} 分鐘前` : m < 1440 ? `${Math.round(m / 60)} 小時前` : `${Math.round(m / 1440)} 天前`; };
+    $("log").innerHTML = x.log.length ? x.log.slice(0, 20).map(([ts, n, src, why]) => `<div><b>+${n}</b><span>${src === "game" ? "🎮" : "📘"} ${why}</span><time>${ago(ts)}</time></div>`).join("") : "<p>還沒有紀錄，去上課或玩遊戲吧！</p>";
+    renderTeacher();
+  }
+  // 到某一級總共要幾 XP
+  const xpTo = lv => { let s = 0; for (let i = 1; i < lv; i++) s += FUN.need(i); return s; };
+
+  function renderTeacher() {
+    const pin = localStorage.getItem(PKEY);
+    if (!unlocked) {
+      $("tbox").innerHTML = pin
+        ? `<p>輸入老師密碼：</p><div class="ed" style="grid-template-columns:1fr auto"><input type="password" inputmode="numeric" id="pin"><button class="tbtn pri" id="ok">打開</button></div><p id="pmsg" style="color:var(--red);font-weight:700"></p>`
+        : `<p>第一次使用：請老師設一組密碼（避免學生自己改禮物）。</p><div class="ed" style="grid-template-columns:1fr auto"><input type="password" inputmode="numeric" id="pin" placeholder="例如 4 位數字"><button class="tbtn pri" id="ok">設定密碼</button></div>`;
+      $("ok").onclick = () => {
+        const v = $("pin").value.trim(); if (!v) return;
+        if (!pin) { localStorage.setItem(PKEY, v); unlocked = true; }
+        else if (v === pin) unlocked = true;
+        else { $("pmsg").textContent = "密碼不對"; return; }
+        renderTeacher();
+      };
+      return;
+    }
+    const gs = FUN.gifts();
+    $("tbox").innerHTML = `
+      <h3 style="margin-top:0">禮物清單</h3>
+      <p style="color:var(--muted);font-size:.9rem;margin:0">等級、禮物內容可以直接改。學生領了禮物後按「已領」。</p>
+      ${gs.map((g, i) => `<div class="ed" data-i="${i}"><input type="number" min="2" value="${g.lv}" data-f="lv" aria-label="等級"><input value="${g.t.replace(/"/g, "&quot;")}" data-f="t" aria-label="禮物"><button class="tbtn" data-claim>${g.claimed ? "↩︎ 未領" : "✓ 已領"}</button><button class="tbtn" data-del>刪除</button></div>`).join("")}
+      <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button class="tbtn" id="add">＋ 新增禮物</button></div>
+      <h3>老師加分</h3>
+      <div class="ed" style="grid-template-columns:90px 1fr auto"><input type="number" id="bonus" value="20" min="1"><input id="bwhy" value="表現很棒"><button class="tbtn pri" id="give">加 XP</button></div>
+      <h3>其他</h3>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="tbtn" id="chpin">改密碼</button><button class="tbtn" id="resetxp">等級歸零</button><button class="tbtn" id="lock">🔒 鎖起來</button></div>`;
+    $("tbox").querySelectorAll(".ed[data-i] input").forEach(inp => inp.addEventListener("change", () => {
+      const i = +inp.closest(".ed").dataset.i, f = inp.dataset.f;
+      gs[i][f] = f === "lv" ? Math.max(2, Math.round(+inp.value || 2)) : inp.value;
+      FUN.saveGifts(gs); render();
+    }));
+    $("tbox").querySelectorAll("[data-claim]").forEach(b => b.onclick = () => { const i = +b.closest(".ed").dataset.i; gs[i].claimed = !gs[i].claimed; FUN.saveGifts(gs); render(); });
+    $("tbox").querySelectorAll("[data-del]").forEach(b => b.onclick = () => { if (!confirm("刪除這個禮物？")) return; gs.splice(+b.closest(".ed").dataset.i, 1); FUN.saveGifts(gs); render(); });
+    $("add").onclick = () => { const L = FUN.levelOf(FUN.loadX().xp); gs.push({ lv: L.lv + 2, t: "🎁 新禮物", claimed: false }); FUN.saveGifts(gs); render(); };
+    $("give").onclick = () => { const n = Math.round(+$("bonus").value); if (n > 0) { FUN.gain(n, "learn", "老師加分：" + $("bwhy").value); setTimeout(render, 50); } };
+    $("chpin").onclick = () => { const v = prompt("新密碼："); if (v) localStorage.setItem(PKEY, v.trim()); };
+    $("resetxp").onclick = () => { if (!confirm("確定要把等級和 XP 全部歸零嗎？")) return; FUN.saveX({ xp: 0, learn: 0, game: 0, log: [] }); localStorage.removeItem("mif-xp-pages"); gs.forEach(g => g.claimed = false); FUN.saveGifts(gs); render(); };
+    $("lock").onclick = () => { unlocked = false; $("teacher").open = false; renderTeacher(); };
+  }
+  render();
+  window.addEventListener("pageshow", render);
+</script>
+</body>
+</html>

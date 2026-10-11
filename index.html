@@ -56,6 +56,9 @@
   header p { color: var(--muted); margin: 4px 0 0; font-size: 1.05rem; }
   .games-link { display: inline-flex; flex-direction: column; align-items: center; margin-top: 14px; padding: 10px 26px; border-radius: 20px;
     background: var(--purple); color: #fff; text-decoration: none; font-weight: 900; font-size: 1.3rem; box-shadow: 0 5px 0 #6a4cb0; transition: transform .1s; }
+  .hlinks { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .games-link.lvl { background: var(--yellow); color: #2b2a33; box-shadow: 0 5px 0 #c08a12; }
+  .games-link.lvl:active { box-shadow: 0 2px 0 #c08a12; }
   .games-link small { font-size: .8rem; font-weight: 700; opacity: .9; }
   .games-link:hover { transform: translateY(-2px); }
   .games-link:active { transform: translateY(3px); box-shadow: 0 2px 0 #6a4cb0; }
@@ -213,7 +216,10 @@
   <header>
     <h1>數學好好玩<span class="dot">!</span></h1>
     <p>翰林版・六年級　看圖、動手玩，一步一步學</p>
-    <a class="games-link" href="games/index.html">🎮 小遊戲<small>閃電挑戰・射氣球・翻牌配對</small></a>
+    <div class="hlinks">
+      <a class="games-link" href="games/index.html">🎮 小遊戲<small>心算・閃電挑戰・射氣球・翻牌</small></a>
+      <a class="games-link lvl" href="level.html" id="lvlink">⭐ 我的等級<small>升級拿禮物 🎁</small></a>
+    </div>
   </header>
 
   <div class="tabs" role="tablist">
@@ -883,7 +889,10 @@ $("#reset").addEventListener("click", () => {
   progress = {}; statusOv = {}; saveJ(P_KEY, progress); saveJ(S_KEY, statusOv); render();
 });
 // 從課程頁回來（或另一個分頁打勾）時更新
-window.addEventListener("pageshow", () => { progress = loadJ(P_KEY); statusOv = loadJ(S_KEY); render(); });
+// 等級按鈕上顯示目前等級
+function paintLvl() { if (!window.FUN) return; const L = FUN.levelOf(FUN.loadX().xp), [e, t] = FUN.title(L.lv); $("#lvlink").innerHTML = `${e} Lv ${L.lv} ${t}<small>再 ${L.need - L.into} XP 升級・升級拿禮物 🎁</small>`; }
+paintLvl();
+window.addEventListener("pageshow", () => { paintLvl(); progress = loadJ(P_KEY); statusOv = loadJ(S_KEY); render(); });
 window.addEventListener("storage", () => { progress = loadJ(P_KEY); statusOv = loadJ(S_KEY); render(); });
 
 render();

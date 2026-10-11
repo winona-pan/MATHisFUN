@@ -27,8 +27,15 @@
 <div class="wrap">
   <div class="gtop"><a href="../index.html">← 目錄</a></div>
   <h1>🎮 小遊戲</h1>
-  <p class="lead">玩遊戲也在練數學！選一個開始吧。右下角 🔊 可以調音效。</p>
+  <p class="lead">玩遊戲也在練數學！玩遊戲會拿 ⭐ XP 升等級，到某個等級有禮物 🎁。右下角 🔊 可以調音效。</p>
   <div class="games">
+    <a class="gcard" href="mental.html">
+      <div class="art" style="background:#e2f5ea"><svg viewBox="0 0 320 180">
+                <text x="30" y="80" font-size="44" font-weight="900" fill="#2b2a33">7 × 8 =</text><text x="210" y="80" font-size="44" font-weight="900" fill="#3aa76d">56</text>
+        <rect x="30" y="104" width="260" height="14" rx="7" fill="#d9eee1"/><rect x="30" y="104" width="90" height="14" rx="7" fill="#3aa76d"/><text x="130" y="116" font-size="14" font-weight="900" fill="#2b2a33">⚡ 1.8 秒</text>
+</svg></div>
+      <div class="txt"><h2>🥋 心算練功房</h2><p>九九乘法、除法練到又快又準，看自己的九九地圖變綠</p><div class="rec" id="r-mental"></div></div>
+    </a>
     <a class="gcard" href="blitz.html">
       <div class="art" style="background:#fff3d1"><svg viewBox="0 0 320 180">
         <circle cx="160" cy="92" r="62" fill="#fff" stroke="#2b2a33" stroke-width="5"/><path d="M160 92 L160 44" stroke="#2b2a33" stroke-width="6" stroke-linecap="round"/><path d="M160 92 L196 108" stroke="#e4572e" stroke-width="6" stroke-linecap="round"/>
@@ -61,6 +68,7 @@
   const min = o => o ? Math.min(...Object.values(o)) : undefined;
   if (max(d.blitz) !== undefined) document.getElementById("r-blitz").textContent = `🏆 最高 ${max(d.blitz)} 分`;
   if (max(d.balloon) !== undefined) document.getElementById("r-balloon").textContent = `🏆 最多戳破 ${max(d.balloon)} 顆`;
+  if (max(d.mental) !== undefined) document.getElementById("r-mental").textContent = `🏆 60 秒最多答對 ${max(d.mental)} 題`;
   if (min(d.match) !== undefined) document.getElementById("r-match").textContent = `🏆 最少 ${min(d.match)} 步完成`;
 </script>
 </body>

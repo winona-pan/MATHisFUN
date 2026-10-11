@@ -207,6 +207,7 @@
         // 連續一次就答對 5、10、15… 題：特別的聲音和彩帶
         if (!wrongOnce && streak % 5 === 0) { fb.textContent += `　🔥 連續答對 ${streak} 題！`; fun("streak"); window.FUN && FUN.confetti(); }
         else fun("ok");
+        if (window.FUN) { FUN.right(); FUN.gain(wrongOnce ? 1 : (streak % 5 === 0 ? 7 : 2), "learn", wrongOnce ? "練習（再想一次答對）" : streak % 5 === 0 ? `練習連對 ${streak} 題` : "練習答對"); }
         if (!window.__noAuto) setTimeout(next, 1300);
       } else {
         if (!wrongOnce) tried++;

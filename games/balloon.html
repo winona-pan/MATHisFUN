@@ -158,6 +158,7 @@
   function start() {
     score = 0; combo = 0; hearts = 3; misses = []; factor = 1;
     show("s-play"); hud();
+    window.FUN && FUN.hold(true);
     requestAnimationFrame(() => { round(); last = performance.now(); cancelAnimationFrame(raf); raf = requestAnimationFrame(loop); });
   }
   function end() {
@@ -170,6 +171,8 @@
     $("rec").innerHTML = r.isNew && score > 0 ? `<span class="newrec">🏆 新紀錄！</span>` : r.old !== undefined ? `<p class="bestline">最多：${Math.max(r.old, score)} 顆</p>` : "";
     if (r.isNew && score > 0) { GAME.fun("done"); FUN.confetti(); } else GAME.fun("lose");
     $("review").innerHTML = GAME.review(misses);
+    window.FUN && FUN.hold(false);
+    window.FUN && FUN.gain(score * 2 + (r.isNew && score > 0 ? 10 : 0), "game", `射氣球 戳破 ${score} 顆`);
     scrollTo(0, 0);
   }
   $("go").addEventListener("click", start);

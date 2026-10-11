@@ -134,6 +134,7 @@
     $("board").innerHTML = cards.map((c, i) => `<button class="card" data-i="${i}" aria-label="翻牌"><div class="in"><div class="b">?</div><div class="f">${c.html}</div></div></button>`).join("");
     $("setname").textContent = set.t; $("moves").textContent = 0; $("time").textContent = 0; $("learned").innerHTML = "&nbsp;";
     show("s-play");
+    window.FUN && FUN.hold(true);
     t0 = Date.now(); clearInterval(tick);
     tick = setInterval(() => { $("time").textContent = Math.floor((Date.now() - t0) / 1000); }, 500);
   }
@@ -168,8 +169,10 @@
     const r = GAME.record("match", set.id, moves, (a, b) => a < b);
     $("rec").innerHTML = r.isNew ? `<span class="newrec">🏆 新紀錄！</span>` : `<p class="bestline">最少：${r.old} 步</p>`;
     GAME.fun("done"); FUN.confetti();
+    FUN.gain(10 + stars * 5, "game", `翻牌配對 ${set.t.replace(/^\S+ /, "")}`);
     $("sum").innerHTML = set.pairs.map(p => `<div class="miss"><div style="width:90px">${p[0].startsWith("<svg") ? p[0] : `<div style="text-align:center">${p[0]}</div>`}</div><p>${p[2]}</p></div>`).join("");
     paintSets(); scrollTo(0, 0);
+    window.FUN && FUN.hold(false);
   }
   $("go").addEventListener("click", start);
   $("again").addEventListener("click", start);

@@ -237,14 +237,27 @@
       const mark = document.createElement("div");
       mark.className = "mark-done";
       pager.before(mark);
+      // 每一課只給一次 20 XP；有練習題的課要先答對 3 題
+      const XP_KEY = "mif-xp-pages";
+      const awarded = () => { try { return JSON.parse(localStorage.getItem(XP_KEY)) || {}; } catch (e) { return {}; } };
+      const hasPractice = !!document.querySelector(".quiz, #prac, [id^=prac]");
+      const canEarn = () => !hasPractice || (window.FUN && FUN.pageRight >= 3);
       const paint = () => {
-        const on = !!load()[page];
-        mark.innerHTML = `<button class="btn ${on ? "on" : ""}" aria-pressed="${on}">${on ? "✓ 這一課學會了！" : "☐ 這一課我學會了"}</button><small>${on ? "再按一次可以取消" : "按下去，目錄上會打勾"}</small>`;
+        const on = !!load()[page], got = !!awarded()[page];
+        const tip = on ? (got ? "再按一次可以取消" : "答對 3 題後再按一次（取消再勾），就能拿 20 XP")
+          : got ? "按下去，目錄上會打勾" : canEarn() ? "按下去拿 ⭐ 20 XP，目錄上會打勾" : "先在上面答對 3 題，再按就能拿 ⭐ 20 XP";
+        mark.innerHTML = `<button class="btn ${on ? "on" : ""}" aria-pressed="${on}">${on ? "✓ 這一課學會了！" : "☐ 這一課我學會了"}</button><small>${tip}</small>`;
       };
+      document.addEventListener("click", () => setTimeout(paint, 50));
       mark.addEventListener("click", e => {
         if (!e.target.closest("button")) return;
         const d = load();
-        if (d[page]) delete d[page]; else { d[page] = 1; fun("done"); window.FUN && FUN.confetti(); }
+        if (d[page]) delete d[page];
+        else {
+          d[page] = 1; fun("done"); window.FUN && FUN.confetti();
+          const a = awarded();
+          if (!a[page] && canEarn() && window.FUN) { a[page] = 1; try { localStorage.setItem(XP_KEY, JSON.stringify(a)); } catch (e) {} FUN.gain(20, "learn", "學會一課：" + document.title); }
+        }
         try { localStorage.setItem(KEY, JSON.stringify(d)); } catch (e) {}
         paint();
       });
@@ -298,7 +311,9 @@
       q.appendChild(fb);
       const ok = () => {
         const all = qs.every(x => x === q || x.classList.contains("done"));
+        if (q.classList.contains("done")) return;
         q.classList.add("done"); fb.className = "fb ok"; fb.textContent = q.dataset.ok || "答對了！👏"; updateScore();
+        if (window.FUN) { FUN.right(); FUN.gain(2, "learn", "練習題答對"); }
         if (all && qs.length > 1) { fun("done"); window.FUN && FUN.confetti(); } else fun("ok");
       };
       const no = () => { fun("no"); fb.className = "fb no"; fb.textContent = "再想想 🤔 " + (q.dataset.hint || ""); };
